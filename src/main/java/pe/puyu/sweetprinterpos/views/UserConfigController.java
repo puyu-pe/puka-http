@@ -13,7 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
-import pe.puyu.sweetprinterpos.model.BifrostConfig;
 import pe.puyu.sweetprinterpos.model.UserConfig;
 
 import pe.puyu.sweetprinterpos.util.JsonUtil;
@@ -33,30 +32,20 @@ import java.util.ResourceBundle;
 
 public class UserConfigController implements Initializable {
   private final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.puka.views.userConfig");
-  private final BifrostConfig bifrostConfig = new BifrostConfig();
   private final UserConfig userConfig = new UserConfig();
 
   @Override
   public void initialize(URL arg0, ResourceBundle arg1) {
-    bifrostConfig.urlBifrostProperty().bindBidirectional(txtUrlBifrost.textProperty());
-    bifrostConfig.rucProperty().bindBidirectional(txtRuc.textProperty());
-    bifrostConfig.namespaceProperty().bindBidirectional(txtNamespace.textProperty());
-    bifrostConfig.branchProperty().bindBidirectional(txtBranch.textProperty());
     imgViewLogo.fitWidthProperty().bind(imgViewContainter.widthProperty());
     imgViewLogo.fitHeightProperty().bind(imgViewContainter.heightProperty());
     txtUrlBifrost.setText("https://bifrost-io.puyu.pe");
     txtNamespace.setText("printing");
-    recoverBifrostConfig();
   }
 
   @FXML
   void onAccept(ActionEvent event) {
     try {
       List<String> errors = new LinkedList<>();
-      errors.addAll(BifrostValidator.validateUrlBifrost(bifrostConfig.getUrlBifrost()));
-      errors.addAll(BifrostValidator.validateNamespace(bifrostConfig.getNamespace()));
-      errors.addAll(BifrostValidator.validateRuc(bifrostConfig.getRuc()));
-      errors.addAll(BifrostValidator.validateBranch(bifrostConfig.getBranch()));
       if (errors.isEmpty()) {
         getStage().close();
       } else {
@@ -100,14 +89,6 @@ public class UserConfigController implements Initializable {
     recoverUserConfig();
   }
 
-  private void recoverBifrostConfig() {
-    try {
-      var bifrostConfigOpt = JsonUtil.convertFromJson(PukaUtil.getBifrostConfigFileDir(), BifrostConfig.class);
-	    bifrostConfigOpt.ifPresent(bifrostConfig::copyFrom);
-    } catch (IOException e) {
-      logger.error("Excepción al recuperar la configuración de bifrost: {}", e.getMessage(), e);
-    }
-  }
 
   private void persistUserLogoPath(File logoFile) {
     try {
@@ -149,14 +130,10 @@ public class UserConfigController implements Initializable {
   @FXML
   private ImageView imgViewLogo;
 
-  @FXML
-  private TextField txtBranch;
 
   @FXML
   private TextField txtNamespace;
 
-  @FXML
-  private TextField txtRuc;
 
   @FXML
   private TextField txtUrlBifrost;
