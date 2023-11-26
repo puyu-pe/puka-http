@@ -49,6 +49,10 @@ public class AppUtil {
 		return file.getAbsolutePath();
 	}
 
+	public static String getPosConfigFileDir() throws  Exception{
+		return getConfigFileDir("pos.json");
+	}
+
 	public static String getLogsDirectory() {
 		return Path.of(getTempDirectory(), "puyu").toString();
 	}

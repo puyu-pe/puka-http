@@ -31,8 +31,8 @@ public class App extends Application {
 			stage.setScene(scene);
 			stage.setTitle("Configuración Servicio de Impresión");
 			stage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 //		PrintServer server = new PrintServer();
 //		var ip = "127.0.0.1";

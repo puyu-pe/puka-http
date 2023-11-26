@@ -48,6 +48,12 @@ public class PosConfig {
 		this.password.set(password);
 	}
 
+	public void copyFrom(PosConfig posConfig) {
+		ip.set(posConfig.getIp());
+		port.set(posConfig.getPort());
+		password.set(posConfig.getPassword());
+	}
+
 	private final StringProperty ip;
 	private final IntegerProperty port;
 	private final StringProperty password;
