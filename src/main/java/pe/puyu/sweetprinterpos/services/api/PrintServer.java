@@ -1,21 +1,44 @@
 package pe.puyu.sweetprinterpos.services.api;
 
+import ch.qos.logback.classic.Logger;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
+import io.javalin.http.Context;
 import io.javalin.plugin.bundled.CorsPluginConfig;
+import javafx.application.Platform;
+import org.slf4j.LoggerFactory;
+import pe.puyu.sweetprinterpos.util.AppUtil;
+import pe.puyu.sweetprinterpos.util.FileSystemLock;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class PrintServer {
 	private final Javalin app;
+	private final FileSystemLock lock;
+	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrintServer"));
 
 	public PrintServer() {
 		app = Javalin.create(this::serverConfig);
+		lock = new FileSystemLock(AppUtil.makeLockFile("lockPrintService"));
+	}
+
+	public boolean isServerRunningOtherProcess() {
+		return lock.hasLock();
 	}
 
 	public void listen(String ip, int port) {
-		configRoutes();
-		app.start(ip, port);
+		try {
+			if (!isServerRunningOtherProcess()) {
+				configRoutes();
+				app.start(ip, port);
+				logger.info("Start service on {}:{}", ip, port);
+			} else {
+				logger.info("An attempt was made to launch server on {}:{}", ip, port);
+				logger.info("Service already run in other process");
+			}
+		} catch (Exception e) {
+			logger.error("Exception on star service on {}:{} -> {}", ip, port, e.getLocalizedMessage());
+		}
 	}
 
 	private void serverConfig(JavalinConfig config) {
@@ -27,11 +50,12 @@ public class PrintServer {
 		app.routes(() -> {
 				path("printer", () -> {
 					path("system", () -> get(PrinterController::getAllPrinterSystem));
-					path("ticket",() -> {
+					path("ticket", () -> {
 						post(PrinterController::printTickets);
 					});
 				});
 				get("test-connection", (ctx) -> ctx.result("service online"));
+				post("stop-service", this::stopService);
 			}
 		);
 		app.exception(Exception.class, PrinterController::genericErrorHandling);
@@ -69,6 +93,24 @@ public class PrintServer {
 			})
 		})
 		* */
+	}
+
+	private void stopService(Context ctx) {
+		var response = new ResponseApi<>();
+		response.setStatus("success");
+		response.setMessage("Try force stop Service.");
+		ctx.json(response);
+		new Thread(() -> {
+			try {
+				Thread.sleep(100);
+				lock.unLock();
+				app.close();
+				logger.info("close service.");
+				Platform.exit();
+			} catch (Exception e) {
+				logger.error("Exception on stopService {}", e.getMessage(), e);
+			}
+		}).start();
 	}
 
 }

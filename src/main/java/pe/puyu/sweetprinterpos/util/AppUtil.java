@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
+import pe.puyu.sweetprinterpos.Constants;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -49,7 +50,7 @@ public class AppUtil {
 		return file.getAbsolutePath();
 	}
 
-	public static String getPosConfigFileDir() throws  Exception{
+	public static String getPosConfigFileDir() throws Exception {
 		return getConfigFileDir("pos.json");
 	}
 
@@ -96,11 +97,27 @@ public class AppUtil {
 		delay.play();
 	}
 
-	public static String getHostIp(){
+	public static String getHostIp() {
 		try {
 			return InetAddress.getLocalHost().getHostAddress();
 		} catch (Exception e) {
 			return "127.0.0.1";
 		}
+	}
+
+	public static String makeLockFile(String fileName){
+		String folderLockPath = Path.of(getUserDataDir(),".lock").toString();
+		var folderLock = new File(folderLockPath);
+		if(!folderLock.exists()){
+			var ignored = folderLock.mkdirs();
+		}
+		if(!fileName.startsWith("."))
+			fileName = "." + fileName;
+		File lockFile = new File(Path.of(folderLockPath,fileName).toString());
+		return lockFile.getAbsolutePath();
+	}
+
+	public static String makeNamespaceLogs(String namespace) {
+		return Constants.PACKAGE_BASE_PATH + "." + namespace.toLowerCase();
 	}
 }
