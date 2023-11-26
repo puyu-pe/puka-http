@@ -81,10 +81,13 @@ public class PosConfigController implements Initializable {
 		try {
 			Path sourcePath = Path.of(logoFile.toString());
 			Path destinationPath = Path.of(PukaUtil.getUserDataDir(), "logo.png");
+			if(Files.exists(destinationPath)){
+				Files.delete(destinationPath);
+			}
 			Files.copy(sourcePath, destinationPath);
 			userConfig.setLogoPath(destinationPath.toString());
 			JsonUtil.saveJson(PukaUtil.getUserConfigFileDir(), userConfig);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error("Excepción al persistir la información en el archivo de configuración del usuario: {}",
 				e.getMessage(),
 				e);
