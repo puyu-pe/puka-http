@@ -36,10 +36,6 @@ public class PukaUtil {
 		return userDataDir;
 	}
 
-	public static String getBifrostConfigFileDir() throws IOException {
-		return getConfigFileDir("bifrost.json");
-	}
-
 	public static String getUserConfigFileDir() throws IOException {
 		return getConfigFileDir("user.json");
 	}
@@ -60,7 +56,7 @@ public class PukaUtil {
 		return System.getProperty("java.io.tmpdir");
 	}
 
-	public static String getPukaVersion() {
+	public static String getAppVersion() {
 		try {
 			var resourceUrl = PukaUtil.class.getResource("/VERSION");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resourceUrl).openStream()));
