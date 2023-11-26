@@ -4,7 +4,6 @@ module pe.puyu.sweetprinterpos {
 	requires javafx.fxml;
 
 	requires java.desktop;
-	requires transitive com.dustinredmond.fxtrayicon;
 
 	requires ch.qos.logback.classic;
 	requires ch.qos.logback.core;
