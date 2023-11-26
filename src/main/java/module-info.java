@@ -1,4 +1,4 @@
-module pe.puyu.pukafx {
+module pe.puyu.sweetprinterpos {
 	requires transitive javafx.graphics;
 	requires javafx.controls;
 	requires javafx.fxml;
@@ -12,22 +12,20 @@ module pe.puyu.pukafx {
 
 	requires com.google.gson;
 	requires org.hildan.fxgson;
-	opens pe.puyu.pukafx.model to com.google.gson, org.hildan.fxgson;
+	opens pe.puyu.sweetprinterpos.model to com.google.gson, org.hildan.fxgson;
+	opens pe.puyu.sweetprinterpos.services.api to com.google.gson, org.hildan.fxgson;
 
 	requires net.harawata.appdirs;
-
-	requires socket.io.client;
-	requires engine.io.client;
-	requires okhttp3;
-	requires org.json;
 
 	requires escpos.coffee;
 	requires com.fazecast.jSerialComm;
 	requires pe.puyu.jticketdesing;
 	requires org.jetbrains.annotations;
 
-	opens pe.puyu.pukafx.views to javafx.fxml, javafx.graphics;
-	opens pe.puyu.pukafx.app to javafx.fxml, javafx.graphics;
+	requires io.javalin;
 
-	exports pe.puyu.pukafx.app;
+	opens pe.puyu.sweetprinterpos.views to javafx.fxml, javafx.graphics;
+	opens pe.puyu.sweetprinterpos.app to javafx.fxml, javafx.graphics;
+
+	exports pe.puyu.sweetprinterpos.app;
 }
