@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#onMouseEnteredWindow" prefHeight="524.0" prefWidth="397.0" styleClass="container" stylesheets="@../styles/index.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.puyu.sweetprinterpos.views.PosConfigController">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#onMouseEnteredWindow" prefHeight="555.0" prefWidth="397.0" styleClass="container" stylesheets="@../styles/index.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.puyu.sweetprinterpos.views.PosConfigController">
   <GridPane prefHeight="74.0" prefWidth="389.0" VBox.vgrow="ALWAYS">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -23,12 +23,14 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
-      <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="20.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="143.0" minHeight="10.0" prefHeight="109.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="10.0" minHeight="10.0" percentHeight="20.0" prefHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="106.0" minHeight="10.0" percentHeight="25.0" prefHeight="102.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="143.0" minHeight="10.0" percentHeight="20.0" prefHeight="51.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="143.0" minHeight="10.0" percentHeight="20.0" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="107.0" minHeight="10.0" percentHeight="20.0" prefHeight="88.0" vgrow="SOMETIMES" />
     </rowConstraints>
-    <Button focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSelectLogo" prefHeight="12.0" prefWidth="101.0" style="-fx-text-fill: black;" text="SELECCIONAR LOGO" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="2" />
-    <HBox fx:id="imgViewContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+    <Button focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSelectLogo" prefHeight="12.0" prefWidth="101.0" style="-fx-text-fill: black;" text="SELECCIONAR LOGO" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="4" />
+    <HBox fx:id="imgViewContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
       <ImageView fx:id="imgViewLogo" cache="true" cacheHint="QUALITY" fitHeight="133.0" fitWidth="158.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS" />
     </HBox>
   </GridPane>
