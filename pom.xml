@@ -70,6 +70,11 @@
       <artifactId>javalin</artifactId>
       <version>5.6.3</version>
     </dependency>
+    <dependency>
+      <groupId>org.xerial</groupId>
+      <artifactId>sqlite-jdbc</artifactId>
+      <version>3.44.0.0</version>
+    </dependency>
   </dependencies>
 
   <build>
