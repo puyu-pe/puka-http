@@ -19,11 +19,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
-public class PukaUtil {
+public class AppUtil {
 
 	public static String getUserDataDir() {
 		AppDirs appDirs = AppDirsFactory.getInstance();
@@ -58,7 +59,7 @@ public class PukaUtil {
 
 	public static String getAppVersion() {
 		try {
-			var resourceUrl = PukaUtil.class.getResource("/VERSION");
+			var resourceUrl = AppUtil.class.getResource("/VERSION");
 			BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resourceUrl).openStream()));
 			String version = reader.readLine();
 			reader.close();
@@ -91,4 +92,11 @@ public class PukaUtil {
 		delay.play();
 	}
 
+	public static String getHostIp(){
+		try {
+			return InetAddress.getLocalHost().getHostAddress();
+		} catch (Exception e) {
+			return "127.0.0.1";
+		}
+	}
 }

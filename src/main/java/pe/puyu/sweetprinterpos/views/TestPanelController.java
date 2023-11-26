@@ -23,7 +23,7 @@ import pe.puyu.sweetprinterpos.services.printer.Printer;
 import pe.puyu.sweetprinterpos.services.printer.SweetTicketPrinter;
 import pe.puyu.sweetprinterpos.services.printingtest.PrintTestService;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
-import pe.puyu.sweetprinterpos.util.PukaUtil;
+import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
@@ -153,7 +153,7 @@ public class TestPanelController implements Initializable {
 				ClipboardContent content = new ClipboardContent();
 				content.putString(selectedItem);
 				clipboard.setContent(content);
-				PukaUtil.toast(getStage(), String.format("Se copio %s", selectedItem));
+				AppUtil.toast(getStage(), String.format("Se copio %s", selectedItem));
 				txtNameSystem.setText(selectedItem);
 			}
 		}

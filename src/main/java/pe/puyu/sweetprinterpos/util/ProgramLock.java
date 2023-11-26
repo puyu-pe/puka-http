@@ -20,7 +20,7 @@ public class ProgramLock {
 	public static void lock() {
 		if (lock != null) return;
 		try {
-			file = new File(Path.of(PukaUtil.getUserDataDir(), ".lockuyupakup").toString());
+			file = new File(Path.of(AppUtil.getUserDataDir(), ".lockuyupakup").toString());
 			//noinspection resource
 			channel = new RandomAccessFile((file), "rw").getChannel();
 			lock = channel.tryLock();

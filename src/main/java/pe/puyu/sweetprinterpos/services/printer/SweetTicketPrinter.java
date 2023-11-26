@@ -7,7 +7,7 @@ import pe.puyu.jticketdesing.core.SweetTicketDesign;
 import pe.puyu.sweetprinterpos.model.UserConfig;
 import pe.puyu.sweetprinterpos.services.printer.interfaces.Cancelable;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
-import pe.puyu.sweetprinterpos.util.PukaUtil;
+import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.io.OutputStream;
 import java.util.concurrent.CompletableFuture;
@@ -49,7 +49,7 @@ public class SweetTicketPrinter {
 		if (ticket.has("metadata") && !ticket.get("metadata").isJsonNull()) {
 			metadata = ticket.getAsJsonObject("metadata");
 		}
-		var userConfig = JsonUtil.convertFromJson(PukaUtil.getUserConfigFileDir(), UserConfig.class);
+		var userConfig = JsonUtil.convertFromJson(AppUtil.getUserConfigFileDir(), UserConfig.class);
 		if ((!metadata.has("logoPath") || metadata.get("logoPath").isJsonNull()) && userConfig.isPresent()) {
 			metadata.addProperty("logoPath", userConfig.get().getLogoPath());
 			ticket.add("metadata", metadata);
