@@ -18,7 +18,6 @@ import pe.puyu.sweetprinterpos.model.UserConfig;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
 import pe.puyu.sweetprinterpos.util.PukaAlerts;
 import pe.puyu.sweetprinterpos.util.PukaUtil;
-import pe.puyu.sweetprinterpos.validations.BifrostValidator;
 
 import java.io.File;
 import java.io.IOException;
