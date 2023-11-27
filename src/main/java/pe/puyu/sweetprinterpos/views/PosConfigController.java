@@ -73,7 +73,7 @@ public class PosConfigController implements Initializable {
 					//sin haber parado primero el servicio .
 					//Tambien puede pasar si existen dos instancias de PrintServer en un mismo proceso
 					// (TODO: realizar un request a stop-service api)
-					throw new Exception("Whats!!! Print Server is already run on other process, STRANGE!!.");
+					throw new Exception("Whats!!! Print Server is already run in other process, STRANGE!!.");
 				}
 				printServer.listen(posConfig.getIp(), posConfig.getPort());
 			} else {
