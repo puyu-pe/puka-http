@@ -66,7 +66,7 @@ public class PrinterController {
 				});
 				sweetTicketPrinter.printTicket();
 			} catch (Exception e) {
-				errors.add(e.getMessage());
+				errors.add("Un ticket no se pudo imprimir razón: " + e.getCause());
 				logger.error("Error al imprimir un ticket:  {}", e.getMessage());
 			}
 		}
