@@ -11,10 +11,13 @@ import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.util.LinkedList;
 
-public class PrinterController {
-	private static final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrinterController"));
+public class PrinterApiController {
+	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrinterApiController"));
 
-	public static void getAllPrinterSystem(Context ctx) {
+	public PrinterApiController(){
+
+	}
+	public void getAllPrinterSystem(Context ctx) {
 		var response = new ResponseApi<String[]>();
 		response.setMessage("Datos recuperados exitosamente");
 		response.setStatus("success");
@@ -22,7 +25,7 @@ public class PrinterController {
 		ctx.json(response);
 	}
 
-	public static void printTickets(Context ctx) {
+	public void printTickets(Context ctx) {
 		var response = new ResponseApi<>();
 		ctx.async(
 			10000,
@@ -42,8 +45,8 @@ public class PrinterController {
 		);
 	}
 
-	public static void genericErrorHandling(Exception e, Context ctx) {
-		logger.error("Error PrinterController, \nMESSAGE: {}.\nCAUSE: {}.\nLOCALIZED_MESSAGE: {}."
+	public void genericErrorHandling(Exception e, Context ctx) {
+		logger.error("Error PrinterApiController, \nMESSAGE: {}.\nCAUSE: {}.\nLOCALIZED_MESSAGE: {}."
 			, e.getMessage()
 			, e.getCause()
 			, e.getLocalizedMessage());
@@ -54,7 +57,7 @@ public class PrinterController {
 		ctx.json(response);
 	}
 
-	public static void printJob(JsonArray tickets) {
+	public void printJob(JsonArray tickets) {
 		var errors = new LinkedList<>();
 		for (var ticket : tickets) {
 			try {

@@ -22,6 +22,7 @@ module pe.puyu.sweetprinterpos {
 	requires org.jetbrains.annotations;
 
 	requires io.javalin;
+	requires java.sql;
 
 	opens pe.puyu.sweetprinterpos.views to javafx.fxml, javafx.graphics;
 	opens pe.puyu.sweetprinterpos.app to javafx.fxml, javafx.graphics;

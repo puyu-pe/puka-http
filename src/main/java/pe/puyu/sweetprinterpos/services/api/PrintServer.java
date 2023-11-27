@@ -16,10 +16,12 @@ public class PrintServer {
 	private final Javalin app;
 	private final FileSystemLock lock;
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrintServer"));
+	private final PrinterApiController controller;
 
 	public PrintServer() {
 		app = Javalin.create(this::serverConfig);
 		lock = new FileSystemLock(AppUtil.makeLockFile("lockPrintService"));
+		controller = new PrinterApiController();
 	}
 
 	public boolean isRunningInOtherProcess() {
@@ -49,42 +51,42 @@ public class PrintServer {
 	private void configRoutes() {
 		app.routes(() -> {
 				path("printer", () -> {
-					path("system", () -> get(PrinterController::getAllPrinterSystem));
+					path("system", () -> get(controller::getAllPrinterSystem));
 					path("ticket", () -> {
-						post(PrinterController::printTickets);
+						post(controller::printTickets);
 					});
 				});
 				get("test-connection", (ctx) -> ctx.result("service online"));
 				post("stop-service", this::stopService);
 			}
 		);
-		app.exception(Exception.class, PrinterController::genericErrorHandling);
+		app.exception(Exception.class, controller::genericErrorHandling);
 		/*
 		app.routes(() -> {
 			path("printer"-> {
-				get(PrinterController::getSavedPrinters)
+				get(PrinterApiController::getSavedPrinters)
 				path("{name}",() -> {
-					get(PrinterController::getPrinter)
-					post(PrinterController::savePrinter)
-					put(PrinterController::updatePrinter)
-					delete(PrinterController::deletePrinter)
+					get(PrinterApiController::getPrinter)
+					post(PrinterApiController::savePrinter)
+					put(PrinterApiController::updatePrinter)
+					delete(PrinterApiController::deletePrinter)
 					path("queue",() -> {
-						get(PrinterController::getSizeQueueByPrinter)
-						ws("events", PrinterController::getQueueEventsByPrinter)
+						get(PrinterApiController::getSizeQueueByPrinter)
+						ws("events", PrinterApiController::getQueueEventsByPrinter)
 					})
 				})
 				path("system", () -> {
-					get(PrinterController::getAllPrintersSystem)
+					get(PrinterApiController::getAllPrintersSystem)
 				})
 				path("ticket", () -> {
-					post(PrinterController::printTickets)
+					post(PrinterApiController::printTickets)
 					path("queue", () -> {
-						get(PrinterController::getSizeQueue)
-						ws("events", PrinterController::getQueueEvents)
+						get(PrinterApiController::getSizeQueue)
+						ws("events", PrinterApiController::getQueueEvents)
 					})
 				})
 				path("test" , () -> {
-					get(PrinterController::printerTest)
+					get(PrinterApiController::printerTest)
 				})
 			})
 			path("info", () -> {
