@@ -33,9 +33,9 @@ public class App extends Application {
 	public void start(Stage stage) {
 		try {
 			var posConfig = recoverPosConfig();
-			PrintServer server = new PrintServer();
 			if (posConfig.isPresent()) {
-				if (server.isServerRunningOtherProcess()) {
+				PrintServer server = new PrintServer();
+				if (server.isRunningInOtherProcess()) {
 					System.out.println("show actions panel here !!!");
 				} else {
 					server.listen(posConfig.get().getIp(), posConfig.get().getPort());

@@ -1,16 +1,13 @@
 package pe.puyu.sweetprinterpos.views;
 
 import ch.qos.logback.classic.Logger;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -18,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.model.PosConfig;
 import pe.puyu.sweetprinterpos.model.UserConfig;
 
+import pe.puyu.sweetprinterpos.services.api.PrintServer;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
 import pe.puyu.sweetprinterpos.util.PukaAlerts;
 import pe.puyu.sweetprinterpos.util.AppUtil;
@@ -60,7 +58,7 @@ public class PosConfigController implements Initializable {
 
 
 	@FXML
-	void onAccept(ActionEvent event) {
+	void onAccept() {
 		try {
 			List<String> errors = new LinkedList<>();
 			errors.addAll(PosConfigValidator.validateIp(txtIP.getText()));
@@ -69,7 +67,13 @@ public class PosConfigController implements Initializable {
 			if (errors.isEmpty()) {
 				getStage().close();
 				persistPosConfig();
-				//NOTE: Iniciar servcio de api
+				PrintServer printServer = new PrintServer();
+				if(printServer.isRunningInOtherProcess()){
+					//Este error puede pasar si se borra la configuracion de PosConfig
+					//sin haber parado primero el servicio (TODO: realizar un request a stop-service api)
+					throw new Exception("Whats!!! Print Server is already run on other process, STRANGE!!.");
+				}
+				printServer.listen(posConfig.getIp(), posConfig.getPort());
 			} else {
 				PukaAlerts.showWarning("Configuración invalida detectada.", String.join("\n", errors));
 			}
@@ -79,7 +83,7 @@ public class PosConfigController implements Initializable {
 	}
 
 	@FXML
-	void onCancel(ActionEvent event) {
+	void onCancel() {
 		boolean result = PukaAlerts.showConfirmation("¿Seguro que deseas cancelar la configuración?",
 			"No se guardara la configuración y no se iniciara el servicio de impresion");
 		if (result)
@@ -87,7 +91,7 @@ public class PosConfigController implements Initializable {
 	}
 
 	@FXML
-	void onSelectLogo(ActionEvent event) {
+	void onSelectLogo() {
 		try {
 			Optional<File> selectFile = AppUtil.showPngFileChooser(getStage());
 			if (selectFile.isPresent()) {
@@ -101,7 +105,7 @@ public class PosConfigController implements Initializable {
 	}
 
 	@FXML
-	void onMouseEnteredWindow(MouseEvent event) {
+	void onMouseEnteredWindow() {
 		recoverUserConfig();
 	}
 

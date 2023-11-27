@@ -22,13 +22,13 @@ public class PrintServer {
 		lock = new FileSystemLock(AppUtil.makeLockFile("lockPrintService"));
 	}
 
-	public boolean isServerRunningOtherProcess() {
+	public boolean isRunningInOtherProcess() {
 		return lock.hasLock();
 	}
 
 	public void listen(String ip, int port) {
 		try {
-			if (!isServerRunningOtherProcess()) {
+			if (!isRunningInOtherProcess()) {
 				configRoutes();
 				app.start(ip, port);
 				logger.info("Start service on {}:{}", ip, port);
