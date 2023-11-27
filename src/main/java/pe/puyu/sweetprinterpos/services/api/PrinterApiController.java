@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
+import pe.puyu.sweetprinterpos.repository.SqlLiteConnection;
 import pe.puyu.sweetprinterpos.services.printer.SweetTicketPrinter;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 
@@ -13,9 +14,11 @@ import java.util.LinkedList;
 
 public class PrinterApiController {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrinterApiController"));
+	private final SqlLiteConnection dbConnection;
 
 	public PrinterApiController(){
-
+		dbConnection = new SqlLiteConnection();
+		Runtime.getRuntime().addShutdownHook(new Thread(dbConnection::close));
 	}
 	public void getAllPrinterSystem(Context ctx) {
 		var response = new ResponseApi<String[]>();
