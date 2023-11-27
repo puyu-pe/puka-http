@@ -30,7 +30,7 @@ public class AppUtil {
 	public static String getUserDataDir() {
 		AppDirs appDirs = AppDirsFactory.getInstance();
 		//nota: appVersion = null por que no es necesario la version
-		String userDataDir = appDirs.getUserDataDir("puka", null, "puyu");
+		String userDataDir = appDirs.getUserDataDir("SweetPrinterPos", null, "puyu");
 		File file = new File(userDataDir);
 		if (!file.exists()) {
 			var ignored = file.mkdirs();

@@ -18,7 +18,7 @@ public class SweetTicketPrinter {
 	private final JsonObject printerInfo;
 	private final JsonObject ticket;
 	private Consumer<String> onUncaughtException;
-	private static final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.sweetticketprinter");
+	private static final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("SweetTicketPrinter"));
 
 	public SweetTicketPrinter(JsonObject ticket) {
 		this.ticket = ticket;

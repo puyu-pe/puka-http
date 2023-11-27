@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.services.printer.interfaces.Cancelable;
 import pe.puyu.sweetprinterpos.services.printer.interfaces.Caughtable;
+import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.awt.print.PrinterJob;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class ServiceOutputStream extends PipedOutputStream implements Cancelable
 	protected final PipedInputStream pipedInputStream;
 	protected final Thread threadPrint;
 
-	protected final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.puka.service.ServiceOutputStream");
+	protected final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ServiceOutputStream"));
 
 	public ServiceOutputStream(PrintService printService) throws IOException {
 

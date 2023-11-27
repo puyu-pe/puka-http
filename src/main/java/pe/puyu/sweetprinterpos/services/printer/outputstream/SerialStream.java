@@ -5,6 +5,7 @@ import com.fazecast.jSerialComm.SerialPort;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.services.printer.interfaces.Cancelable;
 import pe.puyu.sweetprinterpos.services.printer.interfaces.Caughtable;
+import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -16,7 +17,7 @@ public class SerialStream extends PipedOutputStream implements Cancelable, Caugh
 
 	private final PipedInputStream pipedInputStream;
 	private final Thread threadPrint;
-	protected final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.puka.service.SerialPrinter");
+	protected final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("SerialStream"));
 
 	/*
 	 * portDescriptor example "com6"

@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class TestPanelController implements Initializable {
-	private final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.puka.views.testpanel");
+	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TestPanelController"));
 	private final TicketInfo ticketInfo = new TicketInfo();
 	private final PrinterConnection printerConnection = new PrinterConnection();
 

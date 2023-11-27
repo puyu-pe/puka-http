@@ -17,7 +17,7 @@ import pe.puyu.sweetprinterpos.model.UserConfig;
 
 import pe.puyu.sweetprinterpos.services.api.PrintServer;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
-import pe.puyu.sweetprinterpos.util.PukaAlerts;
+import pe.puyu.sweetprinterpos.util.AppAlerts;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 import pe.puyu.sweetprinterpos.validations.PosConfigValidator;
 
@@ -32,7 +32,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PosConfigController implements Initializable {
-	private final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.puka.views.userConfig");
+	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PosConfigController"));
 	private final UserConfig userConfig = new UserConfig();
 	private final PosConfig posConfig = new PosConfig();
 	private final SimpleIntegerProperty portNumberProperty = new SimpleIntegerProperty(7172);
@@ -70,12 +70,14 @@ public class PosConfigController implements Initializable {
 				PrintServer printServer = new PrintServer();
 				if(printServer.isRunningInOtherProcess()){
 					//Este error puede pasar si se borra la configuracion de PosConfig
-					//sin haber parado primero el servicio (TODO: realizar un request a stop-service api)
+					//sin haber parado primero el servicio .
+					//Tambien puede pasar si existen dos instancias de PrintServer en un mismo proceso
+					// (TODO: realizar un request a stop-service api)
 					throw new Exception("Whats!!! Print Server is already run on other process, STRANGE!!.");
 				}
 				printServer.listen(posConfig.getIp(), posConfig.getPort());
 			} else {
-				PukaAlerts.showWarning("Configuración invalida detectada.", String.join("\n", errors));
+				AppAlerts.showWarning("Configuración invalida detectada.", String.join("\n", errors));
 			}
 		} catch (Exception e) {
 			logger.error("Excepción fatal al aceptar los cambios formulario de configuración: {}", e.getMessage(), e);
@@ -84,7 +86,7 @@ public class PosConfigController implements Initializable {
 
 	@FXML
 	void onCancel() {
-		boolean result = PukaAlerts.showConfirmation("¿Seguro que deseas cancelar la configuración?",
+		boolean result = AppAlerts.showConfirmation("¿Seguro que deseas cancelar la configuración?",
 			"No se guardara la configuración y no se iniciara el servicio de impresion");
 		if (result)
 			System.exit(0);
@@ -138,7 +140,7 @@ public class PosConfigController implements Initializable {
 				}
 			}
 		} catch (IOException e) {
-			logger.error("Excepción al recuperar la configuración del ususario: {}", e.getMessage(), e);
+			logger.error("Excepción al recuperar la configuración del usuario: {}", e.getMessage(), e);
 		}
 	}
 
@@ -155,7 +157,7 @@ public class PosConfigController implements Initializable {
 		try {
 			JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
 		} catch (Exception e) {
-			logger.error("Excepción al persistir la información en el archivo de configuración de bifrost: {}",
+			logger.error("Excepción al persistir la información en el archivo de PosConfig: {}",
 				e.getMessage(),
 				e);
 		}

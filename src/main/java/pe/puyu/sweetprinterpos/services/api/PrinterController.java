@@ -7,11 +7,12 @@ import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.services.printer.SweetTicketPrinter;
+import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.util.LinkedList;
 
 public class PrinterController {
-	private static final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.sweetprinterpos.controller");
+	private static final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrinterController"));
 
 	public static void getAllPrinterSystem(Context ctx) {
 		var response = new ResponseApi<String[]>();

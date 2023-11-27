@@ -3,7 +3,7 @@ package pe.puyu.sweetprinterpos.util;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-public class PukaAlerts {
+public class AppAlerts {
 
   public static void showWarning(String headerText, String contentText) {
     Alert alert = new Alert(Alert.AlertType.WARNING);

@@ -18,7 +18,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 
 public class JsonUtil {
-  private static final Logger logger = (Logger) LoggerFactory.getLogger("pe.puyu.puka.util");
+  private static final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("util"));
 
   public static <T> void saveJson(String jsonFileDir, T beanSource) {
     Gson gson = FxGson.create();
@@ -26,7 +26,7 @@ public class JsonUtil {
       String jsonSource = gson.toJson(beanSource);
       writer.write(jsonSource);
     } catch (Exception e) {
-      logger.error("Excepción al guardar un json: {}", e.getMessage(), e);
+      logger.error("Exception on save json: {}", e.getMessage(), e);
     }
   }
 
@@ -36,7 +36,7 @@ public class JsonUtil {
       String jsonFromFile = new String(Files.readAllBytes(Paths.get(jsonFileDir)));
       return Optional.ofNullable(gson.fromJson(jsonFromFile, objectClass));
     } catch (Exception e) {
-      logger.error("Excepción al convertir un objeto a json: {}", e.getMessage(), e);
+      logger.error("Exception on convert json to object: {}", e.getMessage(), e);
       return Optional.empty();
     }
   }
