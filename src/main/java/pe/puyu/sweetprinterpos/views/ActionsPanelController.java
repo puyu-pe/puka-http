@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.Constants;
@@ -38,9 +39,20 @@ public class ActionsPanelController {
 	}
 
 	@FXML
+	void onHideWindow() {
+		this.getStage().close();
+	}
+
+	private Stage getStage() {
+		return (Stage) root.getScene().getWindow();
+	}
+
+	@FXML
 	private ImageView imgViewLogo;
 	@FXML
 	private Label lblQueueSize;
 	@FXML
 	private Label lblVersion;
+	@FXML
+	private GridPane root;
 }
