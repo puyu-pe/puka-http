@@ -36,9 +36,9 @@
             </Label>
          </children>
       </HBox>
-      <Button cancelButton="true" mnemonicParsing="false" text="OCULTAR" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Button cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="OCULTAR" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <padding>
-            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+            <Insets bottom="10.0" top="10.0" />
          </padding>
          <graphic>
             <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -47,6 +47,9 @@
                </image>
             </ImageView>
          </graphic>
+         <GridPane.margin>
+            <Insets left="100.0" right="100.0" />
+         </GridPane.margin>
       </Button>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1">
         <tabs>
@@ -65,9 +68,9 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="1">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#onReprint" text="REIMPRIMIR">
+                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onReprint" text="REIMPRIMIR" HBox.hgrow="ALWAYS">
                                  <padding>
-                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                    <Insets bottom="10.0" top="10.0" />
                                  </padding>
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -76,10 +79,13 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <HBox.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </HBox.margin>
                               </Button>
-                              <Button cancelButton="true" mnemonicParsing="false" onAction="#onRelease" text="LIBERAR">
+                              <Button cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRelease" text="LIBERAR" HBox.hgrow="ALWAYS">
                                  <padding>
-                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                    <Insets bottom="10.0" top="10.0" />
                                  </padding>
                                  <graphic>
                                     <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -88,12 +94,15 @@
                                        </image>
                                     </ImageView>
                                  </graphic>
+                                 <HBox.margin>
+                                    <Insets left="20.0" right="20.0" />
+                                 </HBox.margin>
                               </Button>
                            </children>
                         </HBox>
-                        <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onTestPrint" text="PRUEBAS DE IMPRESION" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                        <Button contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTestPrint" text="PRUEBAS DE IMPRESION" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                            <padding>
-                              <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                              <Insets bottom="10.0" top="10.0" />
                            </padding>
                            <graphic>
                               <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
@@ -102,6 +111,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <GridPane.margin>
+                              <Insets left="40.0" right="40.0" />
+                           </GridPane.margin>
                         </Button>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                            <children>

@@ -2,9 +2,6 @@ package pe.puyu.sweetprinterpos.app;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.Constants;
@@ -13,11 +10,11 @@ import pe.puyu.sweetprinterpos.services.api.PrintServer;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import pe.puyu.sweetprinterpos.util.AppUtil;
+import pe.puyu.sweetprinterpos.util.FxUtil;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
 import pe.puyu.sweetprinterpos.validations.PosConfigValidator;
 
 import java.util.LinkedList;
-import java.util.Objects;
 import java.util.Optional;
 
 public class App extends Application {
@@ -50,17 +47,13 @@ public class App extends Application {
 	}
 
 	private void showActionsPanel(Stage stage) throws Exception{
-		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.ACTIONS_PANEL_FXML)));
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
+		stage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
 		stage.setTitle("Panel de acciones SweetPrinterPOS");
 		stage.show();
 	}
 
 	private void showPosConfigPanel(Stage stage) throws Exception{
-		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.POS_CONFIG_FXML)));
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
+		stage.setScene(FxUtil.loadScene(Constants.POS_CONFIG_FXML));
 		stage.setTitle("Configuración SweetPrinterPOS");
 		stage.show();
 	}
