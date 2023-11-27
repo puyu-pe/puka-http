@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -13,149 +14,119 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-          prefHeight="564.0" prefWidth="780.0" stylesheets="@../styles/index.css"
-          xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="pe.puyu.sweetprinterpos.views.ActionPanelController">
-   <columnConstraints>
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
-      <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0"/>
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0"/>
-      <RowConstraints maxHeight="455.93431822459553" minHeight="10.0" prefHeight="438.97899595897053"/>
-      <RowConstraints maxHeight="58.844962755845586" minHeight="10.0" prefHeight="53.858085314439336"/>
-   </rowConstraints>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="886.0" stylesheets="@../styles/index.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.puyu.sweetprinterpos.views.ActionsPanelController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="80.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="SweetPrinterPOS - PUYU" />
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1">
+         <children>
+            <Label text="VERSION: " />
+            <Label fx:id="lblVersion" style="-fx-font-size: 20; -fx-font-weight: 800;" text="1.0.0">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <Button cancelButton="true" mnemonicParsing="false" text="OCULTAR" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+         <padding>
+            <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+         </padding>
+         <graphic>
+            <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/hide.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnSpan="2" GridPane.rowIndex="1">
+        <tabs>
+          <Tab text="IMPRESION">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="1">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onReprint" text="REIMPRIMIR">
+                                 <padding>
+                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../assets/retry.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button cancelButton="true" mnemonicParsing="false" onAction="#onRelease" text="LIBERAR">
+                                 <padding>
+                                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                                 </padding>
+                                 <graphic>
+                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../assets/clean.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <Button contentDisplay="RIGHT" mnemonicParsing="false" onAction="#onTestPrint" text="PRUEBAS DE IMPRESION" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                           </padding>
+                           <graphic>
+                              <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/printer.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                           <children>
+                              <Label style="-fx-font-size: 18;" text="ELEMENTOS EN COLA DE IMPRESION:" />
+                              <Label fx:id="lblQueueSize" style="-fx-font-size: 30; -fx-font-weight: 800;" text="0" />
+                           </children>
+                        </HBox>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowSpan="3">
+                           <children>
+                              <ImageView fx:id="imgViewLogo" fitHeight="319.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../assets/icon.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </VBox>
+                     </children>
+                  </GridPane>
+               </content>
+          </Tab>
+          <Tab text="ADMINISTRADOR" />
+        </tabs>
+      </TabPane>
+   </children>
    <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
-   <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-            minWidth="-Infinity" prefHeight="394.0" prefWidth="662.0" tabClosingPolicy="UNAVAILABLE"
-            GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-            GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-      <padding>
-         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
-      </padding>
-      <Tab text="Cola de impresion">
-         <GridPane>
-            <columnConstraints>
-               <ColumnConstraints hgrow="SOMETIMES" maxWidth="477.4140434983169" minWidth="10.0"
-                                  prefWidth="476.4166069748794"/>
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="349.7503472092544" minWidth="10.0"
-                                  prefWidth="235.05259330300441"/>
-            </columnConstraints>
-            <rowConstraints>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
-               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS"/>
-            </rowConstraints>
-            <Label text="Numero de tickets que no se imprimieron:">
-               <font>
-                  <Font name="System Bold" size="21.0"/>
-               </font>
-            </Label>
-            <Button fx:id="btnReprint" alignment="CENTER" contentDisplay="TEXT_ONLY" disable="true"
-                    mnemonicParsing="false" onAction="#onReprint" prefHeight="54.0" prefWidth="247.0"
-                    style="-fx-font-size: 24; -fx-text-fill: black;" text="RE-IMPRIMIR" textAlignment="CENTER"
-                    GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-                    GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-               <padding>
-                  <Insets bottom="15.0" left="30.0" right="30.0" top="15.0"/>
-               </padding>
-               <font>
-                  <Font name="System Bold" size="15.0"/>
-               </font>
-               <GridPane.margin>
-                  <Insets/>
-               </GridPane.margin>
-            </Button>
-            <Label fx:id="lblNumberItemsQueue" text="0" GridPane.columnIndex="1">
-               <font>
-                  <Font name="System Bold" size="39.0"/>
-               </font>
-            </Label>
-            <Button fx:id="btnRelease" disable="true" mnemonicParsing="false" onAction="#onReleaseQueue"
-                    style="-fx-font-size: 24; -fx-text-fill: black;" styleClass="btn-danger" text="LIBERAR"
-                    GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS"
-                    GridPane.rowIndex="1">
-               <padding>
-                  <Insets bottom="15.0" left="30.0" right="30.0" top="15.0"/>
-               </padding>
-            </Button>
-         </GridPane>
-      </Tab>
-      <Tab text="Perfil">
-         <GridPane>
-            <columnConstraints>
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0"
-                                  prefWidth="346.1223443657622"/>
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0"
-                                  prefWidth="129.6583254004198"/>
-               <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" minWidth="10.0"
-                                  prefWidth="202.4666433745075"/>
-            </columnConstraints>
-            <rowConstraints>
-               <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0"
-                               vgrow="ALWAYS"/>
-               <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0"
-                               vgrow="ALWAYS"/>
-               <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0"
-                               vgrow="ALWAYS"/>
-            </rowConstraints>
-            <padding>
-               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0"/>
-            </padding>
-            <VBox alignment="CENTER" prefHeight="365.0" prefWidth="342.0" GridPane.halignment="CENTER"
-                  GridPane.hgrow="ALWAYS" GridPane.rowSpan="3" GridPane.valignment="CENTER"
-                  GridPane.vgrow="ALWAYS">
-               <ImageView fx:id="imgLogo" fitHeight="244.0" fitWidth="289.0" pickOnBounds="true"
-                          preserveRatio="true" smooth="false" VBox.vgrow="ALWAYS"/>
-            </VBox>
-            <Label text="Ruc:" GridPane.columnIndex="1">
-               <font>
-                  <Font name="System Bold" size="23.0"/>
-               </font>
-            </Label>
-            <Label text="Sucursal:" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <font>
-                  <Font name="System Bold" size="25.0"/>
-               </font>
-            </Label>
-            <Label fx:id="lblRuc" text="12345678910" GridPane.columnIndex="2">
-               <font>
-                  <Font size="25.0"/>
-               </font>
-            </Label>
-            <Label fx:id="lblBranch" text="9" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <font>
-                  <Font size="25.0"/>
-               </font>
-            </Label>
-         </GridPane>
-      </Tab>
-   </TabPane>
-   <Label text="PUYU - PUKA"/>
-   <HBox alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="100.0" prefWidth="200.0" spacing="25.0"
-         GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS">
-      <Label text="version:" HBox.hgrow="ALWAYS">
-         <font>
-            <Font size="16.0"/>
-         </font>
-      </Label>
-      <Label fx:id="lblVersion" alignment="CENTER" text="0.1.0" textAlignment="CENTER" HBox.hgrow="ALWAYS">
-         <font>
-            <Font name="System Bold" size="15.0"/>
-         </font>
-      </Label>
-   </HBox>
-   <Button cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onHideWindow"
-           style="-fx-text-fill: black;" text="OCULTAR" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
-           GridPane.rowIndex="2">
-      <GridPane.margin>
-         <Insets left="50.0" right="50.0"/>
-      </GridPane.margin>
-      <padding>
-         <Insets bottom="10.0" top="10.0"/>
-      </padding>
-   </Button>
 </GridPane>

@@ -26,7 +26,7 @@ public class App extends Application {
 
 	@Override
 	public void init() {
-		rootLogger.setLevel(Level.TRACE);
+		rootLogger.setLevel(Level.INFO);
 	}
 
 	@Override
@@ -36,21 +36,33 @@ public class App extends Application {
 			if (posConfig.isPresent()) {
 				PrintServer server = new PrintServer();
 				if (server.isRunningInOtherProcess()) {
-					System.out.println("show actions panel here !!!");
+					showActionsPanel(stage);
 				} else {
 					server.listen(posConfig.get().getIp(), posConfig.get().getPort());
 				}
 			} else {
-				Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.POS_CONFIG_FXML)));
-				Scene scene = new Scene(root);
-				stage.setScene(scene);
-				stage.setTitle("Configuración SweetPrinterPOS");
-				stage.show();
+				showPosConfigPanel(stage);
 			}
 		} catch (Exception e) {
 			rootLogger.error("Exception on start App!!!, {}", e.getMessage(), e);
 			Platform.exit();
 		}
+	}
+
+	private void showActionsPanel(Stage stage) throws Exception{
+		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.ACTIONS_PANEL_FXML)));
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Panel de acciones SweetPrinterPOS");
+		stage.show();
+	}
+
+	private void showPosConfigPanel(Stage stage) throws Exception{
+		Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Constants.POS_CONFIG_FXML)));
+		Scene scene = new Scene(root);
+		stage.setScene(scene);
+		stage.setTitle("Configuración SweetPrinterPOS");
+		stage.show();
 	}
 
 	@Override
