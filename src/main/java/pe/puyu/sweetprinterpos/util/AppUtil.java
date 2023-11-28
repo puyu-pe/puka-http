@@ -54,6 +54,10 @@ public class AppUtil {
 		return getConfigFileDir("pos.json");
 	}
 
+	public static String getDatabaseDirectory() {
+		return getLockDirectory();
+	}
+
 	public static String getLogsDirectory() {
 		return Path.of(getTempDirectory(), "puyu").toString();
 	}
@@ -82,6 +86,7 @@ public class AppUtil {
 		return Optional.ofNullable(selectFile);
 	}
 
+
 	public static void toast(Stage stage, String text) {
 		Popup popup = new Popup();
 		Label message = new Label(text);
@@ -105,15 +110,20 @@ public class AppUtil {
 		}
 	}
 
-	public static String makeLockFile(String fileName){
-		String folderLockPath = Path.of(getUserDataDir(),".lock").toString();
+	public static String getLockDirectory() {
+		String folderLockPath = Path.of(getUserDataDir(), ".lock").toString();
 		var folderLock = new File(folderLockPath);
-		if(!folderLock.exists()){
+		if (!folderLock.exists()) {
 			var ignored = folderLock.mkdirs();
 		}
-		if(!fileName.startsWith("."))
+		return folderLockPath;
+	}
+
+	public static String makeLockFile(String fileName) {
+		String folderLockPath = getLockDirectory();
+		if (!fileName.startsWith("."))
 			fileName = "." + fileName;
-		File lockFile = new File(Path.of(folderLockPath,fileName).toString());
+		File lockFile = new File(Path.of(folderLockPath, fileName).toString());
 		return lockFile.getAbsolutePath();
 	}
 

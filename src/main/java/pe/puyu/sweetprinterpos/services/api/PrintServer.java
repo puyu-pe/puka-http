@@ -7,6 +7,7 @@ import io.javalin.http.Context;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import javafx.application.Platform;
 import org.slf4j.LoggerFactory;
+import pe.puyu.sweetprinterpos.repository.AppDatabase;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 import pe.puyu.sweetprinterpos.util.FileSystemLock;
 
@@ -17,11 +18,14 @@ public class PrintServer {
 	private final FileSystemLock lock;
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrintServer"));
 	private final PrinterApiController controller;
+	private final AppDatabase db;
 
 	public PrintServer() {
 		app = Javalin.create(this::serverConfig);
 		lock = new FileSystemLock(AppUtil.makeLockFile("lockPrintService"));
-		controller = new PrinterApiController();
+		db = new AppDatabase();
+		controller = new PrinterApiController(db);
+		Runtime.getRuntime().addShutdownHook(new Thread(db::close));
 	}
 
 	public boolean isRunningInOtherProcess() {
@@ -107,6 +111,7 @@ public class PrintServer {
 				Thread.sleep(100);
 				lock.unLock();
 				app.close();
+				db.close();
 				logger.info("close service.");
 				Platform.exit();
 			} catch (Exception e) {

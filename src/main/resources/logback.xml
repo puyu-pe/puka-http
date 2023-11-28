@@ -6,7 +6,6 @@
     <file>${LOG_DIR}/${LOG_FILE}.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/${LOG_FILE}.gz</fileNamePattern>
-      <fileNamePattern>${LOG_DIR}/%d{yyyy-MM-dd}/${LOG_FILE}.tar</fileNamePattern>
 
       <!-- Mantener el historial de 30 dias limitado a un tamaño de 3GB-->
       <maxHistory>7</maxHistory>

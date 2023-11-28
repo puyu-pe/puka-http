@@ -3,10 +3,12 @@ package pe.puyu.sweetprinterpos.services.api;
 import ch.qos.logback.classic.Logger;
 import com.github.anastaciocintra.output.PrinterOutputStream;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
-import pe.puyu.sweetprinterpos.repository.SqlLiteConnection;
+import pe.puyu.sweetprinterpos.repository.AppDatabase;
+import pe.puyu.sweetprinterpos.repository.TicketRepository;
 import pe.puyu.sweetprinterpos.services.printer.SweetTicketPrinter;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 
@@ -14,12 +16,12 @@ import java.util.LinkedList;
 
 public class PrinterApiController {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrinterApiController"));
-	private final SqlLiteConnection dbConnection;
+	private TicketRepository ticketRepository;
 
-	public PrinterApiController(){
-		dbConnection = new SqlLiteConnection();
-		Runtime.getRuntime().addShutdownHook(new Thread(dbConnection::close));
+	public PrinterApiController(AppDatabase db) {
+		db.getConnection().ifPresent(con -> ticketRepository = new TicketRepository(con));
 	}
+
 	public void getAllPrinterSystem(Context ctx) {
 		var response = new ResponseApi<String[]>();
 		response.setMessage("Datos recuperados exitosamente");
@@ -29,13 +31,14 @@ public class PrinterApiController {
 	}
 
 	public void printTickets(Context ctx) {
-		var response = new ResponseApi<>();
+		var response = new ResponseApi<Long>();
 		ctx.async(
 			10000,
 			() -> {
 				response.setStatus("error");
 				response.setMessage("Hubo un problema al imprimir ticktes.");
 				response.setError("Trabajo de impresion excedio el tiempo de espera.");
+				setResponseItemsQueue(response);
 				ctx.json(response);
 			},
 			() -> {
@@ -43,6 +46,7 @@ public class PrinterApiController {
 				printJob(tickets);
 				response.setStatus("success");
 				response.setMessage("Trabajo de impresión no lanzo ningun error.");
+				setResponseItemsQueue(response);
 				ctx.json(response);
 			}
 		);
@@ -53,31 +57,48 @@ public class PrinterApiController {
 			, e.getMessage()
 			, e.getCause()
 			, e.getLocalizedMessage());
-		var response = new ResponseApi<>();
+		var response = new ResponseApi<Long>();
 		response.setMessage("Ocurrio un error inesperado");
 		response.setError(e.getMessage());
 		response.setStatus("error");
+		setResponseItemsQueue(response);
 		ctx.json(response);
 	}
 
 	public void printJob(JsonArray tickets) {
-		var errors = new LinkedList<>();
+		var errors = new LinkedList<String>();
 		for (var ticket : tickets) {
 			try {
 				logger.trace("Ticket a imprimir: {}", ticket);
 				var sweetTicketPrinter = new SweetTicketPrinter(ticket.getAsJsonObject());
 				sweetTicketPrinter.setOnUncaughtException(e -> {
 					errors.add(e);
-					logger.warn("Error al imprimir un ticket: {}", e);
+					logger.warn("UncaughtException printJob: {}", e);
+					secureInsertTicket(ticket);
 				});
 				sweetTicketPrinter.printTicket();
 			} catch (Exception e) {
-				errors.add("Un ticket no se pudo imprimir razón: " + e.getCause());
+				errors.add(e.getMessage());
+				secureInsertTicket(ticket);
 				logger.error("Error al imprimir un ticket:  {}", e.getMessage());
 			}
 		}
-		if (!errors.isEmpty())
+		if (!errors.isEmpty()) {
 			throw new RuntimeException(errors.toString());
+		}
+	}
+
+	private void secureInsertTicket(JsonElement ticket) {
+		if (ticketRepository != null) {
+			ticketRepository.insert(ticket.getAsJsonObject().toString());
+		}
+	}
+
+	private void setResponseItemsQueue(ResponseApi<Long> response) {
+		if (ticketRepository != null)
+			response.setData(ticketRepository.countAll());
+		else
+			response.setData(0L);
 	}
 
 }
