@@ -123,6 +123,10 @@
     derive(button-secondary-color, -10%);
 }
 
+.button:cancel:hover {
+  -fx-background-color: rgb(255,0,0),
+  derive(rgb(245,92,81), -10%);
+}
 .btn-danger{
   -fx-background-insets: 0px, 2px;
   -fx-background-color: rgb(255,0,0),rgb(245,92,81)
