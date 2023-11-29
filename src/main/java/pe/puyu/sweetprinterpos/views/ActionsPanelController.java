@@ -26,6 +26,7 @@ public class ActionsPanelController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		lblVersion.setText(AppUtil.getAppVersion());
 		recoverLogo();
 	}
 
