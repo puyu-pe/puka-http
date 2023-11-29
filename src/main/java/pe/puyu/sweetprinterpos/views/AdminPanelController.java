@@ -1,6 +1,7 @@
 package pe.puyu.sweetprinterpos.views;
 
 import ch.qos.logback.classic.Logger;
+import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
@@ -21,6 +22,7 @@ import pe.puyu.sweetprinterpos.util.JsonUtil;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 public class AdminPanelController implements Initializable {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("AdminPanelController"));
@@ -61,37 +63,46 @@ public class AdminPanelController implements Initializable {
 
 	@FXML
 	void onStart() {
-		PrintServer server = new PrintServer();
-		try {
-			if (server.isRunningInOtherProcess()) {
-				throw new Exception("Server is already running in another process");
+		btnStart.setDisable(true);
+		CompletableFuture.runAsync(() -> {
+			PrintServer server = new PrintServer();
+			try {
+				if (server.isRunningInOtherProcess()) {
+					throw new Exception("Server is already running in another process");
+				}
+				server.listen(posConfig.getIp(), posConfig.getPort());
+				JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
+				Platform.runLater(() -> getStage().close());
+			} catch (Exception e) {
+				server.closeService();
+				logger.error("Exception on start server {}", e.getLocalizedMessage(), e);
+				Platform.runLater(() ->  btnStart.setDisable(false));
 			}
-			server.listen(posConfig.getIp(), posConfig.getPort());
-			JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
-			getStage().close();
-		} catch (Exception e) {
-			server.closeService();
-			logger.error("Exception on start server {}", e.getLocalizedMessage(), e);
-		}
+		});
 	}
 
 	@FXML
 	void onStop() {
-		try {
-			var url = baseUrl + "/stop-service";
-			var response = HttpUtil.get(url);
-			if (response.getStatus().equals("success")) {
-				txtIp.setDisable(false);
-				txtPort.setDisable(false);
-				btnStop.setDisable(true);
-				btnStart.setDisable(false);
-				cmbLevelLogs.setDisable(true);
-			} else {
-				logger.warn("{}: {}", response.getMessage(), response.getError());
+		btnStop.setDisable(true);
+		CompletableFuture.runAsync(() -> {
+			try {
+				var url = baseUrl + "/stop-service";
+				var response = HttpUtil.get(url);
+				if (response.getStatus().equals("success")) {
+					txtIp.setDisable(false);
+					txtPort.setDisable(false);
+					btnStop.setDisable(true);
+					btnStart.setDisable(false);
+					cmbLevelLogs.setDisable(true);
+				} else {
+					logger.warn("{}: {}", response.getMessage(), response.getError());
+					Platform.runLater(() -> btnStop.setDisable(false));
+				}
+			} catch (Exception e) {
+				logger.error("Exception on stop service: {}", e.getLocalizedMessage());
+				Platform.runLater(() -> btnStop.setDisable(false));
 			}
-		} catch (Exception e) {
-			logger.error("Exception on stop service: {}", e.getLocalizedMessage());
-		}
+		});
 	}
 
 	private void initCmbLevelLogs() {
