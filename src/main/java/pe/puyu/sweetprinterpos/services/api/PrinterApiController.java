@@ -52,6 +52,17 @@ public class PrinterApiController {
 		);
 	}
 
+	public void deleteTickets(Context ctx) {
+		var response = new ResponseApi<>();
+		if(!(ticketRepository == null)){
+			ticketRepository.deleteAll();
+			response.setData(ticketRepository.countAll());
+		}
+		response.setMessage("Se libero todos los tickets en memoria");
+		response.setStatus("success");
+		ctx.json(response);
+	}
+
 	public void genericErrorHandling(Exception e, Context ctx) {
 		logger.error("Error PrinterApiController, \nMESSAGE: {}.\nCAUSE: {}.\nLOCALIZED_MESSAGE: {}."
 			, e.getMessage()

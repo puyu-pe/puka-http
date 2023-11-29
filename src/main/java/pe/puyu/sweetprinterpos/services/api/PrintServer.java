@@ -77,6 +77,7 @@ public class PrintServer {
 					path("system", () -> get(controller::getAllPrinterSystem));
 					path("ticket", () -> {
 						post(controller::printTickets);
+						delete(controller::deleteTickets);
 					});
 				});
 				get("test-connection", (ctx) -> ctx.result("service online"));
