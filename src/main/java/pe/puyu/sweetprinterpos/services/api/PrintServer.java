@@ -76,6 +76,7 @@ public class PrintServer {
 				path("printer", () -> {
 					path("system", () -> get(controller::getAllPrinterSystem));
 					path("ticket", () -> {
+						path("reprint", () -> get(controller::reprintTickets));
 						post(controller::printTickets);
 						delete(controller::deleteTickets);
 					});

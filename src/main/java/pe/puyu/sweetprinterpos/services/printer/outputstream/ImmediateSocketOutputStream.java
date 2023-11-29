@@ -21,7 +21,7 @@ public class ImmediateSocketOutputStream extends OutputStream implements Cancela
 	private CompletableFuture<Void> connectAsync() {
 		return CompletableFuture.runAsync(() -> {
 			try {
-				this.socket.connect(address, 10000);
+				this.socket.connect(address, 15000);
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}

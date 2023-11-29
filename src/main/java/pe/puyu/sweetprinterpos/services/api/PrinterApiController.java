@@ -33,7 +33,7 @@ public class PrinterApiController {
 	public void printTickets(Context ctx) {
 		var response = new ResponseApi<Long>();
 		ctx.async(
-			10000,
+			15000,
 			() -> {
 				response.setStatus("error");
 				response.setMessage("Hubo un problema al imprimir ticktes.");
@@ -53,7 +53,7 @@ public class PrinterApiController {
 	}
 
 	public void deleteTickets(Context ctx) {
-		var response = new ResponseApi<>();
+		var response = new ResponseApi<Long>();
 		if(!(ticketRepository == null)){
 			ticketRepository.deleteAll();
 			response.setData(ticketRepository.countAll());
@@ -61,6 +61,35 @@ public class PrinterApiController {
 		response.setMessage("Se libero todos los tickets en memoria");
 		response.setStatus("success");
 		ctx.json(response);
+	}
+
+	public void reprintTickets(Context ctx) {
+		var response = new ResponseApi<Long>();
+		ctx.async(
+			20000,
+			() -> {
+				response.setStatus("error");
+				response.setMessage("Hubo un problema al reimprimir ticktes.");
+				response.setError("Trabajo de impresion excedio el tiempo de espera.");
+				setResponseItemsQueue(response);
+				ctx.json(response);
+			},
+			() -> {
+				if(ticketRepository != null){
+					var list = ticketRepository.getAll();
+					JsonArray tickets = new JsonArray();
+					for(var item : list){
+						tickets.add(JsonParser.parseString(item.getData()));
+					}
+					ticketRepository.deleteAll();
+					printJob(tickets);
+					response.setData(ticketRepository.countAll());
+				}
+				response.setMessage("La operacion se completo exitosamente");
+				response.setStatus("success");
+				ctx.json(response);
+			}
+		);
 	}
 
 	public void genericErrorHandling(Exception e, Context ctx) {
