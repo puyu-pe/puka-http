@@ -8,7 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
@@ -16,12 +15,14 @@ import pe.puyu.sweetprinterpos.Constants;
 import pe.puyu.sweetprinterpos.model.PosConfig;
 import pe.puyu.sweetprinterpos.model.UserConfig;
 import pe.puyu.sweetprinterpos.services.api.ResponseApi;
-import pe.puyu.sweetprinterpos.util.AppUtil;
-import pe.puyu.sweetprinterpos.util.FxUtil;
-import pe.puyu.sweetprinterpos.util.HttpUtil;
-import pe.puyu.sweetprinterpos.util.JsonUtil;
+import pe.puyu.sweetprinterpos.util.*;
 
+import javax.websocket.ContainerProvider;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
@@ -29,11 +30,14 @@ import java.util.concurrent.CompletableFuture;
 public class ActionsPanelController implements Initializable {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ActionsPanelController"));
 	private final String baseUrl;
+	private final PosConfig posConfig;
+	private WebSocketContainer container;
 
 	public ActionsPanelController() {
-		PosConfig posConfig = new PosConfig();
+		posConfig = new PosConfig();
 		posConfig.copyFrom(AppUtil.recoverPosConfig());
 		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
+		container = null;
 	}
 
 	@Override
@@ -106,6 +110,28 @@ public class ActionsPanelController implements Initializable {
 	@FXML
 	void onHideWindow() {
 		this.getStage().close();
+	}
+	@FXML
+	void onMouseEnteredWindow() {
+		if(container != null)
+			return;
+		try {
+			container = ContainerProvider.getWebSocketContainer();
+			String uri = String.format("ws://%s:%d/printer/ticket/queue/events", posConfig.getIp(), posConfig.getPort());
+			WebSocketClient client = new WebSocketClient("queue-events");
+			Session session = container.connectToServer(client, URI.create(uri));
+			client.setOnMessage(message -> Platform.runLater(() -> lblQueueSize.setText(message)));
+			Runnable closeSession = () -> {
+				try {
+					session.close();
+				} catch (IOException ignored) {
+				}
+			};
+			getStage().setOnCloseRequest((event) -> closeSession.run());
+			Runtime.getRuntime().addShutdownHook(new Thread(closeSession));
+		} catch (Exception e) {
+			logger.error("Exception on connectQueueEvents: {}", e.getMessage());
+		}
 	}
 
 	private String requestQueueSize() {

@@ -13,6 +13,7 @@ import pe.puyu.sweetprinterpos.repository.TicketRepository;
 import pe.puyu.sweetprinterpos.services.printer.SweetTicketPrinter;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 
@@ -59,7 +60,7 @@ public class PrinterApiController {
 		if (!(ticketRepository == null)) {
 			ticketRepository.deleteAll();
 			response.setData(ticketRepository.countAll());
-		}else{
+		} else {
 			response.setData(0);
 		}
 		response.setMessage("Se libero todos los tickets en memoria");
@@ -88,7 +89,7 @@ public class PrinterApiController {
 					ticketRepository.deleteAll();
 					printJob(tickets);
 					response.setData(ticketRepository.countAll());
-				}else{
+				} else {
 					response.setData(0);
 				}
 				response.setMessage("La operacion se completo exitosamente");
@@ -158,15 +159,17 @@ public class PrinterApiController {
 
 	public void getQueueEvents(WsConfig ws) {
 		ws.onConnect(ctx -> {
+			ctx.session.setIdleTimeout(Duration.ofDays(1));
 			Consumer<Integer> observer = (count) -> {
 				if (ticketRepository != null) {
 					ctx.send(count);
 				}
 			};
 			ticketRepository.addObserver(observer);
-
-			ws.onClose(closeCtx -> ticketRepository.removeObserver(observer));
-
+			ws.onClose(closeCtx -> {
+				logger.info("close ws connection, then remove observer ticketrepository.");
+				ticketRepository.removeObserver(observer);
+			});
 			ws.onError(ctxError -> logger.error("Exception on websockets connection", ctxError.error()));
 		});
 	}

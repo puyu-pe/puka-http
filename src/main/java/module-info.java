@@ -23,6 +23,7 @@ module pe.puyu.sweetprinterpos {
 
 	requires io.javalin;
 	requires java.net.http;
+	requires tyrus.standalone.client;
 	requires ormlite.jdbc;
 	requires java.sql;
 	requires com.h2database;
@@ -33,4 +34,5 @@ module pe.puyu.sweetprinterpos {
 
 	exports pe.puyu.sweetprinterpos.app;
 	exports pe.puyu.sweetprinterpos.repository.model;
+	exports pe.puyu.sweetprinterpos.util;
 }
