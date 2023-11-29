@@ -22,8 +22,10 @@ module pe.puyu.sweetprinterpos {
 	requires org.jetbrains.annotations;
 
 	requires io.javalin;
+	requires java.net.http;
 	requires ormlite.jdbc;
 	requires java.sql;
+	requires com.h2database;
 	opens pe.puyu.sweetprinterpos.repository.model to ormlite.jdbc;
 
 	opens pe.puyu.sweetprinterpos.views to javafx.fxml, javafx.graphics;

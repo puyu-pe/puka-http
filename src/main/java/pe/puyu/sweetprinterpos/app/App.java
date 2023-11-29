@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class App extends Application {
 	// Level error : TRACE DEBUG INFO WARN ERROR
-	private static final Logger rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
+	public static final Logger rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 
 	@Override
 	public void init() {
@@ -46,13 +46,13 @@ public class App extends Application {
 		}
 	}
 
-	private void showActionsPanel(Stage stage) throws Exception{
+	private void showActionsPanel(Stage stage) throws Exception {
 		stage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
 		stage.setTitle("Panel de acciones SweetPrinterPOS");
 		stage.show();
 	}
 
-	private void showPosConfigPanel(Stage stage) throws Exception{
+	private void showPosConfigPanel(Stage stage) throws Exception {
 		stage.setScene(FxUtil.loadScene(Constants.POS_CONFIG_FXML));
 		stage.setTitle("Configuración SweetPrinterPOS");
 		stage.show();

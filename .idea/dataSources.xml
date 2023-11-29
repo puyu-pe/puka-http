@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="pos" uuid="bdffdc49-07b0-43d4-a27e-9d3f8eebfa7a">
+    <data-source source="LOCAL" name="HOME_H2" uuid="bdffdc49-07b0-43d4-a27e-9d3f8eebfa7a">
       <driver-ref>h2.unified</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.h2.Driver</jdbc-driver>
-      <jdbc-url>jdbc:h2:file:$USER_HOME$/.local/share/SweetPrinterPos/.lock/pos</jdbc-url>
+      <jdbc-url>jdbc:h2:tcp://192.168.18.8:9092/file:$USER_HOME$/.local/share/SweetPrinterPos/.lock/db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

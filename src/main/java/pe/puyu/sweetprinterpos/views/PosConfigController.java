@@ -42,8 +42,8 @@ public class PosConfigController implements Initializable {
 		imgViewLogo.fitWidthProperty().bind(imgViewContainer.widthProperty());
 		imgViewLogo.fitHeightProperty().bind(imgViewContainer.heightProperty());
 		posConfig.ipProperty().bindBidirectional(txtIP.textProperty());
-		posConfig.passwordProperty().bindBidirectional(txtPassword.textProperty());
 		posConfig.portProperty().bindBidirectional(portNumberProperty);
+		posConfig.passwordProperty().bindBidirectional(txtPassword.textProperty());
 		txtPort.textProperty().addListener((observable, oldValue, newValue) -> {
 			try {
 				portNumberProperty.set(Integer.parseInt(newValue));
