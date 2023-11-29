@@ -149,10 +149,7 @@ public class TestPanelController implements Initializable {
 		if (event.getClickCount() == 1) {
 			String selectedItem = listViewServices.getSelectionModel().getSelectedItem();
 			if (selectedItem != null) {
-				Clipboard clipboard = Clipboard.getSystemClipboard();
-				ClipboardContent content = new ClipboardContent();
-				content.putString(selectedItem);
-				clipboard.setContent(content);
+				AppUtil.toClipboard(selectedItem);
 				AppUtil.toast(getStage(), String.format("Se copio %s", selectedItem));
 				txtNameSystem.setText(selectedItem);
 			}

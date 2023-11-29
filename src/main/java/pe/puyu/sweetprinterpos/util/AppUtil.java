@@ -3,6 +3,8 @@ package pe.puyu.sweetprinterpos.util;
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -16,6 +18,7 @@ import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 import pe.puyu.sweetprinterpos.Constants;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +58,7 @@ public class AppUtil {
 	}
 
 	public static String getDatabaseDirectory() {
-		return getLockDirectory();
+		return getLookDirectory();
 	}
 
 	public static String getLogsDirectory() {
@@ -110,7 +113,7 @@ public class AppUtil {
 		}
 	}
 
-	public static String getLockDirectory() {
+	public static String getLookDirectory() {
 		String folderLockPath = Path.of(getUserDataDir(), ".lock").toString();
 		var folderLock = new File(folderLockPath);
 		if (!folderLock.exists()) {
@@ -120,7 +123,7 @@ public class AppUtil {
 	}
 
 	public static String makeLockFile(String fileName) {
-		String folderLockPath = getLockDirectory();
+		String folderLockPath = getLookDirectory();
 		if (!fileName.startsWith("."))
 			fileName = "." + fileName;
 		File lockFile = new File(Path.of(folderLockPath, fileName).toString());
@@ -130,4 +133,30 @@ public class AppUtil {
 	public static String makeNamespaceLogs(String namespace) {
 		return Constants.PACKAGE_BASE_PATH + "." + namespace.toLowerCase();
 	}
+
+	public static void toClipboard(String text) {
+		Clipboard clipboard = Clipboard.getSystemClipboard();
+		ClipboardContent content = new ClipboardContent();
+		content.putString(text);
+		clipboard.setContent(content);
+	}
+
+	public static void openInNativeFileExplorer(String directory) {
+		try {
+			String os = System.getProperty("os.name").toLowerCase();
+			Runtime runtime = Runtime.getRuntime();
+			File dirToOpen = new File(directory);
+			if (os.contains("win")) {
+				runtime.exec("explorer.exe " + dirToOpen.getAbsolutePath());
+			} else if (os.contains("nix") || os.contains("nux")) {
+				runtime.exec("xdg-open " + dirToOpen.getAbsolutePath());
+			} else if (os.contains("mac")) {
+				runtime.exec("open " + dirToOpen.getAbsolutePath());
+			}
+		} catch (Exception ex) {
+			toClipboard(directory);
+		}
+	}
+
+
 }

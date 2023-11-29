@@ -50,13 +50,13 @@ public class AdminPanelController implements Initializable {
 	}
 
 	@FXML
-	void onConfiguration(ActionEvent event) {
-
+	void onConfiguration() {
+		AppUtil.openInNativeFileExplorer(AppUtil.getUserDataDir());
 	}
 
 	@FXML
-	void onLogs(ActionEvent event) {
-
+	void onLogs() {
+		AppUtil.openInNativeFileExplorer(AppUtil.getLogsDirectory());
 	}
 
 	@FXML
