@@ -43,6 +43,7 @@ public class App extends Application {
 		} catch (Exception e) {
 			rootLogger.error("Exception on start App!!!, {}", e.getMessage(), e);
 			Platform.exit();
+			System.exit(0);
 		}
 	}
 

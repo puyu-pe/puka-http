@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:h2:tcp://192.168.18.8:9092/file:$USER_HOME$/.local/share/SweetPrinterPos/.lock/db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="PUYU_H2" uuid="9a733272-f44f-472a-b59b-84500d1ca58a">
+      <driver-ref>h2.unified</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.h2.Driver</jdbc-driver>
+      <jdbc-url>jdbc:h2:tcp://192.168.1.52:9092/file:$USER_HOME$/.local/share/SweetPrinterPos/.lock/db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
+import io.javalin.websocket.WsConfig;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.repository.AppDatabase;
 import pe.puyu.sweetprinterpos.repository.TicketRepository;
@@ -13,6 +14,7 @@ import pe.puyu.sweetprinterpos.services.printer.SweetTicketPrinter;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 
 import java.util.LinkedList;
+import java.util.function.Consumer;
 
 public class PrinterApiController {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrinterApiController"));
@@ -31,7 +33,7 @@ public class PrinterApiController {
 	}
 
 	public void printTickets(Context ctx) {
-		var response = new ResponseApi<Long>();
+		var response = new ResponseApi<Integer>();
 		ctx.async(
 			15000,
 			() -> {
@@ -53,10 +55,12 @@ public class PrinterApiController {
 	}
 
 	public void deleteTickets(Context ctx) {
-		var response = new ResponseApi<Long>();
-		if(!(ticketRepository == null)){
+		var response = new ResponseApi<Integer>();
+		if (!(ticketRepository == null)) {
 			ticketRepository.deleteAll();
 			response.setData(ticketRepository.countAll());
+		}else{
+			response.setData(0);
 		}
 		response.setMessage("Se libero todos los tickets en memoria");
 		response.setStatus("success");
@@ -64,7 +68,7 @@ public class PrinterApiController {
 	}
 
 	public void reprintTickets(Context ctx) {
-		var response = new ResponseApi<Long>();
+		var response = new ResponseApi<Integer>();
 		ctx.async(
 			20000,
 			() -> {
@@ -75,15 +79,17 @@ public class PrinterApiController {
 				ctx.json(response);
 			},
 			() -> {
-				if(ticketRepository != null){
+				if (ticketRepository != null) {
 					var list = ticketRepository.getAll();
 					JsonArray tickets = new JsonArray();
-					for(var item : list){
+					for (var item : list) {
 						tickets.add(JsonParser.parseString(item.getData()));
 					}
 					ticketRepository.deleteAll();
 					printJob(tickets);
 					response.setData(ticketRepository.countAll());
+				}else{
+					response.setData(0);
 				}
 				response.setMessage("La operacion se completo exitosamente");
 				response.setStatus("success");
@@ -97,7 +103,7 @@ public class PrinterApiController {
 			, e.getMessage()
 			, e.getCause()
 			, e.getLocalizedMessage());
-		var response = new ResponseApi<Long>();
+		var response = new ResponseApi<Integer>();
 		response.setMessage("Ocurrio un error inesperado");
 		response.setError(e.getMessage());
 		response.setStatus("error");
@@ -134,12 +140,35 @@ public class PrinterApiController {
 		}
 	}
 
-	private void setResponseItemsQueue(ResponseApi<Long> response) {
+	private void setResponseItemsQueue(ResponseApi<Integer> response) {
 		if (ticketRepository != null)
 			response.setData(ticketRepository.countAll());
 		else
-			response.setData(0L);
+			response.setData(0);
 	}
 
+
+	public void getSizeQueue(Context ctx) {
+		var response = new ResponseApi<Integer>();
+		setResponseItemsQueue(response);
+		response.setMessage("Operacion completada exitosamente");
+		response.setStatus("success");
+		ctx.json(response);
+	}
+
+	public void getQueueEvents(WsConfig ws) {
+		ws.onConnect(ctx -> {
+			Consumer<Integer> observer = (count) -> {
+				if (ticketRepository != null) {
+					ctx.send(count);
+				}
+			};
+			ticketRepository.addObserver(observer);
+
+			ws.onClose(closeCtx -> ticketRepository.removeObserver(observer));
+
+			ws.onError(ctxError -> logger.error("Exception on websockets connection", ctxError.error()));
+		});
+	}
 }
 

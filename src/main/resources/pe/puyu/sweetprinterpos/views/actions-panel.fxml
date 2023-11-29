@@ -68,7 +68,7 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.rowIndex="1">
                            <children>
-                              <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onReprint" text="REIMPRIMIR" HBox.hgrow="ALWAYS">
+                              <Button fx:id="btnReprint" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onReprint" text="REIMPRIMIR" HBox.hgrow="ALWAYS">
                                  <padding>
                                     <Insets bottom="10.0" top="10.0" />
                                  </padding>
@@ -83,7 +83,7 @@
                                     <Insets left="20.0" right="20.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRelease" text="LIBERAR" HBox.hgrow="ALWAYS">
+                              <Button fx:id="btnRelease" cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onRelease" text="LIBERAR" HBox.hgrow="ALWAYS">
                                  <padding>
                                     <Insets bottom="10.0" top="10.0" />
                                  </padding>

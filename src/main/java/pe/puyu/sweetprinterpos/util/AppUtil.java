@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 import pe.puyu.sweetprinterpos.Constants;
+import pe.puyu.sweetprinterpos.model.PosConfig;
 
 import java.awt.*;
 import java.io.BufferedReader;
@@ -139,6 +140,19 @@ public class AppUtil {
 		ClipboardContent content = new ClipboardContent();
 		content.putString(text);
 		clipboard.setContent(content);
+	}
+
+	public static PosConfig recoverPosConfig(){
+		PosConfig config = new PosConfig();
+		config.setIp(AppUtil.getHostIp());
+		config.setPort(8175);
+		config.setPassword("semiotica");
+		try {
+			var configOpt = JsonUtil.convertFromJson(AppUtil.getPosConfigFileDir(), PosConfig.class);
+			return configOpt.orElse(config);
+		} catch (Exception e) {
+			return config;
+		}
 	}
 
 	public static void openInNativeFileExplorer(String directory) {

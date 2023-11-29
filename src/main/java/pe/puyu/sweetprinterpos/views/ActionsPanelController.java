@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,32 +13,74 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.sweetprinterpos.Constants;
+import pe.puyu.sweetprinterpos.model.PosConfig;
 import pe.puyu.sweetprinterpos.model.UserConfig;
+import pe.puyu.sweetprinterpos.services.api.ResponseApi;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 import pe.puyu.sweetprinterpos.util.FxUtil;
+import pe.puyu.sweetprinterpos.util.HttpUtil;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 public class ActionsPanelController implements Initializable {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ActionsPanelController"));
+	private final String baseUrl;
+
+	public ActionsPanelController() {
+		PosConfig posConfig = new PosConfig();
+		posConfig.copyFrom(AppUtil.recoverPosConfig());
+		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		lblVersion.setText(AppUtil.getAppVersion());
+		lblQueueSize.setText(requestQueueSize());
 		recoverLogo();
 	}
 
 	@FXML
 	void onRelease() {
-
+		btnRelease.setDisable(true);
+		btnReprint.setDisable(true);
+		CompletableFuture.runAsync(() -> {
+			try {
+				var url = baseUrl + "/printer/ticket";
+				ResponseApi<Double> response = HttpUtil.delete(url);
+				Platform.runLater(() -> lblQueueSize.setText(String.valueOf(Math.round(response.getData()))));
+			} catch (Exception e) {
+				logger.error("Exception on release queue: {}", e.getMessage());
+			} finally {
+				Platform.runLater(() -> {
+					btnRelease.setDisable(false);
+					btnReprint.setDisable(false);
+				});
+			}
+		});
 	}
 
 	@FXML
 	void onReprint() {
-
+		btnRelease.setDisable(true);
+		btnReprint.setDisable(true);
+		CompletableFuture.runAsync(() -> {
+			try {
+				var url = baseUrl + "/printer/ticket/reprint";
+				ResponseApi<Double> response = HttpUtil.get(url);
+				Platform.runLater(() -> lblQueueSize.setText(String.valueOf(Math.round(response.getData()))));
+			} catch (Exception e) {
+				logger.error("Exception on reprint queue: {}", e.getMessage());
+			} finally {
+				Platform.runLater(() -> {
+					btnRelease.setDisable(false);
+					btnReprint.setDisable(false);
+				});
+			}
+		});
 	}
 
 	@FXML
@@ -63,6 +106,17 @@ public class ActionsPanelController implements Initializable {
 	@FXML
 	void onHideWindow() {
 		this.getStage().close();
+	}
+
+	private String requestQueueSize() {
+		try {
+			var url = baseUrl + "/printer/ticket/queue";
+			ResponseApi<Double> response = HttpUtil.get(url);
+			return String.valueOf(Math.round(response.getData()));
+		} catch (Exception e) {
+			logger.error("Exception at request queue size: {}", e.getLocalizedMessage());
+			return "0";
+		}
 	}
 
 	private void recoverLogo() {
@@ -92,5 +146,8 @@ public class ActionsPanelController implements Initializable {
 	private Label lblVersion;
 	@FXML
 	private GridPane root;
-
+	@FXML
+	private Button btnRelease;
+	@FXML
+	private Button btnReprint;
 }

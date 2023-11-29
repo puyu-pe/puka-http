@@ -77,6 +77,10 @@ public class PrintServer {
 					path("system", () -> get(controller::getAllPrinterSystem));
 					path("ticket", () -> {
 						path("reprint", () -> get(controller::reprintTickets));
+						path("queue", () -> {
+							get(controller::getSizeQueue);
+							ws("events", controller::getQueueEvents);
+						});
 						post(controller::printTickets);
 						delete(controller::deleteTickets);
 					});

@@ -44,7 +44,7 @@ public class AdminPanelController implements Initializable {
 			}
 		});
 		portNumberProperty.addListener((observable, oldValue, newValue) -> txtPort.setText(newValue.toString()));
-		posConfig.copyFrom(recoverPosConfig());
+		posConfig.copyFrom(AppUtil.recoverPosConfig());
 		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
 		initCmbLevelLogs();
 	}
@@ -114,25 +114,6 @@ public class AdminPanelController implements Initializable {
 			logger.info("Update Log Level into server to {}", response.getData());
 		} catch (Exception e) {
 			logger.error("Exception at change log level: {}", e.getLocalizedMessage());
-		}
-	}
-
-	private PosConfig recoverPosConfig() {
-		PosConfig config = new PosConfig();
-		config.setIp(AppUtil.getHostIp());
-		config.setPort(7172);
-		config.setPassword("semiotica");
-		try {
-			var configOpt = JsonUtil.convertFromJson(AppUtil.getPosConfigFileDir(), PosConfig.class);
-			if (configOpt.isEmpty()) {
-				logger.warn("Not found pos Config, posConfig set default values.");
-				return config;
-			} else {
-				return configOpt.get();
-			}
-		} catch (Exception e) {
-			logger.error("Exception at get PosConfig AdminPanelController {}", e.getLocalizedMessage(), e);
-			return config;
 		}
 	}
 

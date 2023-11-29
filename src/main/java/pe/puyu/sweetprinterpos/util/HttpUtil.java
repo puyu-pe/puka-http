@@ -33,4 +33,16 @@ public class HttpUtil {
 		FxGsonMapper mapper = new FxGsonMapper();
 		return mapper.fromJsonString(response.body(), ResponseApi.class);
 	}
+
+	public static <DataType> ResponseApi<DataType> delete(String endpoint) throws Exception {
+		HttpClient client = HttpClient.newHttpClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create(endpoint))
+			.DELETE()
+			.build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		FxGsonMapper mapper = new FxGsonMapper();
+		return mapper.fromJsonString(response.body(), ResponseApi.class);
+	}
+
 }
