@@ -64,6 +64,7 @@
                   </HBox>
                </children>
             </HBox>
+            <Label fx:id="lblError" maxWidth="1.7976931348623157E308" style="-fx-text-fill: red;" wrapText="true" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
       <HBox alignment="CENTER" prefHeight="189.0" prefWidth="684.0" spacing="20.0" GridPane.columnSpan="2" GridPane.rowIndex="1">

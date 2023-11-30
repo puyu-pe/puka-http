@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ import pe.puyu.sweetprinterpos.services.api.ResponseApi;
 import pe.puyu.sweetprinterpos.util.AppUtil;
 import pe.puyu.sweetprinterpos.util.HttpUtil;
 import pe.puyu.sweetprinterpos.util.JsonUtil;
+import pe.puyu.sweetprinterpos.validations.PosConfigValidator;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -41,7 +43,7 @@ public class AdminPanelController implements Initializable {
 		txtPort.textProperty().addListener((observable, oldValue, newValue) -> {
 			try {
 				portNumberProperty.set(Integer.parseInt(newValue));
-			} catch (NumberFormatException e) {
+			} catch (Exception e) {
 				portNumberProperty.set(posConfig.getPort());
 			}
 		});
@@ -70,13 +72,20 @@ public class AdminPanelController implements Initializable {
 				if (server.isRunningInOtherProcess()) {
 					throw new Exception("Server is already running in another process");
 				}
-				server.listen(posConfig.getIp(), posConfig.getPort());
+				var errors = PosConfigValidator.validateIp(txtIp.getText());
+				errors.addAll(PosConfigValidator.validatePort(txtPort.getText()));
+				if(!errors.isEmpty())
+						throw new Exception(errors.toString());
+				server.listen(txtIp.getText(), Integer.parseInt(txtPort.getText()));
 				JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
 				Platform.runLater(() -> getStage().close());
 			} catch (Exception e) {
 				server.closeService();
 				logger.error("Exception on start server {}", e.getLocalizedMessage(), e);
-				Platform.runLater(() ->  btnStart.setDisable(false));
+				Platform.runLater(() ->  {
+					btnStart.setDisable(false);
+					lblError.setText(e.getLocalizedMessage());
+				} );
 			}
 		});
 	}
@@ -89,18 +98,26 @@ public class AdminPanelController implements Initializable {
 				var url = baseUrl + "/stop-service";
 				var response = HttpUtil.get(url);
 				if (response.getStatus().equals("success")) {
-					txtIp.setDisable(false);
-					txtPort.setDisable(false);
-					btnStop.setDisable(true);
-					btnStart.setDisable(false);
-					cmbLevelLogs.setDisable(true);
+					Platform.runLater(() -> {
+						txtIp.setDisable(false);
+						txtPort.setDisable(false);
+						btnStop.setDisable(true);
+						btnStart.setDisable(false);
+						cmbLevelLogs.setDisable(true);
+					});
 				} else {
 					logger.warn("{}: {}", response.getMessage(), response.getError());
-					Platform.runLater(() -> btnStop.setDisable(false));
+					Platform.runLater(() -> {
+						btnStop.setDisable(false);
+						lblError.setText(response.getError());
+					});
 				}
 			} catch (Exception e) {
 				logger.error("Exception on stop service: {}", e.getLocalizedMessage());
-				Platform.runLater(() -> btnStop.setDisable(false));
+				Platform.runLater(() -> {
+					btnStop.setDisable(false);
+					lblError.setText(e.getLocalizedMessage());
+				});
 			}
 		});
 	}
@@ -150,4 +167,6 @@ public class AdminPanelController implements Initializable {
 	@FXML
 	private TextField txtPort;
 
+	@FXML
+	private Label lblError;
 }
