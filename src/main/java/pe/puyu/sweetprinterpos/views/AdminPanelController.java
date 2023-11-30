@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Logger;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

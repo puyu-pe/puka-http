@@ -10,8 +10,6 @@ import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
@@ -28,6 +26,7 @@ import pe.puyu.sweetprinterpos.util.AppUtil;
 import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 public class TestPanelController implements Initializable {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TestPanelController"));
@@ -80,7 +79,9 @@ public class TestPanelController implements Initializable {
 
 	@FXML
 	void onClickBtnTest() {
-		Platform.runLater(() -> {
+		btnTest.setDisable(true);
+		btnPrint.setDisable(true);
+		CompletableFuture.runAsync(() -> {
 			var name_system = printerConnection.getName_system();
 			var port = printerConnection.getPort();
 			var type = printerConnection.getType();
@@ -105,10 +106,15 @@ public class TestPanelController implements Initializable {
 				escpos.feed(4);
 				escpos.cut(CutMode.PART);
 				outputStream.write(buffer.toByteArray());
-				showMessageAreaError("La prueba no lanzo ninguna excepcion.", "info");
+				Platform.runLater(() -> showMessageAreaError("La prueba no lanzo ninguna excepcion.", "info"));
 			} catch (Exception e) {
-				showMessageAreaError(String.format("Fallo la prueba: %s", e.getMessage()), "error");
+				Platform.runLater(() -> showMessageAreaError(String.format("Fallo la prueba: %s", e.getMessage()), "error"));
 				logger.error("Ocurrio una excepcion al realizar el test basico: {}", e.getMessage(), e);
+			} finally {
+				Platform.runLater(() -> {
+					btnPrint.setDisable(false);
+					btnTest.setDisable(false);
+				});
 			}
 		});
 	}
@@ -120,7 +126,9 @@ public class TestPanelController implements Initializable {
 
 	@FXML
 	void onClickBtnPrint() {
-		Platform.runLater(() -> {
+		btnTest.setDisable(true);
+		btnPrint.setDisable(true);
+		CompletableFuture.runAsync(() -> {
 			try {
 				var ticket = PrintTestService.getTicketByTypeDocument(cmbTypeDocument.getValue());
 				var printer = JsonUtil.toJSONObject(printerConnection);
@@ -136,10 +144,15 @@ public class TestPanelController implements Initializable {
 				var sweetTicketPrinter = new SweetTicketPrinter(ticket);
 				sweetTicketPrinter.setOnUncaughtException(error -> showMessageAreaError(error, "error"));
 				sweetTicketPrinter.printTicket();
-				showMessageAreaError("La prueba no lanzo una excepcion.", "info");
+				Platform.runLater(() -> showMessageAreaError("La prueba no lanzo una excepcion.", "info"));
 			} catch (Exception e) {
-				showMessageAreaError(e.getMessage(), "error");
+				Platform.runLater(() -> showMessageAreaError(e.getMessage(), "error"));
 				logger.error("Excepcion al imprimir, pruebas avanzadas: {}", e.getMessage(), e);
+			} finally {
+				Platform.runLater(() -> {
+					btnTest.setDisable(false);
+					btnPrint.setDisable(false);
+				});
 			}
 		});
 	}
@@ -257,4 +270,11 @@ public class TestPanelController implements Initializable {
 
 	@FXML
 	private TextField txtFontSizeCommand;
+
+	@FXML
+	private Button btnPrint;
+
+	@FXML
+	private Button btnTest;
+
 }
