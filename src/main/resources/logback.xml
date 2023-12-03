@@ -1,5 +1,5 @@
 <configuration debug="false">
-  <property name="LOG_FILE" value="puka" />
+  <property name="LOG_FILE" value="sweetprinterpos" />
   <property name="LOG_DIR" value="${java.io.tmpdir}/puyu" />
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">

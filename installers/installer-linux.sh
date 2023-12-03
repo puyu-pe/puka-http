@@ -43,7 +43,7 @@ detected_modules=`$JAVA_HOME/bin/jdeps \
   --ignore-missing-deps \
   --print-module-deps \
   --class-path "target/installer/input/libs/*" \
-    target/classes/pe/puyu/pukafx/app/App.class`
+    target/classes/pe/puyu/sweetprinterpos/app/App.class`
 echo "detected modules: ${detected_modules}"
 
 
@@ -89,11 +89,11 @@ $JAVA_HOME/bin/jpackage \
 --dest target/installer \
 --input target/installer/input/libs \
 --name PUKA \
---main-class pe.puyu.pukafx.AppLauncher \
+--main-class pe.puyu.sweetprinterpos.AppLauncher \
 --main-jar ${MAIN_JAR} \
 --java-options -Xmx2048m \
 --runtime-image target/java-runtime \
---icon src/main/resources/pe/puyu/pukafx/assets/icon.png \
+--icon src/main/resources/pe/puyu/sweetprinterpos/assets/icon.png \
 --app-version ${APP_VERSION} \
 --vendor "PUYU SRL." \
 --copyright "Copyright © 2023 PUYU SRL."
