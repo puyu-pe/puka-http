@@ -21,7 +21,7 @@ rem por el script. Lo mas probable es que este comando este en el archivo README
 
 rem MAIN_JAR depende de PROJECT_VERSION y tiene que ser el jar que se encuentra en el la carpeta target
 rem este jar es generado automaticamente por el maven-dependency-plugin , (vea pom.xml)
-set MAIN_JAR="PukaFX-%PROJECT_VERSION%.jar"
+set MAIN_JAR="SweetPrinterPOS-%PROJECT_VERSION%.jar"
 
 rem INSTALLER_TYPE Se puede establecer los siguiente "app-image", "exe", "msi"
 rem Solo se probaron "exe" y "msi". En cambio "app-image", no funciono en la maquina del autor
@@ -50,7 +50,7 @@ echo detecting required modules
   --multi-release %JAVA_VERSION% ^
   --ignore-missing-deps ^
   --class-path "target\installer\input\libs\*" ^
-  --print-module-deps target/classes/pe/puyu/pukafx/app/App.class > temp.txt
+  --print-module-deps target/classes/pe/puyu/sweetprinterpos/app/App.class > temp.txt
 
 set /p detected_modules=<temp.txt
 
@@ -106,12 +106,12 @@ call "%JAVA_HOME%\bin\jpackage" ^
   --type %INSTALLER_TYPE% ^
   --dest target/installer ^
   --input target/installer/input/libs ^
-  --name PUKA ^
-  --main-class pe.puyu.pukafx.AppLauncher ^
+  --name SweetPrinterPOS ^
+  --main-class pe.puyu.sweetprinterpos.AppLauncher ^
   --main-jar %MAIN_JAR% ^
   --java-options -Xmx2048m ^
   --runtime-image target/java-runtime ^
-  --icon src/main/resources/pe/puyu/pukafx/assets/icon.ico ^
+  --icon src/main/resources/pe/puyu/sweetprinterpos/assets/icon.ico ^
   --app-version %APP_VERSION% ^
   --vendor "PUKA SRL." ^
   --copyright "Copyright © 2023 PUYU SRL." ^
