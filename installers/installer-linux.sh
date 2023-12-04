@@ -9,7 +9,7 @@
 # APP_VERSION: the application version, e.g. 1.0.0, shown in "about" dialog
 
 # export $(cat .env | xargs)
-MAIN_JAR="PukaFX-${PROJECT_VERSION}.jar"
+MAIN_JAR="SweetPrinterPOS-${PROJECT_VERSION}.jar"
 
 # Set desired installer type: "app-image", "rpm" or "deb".
 INSTALLER_TYPE=${INSTALLER_TYPE}
