@@ -15,7 +15,7 @@ Utilidad de servicio de impresión, para puntos de venta.
   - src (Código fuente)
     - main
       - java
-        - pe.puyu.sweetprinterpos
+        - pe.puyu.pukahttp
           - app (Clase Aplicacion JavaFX)
           - model (JavaFX beans)
           - services (Servicios en puka)
@@ -28,7 +28,7 @@ Utilidad de servicio de impresión, para puntos de venta.
           - views (Controladores JavaFX)
           - AppLauncher.java (Clase principal)
       - resources
-        - pe.puyu.sweetprinterpos
+        - pe.puyu.pukahttp
           - assets (Iconos)
           - fonts (Fuentes de texto)
           - styles (Estilos css javafx)

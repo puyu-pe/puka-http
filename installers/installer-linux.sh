@@ -9,7 +9,7 @@
 # APP_VERSION: the application version, e.g. 1.0.0, shown in "about" dialog
 
 # export $(cat .env | xargs)
-MAIN_JAR="SweetPrinterPOS-${PROJECT_VERSION}.jar"
+MAIN_JAR="${APP_NAME}-${PROJECT_VERSION}.jar"
 
 # Set desired installer type: "app-image", "rpm" or "deb".
 INSTALLER_TYPE=${INSTALLER_TYPE}
@@ -43,7 +43,7 @@ detected_modules=`$JAVA_HOME/bin/jdeps \
   --ignore-missing-deps \
   --print-module-deps \
   --class-path "target/installer/input/libs/*" \
-    target/classes/pe/puyu/sweetprinterpos/app/App.class`
+    target/classes/pe/puyu/pukahttp/app/App.class`
 echo "detected modules: ${detected_modules}"
 
 
@@ -88,12 +88,12 @@ $JAVA_HOME/bin/jpackage \
 --type $INSTALLER_TYPE \
 --dest target/installer \
 --input target/installer/input/libs \
---name PUKA \
---main-class pe.puyu.sweetprinterpos.AppLauncher \
+--name $APP_NAME \
+--main-class pe.puyu.pukahttp.AppLauncher \
 --main-jar ${MAIN_JAR} \
 --java-options -Xmx2048m \
 --runtime-image target/java-runtime \
---icon src/main/resources/pe/puyu/sweetprinterpos/assets/icon.png \
+--icon src/main/resources/pe/puyu/pukahttp/assets/icon.png \
 --app-version ${APP_VERSION} \
 --vendor "PUYU SRL." \
 --copyright "Copyright © 2023 PUYU SRL."

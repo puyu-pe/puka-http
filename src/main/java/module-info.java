@@ -1,4 +1,4 @@
-module pe.puyu.sweetprinterpos {
+module pe.puyu.pukahttp {
 	requires transitive javafx.graphics;
 	requires javafx.controls;
 	requires javafx.fxml;
@@ -11,8 +11,8 @@ module pe.puyu.sweetprinterpos {
 
 	requires com.google.gson;
 	requires org.hildan.fxgson;
-	opens pe.puyu.sweetprinterpos.model to com.google.gson, org.hildan.fxgson;
-	opens pe.puyu.sweetprinterpos.services.api to com.google.gson, org.hildan.fxgson;
+	opens pe.puyu.pukahttp.model to com.google.gson, org.hildan.fxgson;
+	opens pe.puyu.pukahttp.services.api to com.google.gson, org.hildan.fxgson;
 
 	requires net.harawata.appdirs;
 
@@ -27,12 +27,12 @@ module pe.puyu.sweetprinterpos {
 	requires ormlite.jdbc;
 	requires java.sql;
 	requires com.h2database;
-	opens pe.puyu.sweetprinterpos.repository.model to ormlite.jdbc;
+	opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
 
-	opens pe.puyu.sweetprinterpos.views to javafx.fxml, javafx.graphics;
-	opens pe.puyu.sweetprinterpos.app to javafx.fxml, javafx.graphics;
+	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
+	opens pe.puyu.pukahttp.app to javafx.fxml, javafx.graphics;
 
-	exports pe.puyu.sweetprinterpos.app;
-	exports pe.puyu.sweetprinterpos.repository.model;
-	exports pe.puyu.sweetprinterpos.util;
+	exports pe.puyu.pukahttp.app;
+	exports pe.puyu.pukahttp.repository.model;
+	exports pe.puyu.pukahttp.util;
 }
