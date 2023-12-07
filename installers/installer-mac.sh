@@ -5,7 +5,8 @@ INSTALLER_TYPE=dmg
 JAVA_VERSION=21
 PROJECT_VERSION=1.0.0
 APP_VERSION=1.0.0
-MAIN_JAR="SweetPrinterPOS-$PROJECT_VERSION.jar"
+APP_NAME=PukaHTTP
+MAIN_JAR="$APP_NAME-$PROJECT_VERSION.jar"
 
 echo "java home: $JAVA_HOME"
 echo "project version: $PROJECT_VERSION"
@@ -36,7 +37,7 @@ detected_modules=`$JAVA_HOME/bin/jdeps \
   --ignore-missing-deps \
   --print-module-deps \
   --class-path "target/installer/input/libs/*" \
-    target/classes/pe/puyu/sweetprinterpos/app/App.class`
+    target/classes/pe/puyu/pukahttp/app/App.class`
 echo "detected modules: ${detected_modules}"
 
 
@@ -80,14 +81,14 @@ $JAVA_HOME/bin/jpackage \
 --type $INSTALLER_TYPE \
 --dest target/installer \
 --input target/installer/input/libs \
---name PUKA \
---main-class pe.puyu.sweetprinterpos.AppLauncher \
+--name $APP_NAME \
+--main-class pe.puyu.pukahttp.AppLauncher \
 --main-jar ${MAIN_JAR} \
 --java-options -Xmx2048m \
 --runtime-image target/java-runtime \
---icon src/main/resources/pe/puyu/sweetprinterpos/assets/icon.icns \
+--icon src/main/resources/pe/puyu/pukahttp/assets/icon.icns \
 --app-version ${APP_VERSION} \
 --vendor "PUYU SRL." \
 --copyright "Copyright © 2023 PUYU SRL." \
---mac-package-identifier pe.puyu.sweetprinterpos \
---mac-package-name SweetPrinterPOS
+--mac-package-identifier pe.puyu.pukahttp \
+--mac-package-name $APP_NAME

@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>pe.puyu</groupId>
-  <artifactId>SweetPrinterPOS</artifactId>
+  <artifactId>PukaHTTP</artifactId>
   <version>1.0.0</version>
-  <name>SweetPrinterPOS</name>
-  <url>https://github.com/OscarDevCPP/SweetPrinterPOS</url>
+  <name>PukaHTTP</name>
+  <url>https://github.com/puyu-pe/puka-http</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -153,7 +153,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>pe.puyu.sweetprinterpos/pe.puyu.sweetprinterpos.app.App</mainClass>
+              <mainClass>pe.puyu.pukahttp/pe.puyu.pukahttp.app.App</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>
