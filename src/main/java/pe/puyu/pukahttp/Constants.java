@@ -1,6 +1,7 @@
 package pe.puyu.pukahttp;
 
 public class Constants {
+	public static final String APP_NAME = "PukaHTTP";
 	public static final String FXML_PATH_BASE = "/pe/puyu/pukahttp/views";
 	public static final String PACKAGE_BASE_PATH = "pe.puyu.pukahttp";
 	public static final String POS_CONFIG_FXML = FXML_PATH_BASE + "/pos-config.fxml";
