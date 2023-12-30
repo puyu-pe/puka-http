@@ -27,7 +27,7 @@ public class SweetTicketPrinter {
 	public void printTicket() throws Exception {
 		try (OutputStream outputStream = getOutputStreamByPrinterType()) {
 			loadMetadata();
-			outputStream.write(new SweetTicketDesign(ticket.toString()).getBytes());
+			outputStream.write(new SweetTicketDesign(ticket).getBytes());
 		}
 	}
 
