@@ -43,3 +43,4 @@ build/
 
 ### others ###
 .env
+pukahttp_db/

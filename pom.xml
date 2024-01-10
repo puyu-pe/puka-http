@@ -6,7 +6,7 @@
 
   <groupId>pe.puyu</groupId>
   <artifactId>PukaHTTP</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
   <name>PukaHTTP</name>
   <url>https://github.com/puyu-pe/puka-http</url>
 
@@ -33,12 +33,12 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-core</artifactId>
-      <version>1.4.11</version>
+      <version>1.4.12</version>
     </dependency>
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.4.11</version>
+      <version>1.4.12</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -58,7 +58,7 @@
     <dependency>
       <groupId>pe.puyu</groupId>
       <artifactId>JTicketDesing</artifactId>
-      <version>0.3.0</version>
+      <version>0.4.0</version>
     </dependency>
     <dependency>
       <groupId>com.fazecast</groupId>

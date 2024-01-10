@@ -75,6 +75,7 @@ public class PrintServer {
 		app.routes(() -> {
 				path("printer", () -> {
 					path("system", () -> get(controller::getAllPrinterSystem));
+					path("open-drawer", () -> post(controller::openDrawer));
 					path("ticket", () -> {
 						path("reprint", () -> get(controller::reprintTickets));
 						path("queue", () -> {

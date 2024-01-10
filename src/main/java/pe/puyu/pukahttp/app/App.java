@@ -49,13 +49,13 @@ public class App extends Application {
 
 	private void showActionsPanel(Stage stage) throws Exception {
 		stage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
-		stage.setTitle("Panel de acciones SweetPrinterPOS");
+		stage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
 		stage.show();
 	}
 
 	private void showPosConfigPanel(Stage stage) throws Exception {
 		stage.setScene(FxUtil.loadScene(Constants.POS_CONFIG_FXML));
-		stage.setTitle("Configuración SweetPrinterPOS");
+		stage.setTitle(String.format("Configuración %s", Constants.APP_NAME));
 		stage.show();
 	}
 

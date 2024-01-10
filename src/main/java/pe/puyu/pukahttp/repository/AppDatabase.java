@@ -14,12 +14,13 @@ import java.util.Optional;
 public class AppDatabase {
 	private JdbcPooledConnectionSource connectionSource;
 	private Server server;
+	private final String DATABASE_NAME = "pukahttp_db";
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("AppDatabase"));
 
 	public AppDatabase() {
 		try {
-			server = Server.createTcpServer("-tcpAllowOthers", "-ifNotExists").start();
-			var url = String.format("jdbc:h2:%s/file:%s/db", server.getURL(), AppUtil.getDatabaseDirectory());
+			server = Server.createTcpServer("-tcpAllowOthers", "-ifNotExists","-tcpPort", "9130").start();
+			var url = String.format("jdbc:h2:%s/file:%s/%s", DATABASE_NAME, server.getURL(), AppUtil.getDatabaseDirectory());
 			connectionSource = new JdbcPooledConnectionSource(url);
 			connectionSource.setLoginTimeoutSecs(15);
 			createTables();

@@ -1,18 +1,22 @@
 package pe.puyu.pukahttp.services.api;
 
 import ch.qos.logback.classic.Logger;
+import com.github.anastaciocintra.escpos.EscPos;
 import com.github.anastaciocintra.output.PrinterOutputStream;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import io.javalin.websocket.WsConfig;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.repository.AppDatabase;
 import pe.puyu.pukahttp.repository.TicketRepository;
+import pe.puyu.pukahttp.services.printer.Printer;
 import pe.puyu.pukahttp.services.printer.SweetTicketPrinter;
 import pe.puyu.pukahttp.util.AppUtil;
 
+import java.io.OutputStream;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -31,6 +35,36 @@ public class PrinterApiController {
 		response.setStatus("success");
 		response.setData(PrinterOutputStream.getListPrintServicesNames());
 		ctx.json(response);
+	}
+
+	public void openDrawer(Context ctx) {
+		var response = new ResponseApi<String>();
+		ctx.async(
+			10000,
+			() -> {
+				response.setStatus("error");
+				response.setMessage("Error al abrir caja");
+				response.setError("Tiempo espera agotado");
+				ctx.json(response);
+			},
+			() -> {
+				try {
+					JsonObject printer = JsonParser.parseString(ctx.body()).getAsJsonObject();
+					var name_system = printer.get("name_system").getAsString();
+					var port = printer.get("port").getAsInt();
+					var type = printer.get("type").getAsString();
+					OutputStream outputStream = Printer.getOutputStreamFor(name_system, port, type);
+					try (var escpos = new EscPos(outputStream)) {
+						escpos.pulsePin(EscPos.PinConnector.Pin_2, 120, 240);
+						response.setMessage("Operación de abrir caja exitosa.");
+						response.setStatus("success");
+						ctx.json(response);
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		);
 	}
 
 	public void printTickets(Context ctx) {
@@ -105,7 +139,7 @@ public class PrinterApiController {
 			, e.getCause()
 			, e.getLocalizedMessage());
 		var response = new ResponseApi<Integer>();
-		response.setMessage("Ocurrio un error inesperado");
+		response.setMessage("Ocurrio una excepción en el servidor");
 		response.setError(e.getMessage());
 		response.setStatus("error");
 		setResponseItemsQueue(response);
