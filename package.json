@@ -6,8 +6,8 @@
   "description": "Servicio de impresión de PUYU, para puntos de venta, utilizando http y comandos EscPOS.",
   "main": "index.js",
   "preferGlobal": true,
-  "repository": "https://github.com/puyu-pe/puka-http",
-  "version": "2.2.6",
+  "repository": "https://github.com/puyu-pe/puka-http.git",
+  "version": "2.2.7",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "17",
