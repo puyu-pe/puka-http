@@ -49,3 +49,4 @@ pukahttp_db/
 jdeploy
 jdeploy-bundle
 node_modules
+package-lock.json
