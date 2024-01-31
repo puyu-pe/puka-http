@@ -20,9 +20,8 @@ jobs:
         run: mvn -B package --file pom.xml
       - uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: |
-            target/PukaHTTP-1.0-SNAPSHOT.jar
+          name: target
+          path: target
 
   publish_github:
     needs: [ build ]
@@ -33,7 +32,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: target
+          path: target
       - name: Publish App Installer Bundles GITHUB
         uses: shannah/jdeploy@master
         with:
@@ -48,7 +48,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: target
+          path: target
       - name: Publish App Installer Bundles NPM
         uses: shannah/jdeploy@master
         with:
