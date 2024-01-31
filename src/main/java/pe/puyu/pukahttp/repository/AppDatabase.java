@@ -19,8 +19,8 @@ public class AppDatabase {
 
 	public AppDatabase() {
 		try {
-			server = Server.createTcpServer("-tcpAllowOthers", "-ifNotExists","-tcpPort", "9130").start();
-			var url = String.format("jdbc:h2:%s/file:%s/%s", DATABASE_NAME, server.getURL(), AppUtil.getDatabaseDirectory());
+			server = Server.createTcpServer("-tcpAllowOthers", "-ifNotExists", "-tcpPort", "9130").start();
+			var url = String.format("jdbc:h2:%s/file:%s/%s", server.getURL(), AppUtil.getDatabaseDirectory(), DATABASE_NAME);
 			connectionSource = new JdbcPooledConnectionSource(url);
 			connectionSource.setLoginTimeoutSecs(15);
 			createTables();

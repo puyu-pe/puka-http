@@ -13,7 +13,7 @@
       <totalSizeCap>3GB</totalSizeCap>
     </rollingPolicy>
     <encoder>
-      <pattern>%-4relative %d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
+      <pattern>%-4relative %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
     </encoder>
   </appender>
 
