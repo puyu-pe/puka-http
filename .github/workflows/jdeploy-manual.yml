@@ -20,3 +20,8 @@ jobs:
         uses: shannah/jdeploy@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
+      - name: Build App Installer Bundles NPM
+        uses: shannah/jdeploy@master
+        with:
+          deploy_target: "npm"
+          npm_token: ${{ secrets.NPM_TOKEN }}
