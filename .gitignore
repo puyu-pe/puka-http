@@ -44,3 +44,8 @@ build/
 ### others ###
 .env
 pukahttp_db/
+
+### Publish App ###
+jdeploy
+jdeploy-bundle
+node_modules
