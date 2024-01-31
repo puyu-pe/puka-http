@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 17
@@ -16,13 +16,38 @@ jobs:
           cache: maven
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - name: Build App Installer Bundles GITHUB
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: |
+            target/PukaHTTP-1.0-SNAPSHOT.jar
+            package.json 
+            icon.png
+            installsplash.png
+            pom.xml
+
+  publish_github:
+    needs: [ build ]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - name: Publish App Installer Bundles GITHUB
         uses: shannah/jdeploy@master
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
-      - name: Build App Installer Bundles NPM
+          github_token: ${{ github.token }}
+
+  publish_npm:
+    needs: [ build ]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+      - name: Publish App Installer Bundles NPM
         uses: shannah/jdeploy@master
         with:
           deploy_target: npm
           npm_token: ${{ secrets.NPM_TOKEN }}
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ github.token }}
