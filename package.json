@@ -7,7 +7,7 @@
   "main": "index.js",
   "preferGlobal": true,
   "repository": "https://github.com/puyu-pe/puka-http.git",
-  "version": "2.2.8",
+  "version": "2.2.9",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "17",
