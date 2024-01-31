@@ -3,11 +3,11 @@
     "PukaHTTP": "jdeploy-bundle/jdeploy.js"
   },
   "author": "PUYU",
-  "description": "Servicio de impresión de PUYU SRL, para puntos de venta, utilizando http y comandos EscPOS.",
+  "description": "Servicio de impresión de PUYU, para puntos de venta, utilizando http y comandos EscPOS.",
   "main": "index.js",
   "preferGlobal": true,
   "repository": "https://github.com/puyu-pe/puka-http",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "17",
@@ -26,7 +26,7 @@
     "shelljs": "^0.8.4"
   },
   "license": "ISC",
-  "name": "puka-http-printservice",
+  "name": "puka-http",
   "files": [
     "jdeploy-bundle"
   ],
