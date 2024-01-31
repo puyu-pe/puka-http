@@ -1,0 +1,33 @@
+{
+  "bin": {
+    "PukaHTTP": "jdeploy-bundle/jdeploy.js"
+  },
+  "author": "PUYU",
+  "description": "Servicio de impresión de PUYU SRL, para puntos de venta, utilizando http y comandos EscPOS.",
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": "https://github.com/puyu-pe/puka-http",
+  "version": "2.1.1",
+  "jdeploy": {
+    "jdk": false,
+    "javaVersion": "17",
+    "jar": "target/PukaHTTP-1.0-SNAPSHOT.jar",
+    "javafx": true,
+    "title": "PukaHTTP"
+  },
+  "dependencies": {
+    "command-exists-promise": "^2.0.2",
+    "node-fetch": "2.6.7",
+    "tar": "^4.4.8",
+    "yauzl": "^2.10.0",
+    "shelljs": "^0.8.4"
+  },
+  "license": "ISC",
+  "name": "puka-http-printservice",
+  "files": [
+    "jdeploy-bundle"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
