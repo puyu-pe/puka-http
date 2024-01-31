@@ -1,7 +1,8 @@
 name: jDeploy CI with Maven
 
 on:
-  workflow_dispatch
+  push:
+    tags: ['*']
 
 jobs:
   build:
