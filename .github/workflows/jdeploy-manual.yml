@@ -2,7 +2,11 @@ name: jDeploy CI with Maven
 
 on:
   push:
-    tags: ['*']
+    branches: ['deploy']
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
