@@ -3,13 +3,20 @@
 Servicio de impresión para puntos de venta, utilizando http y comandos EscPOS.
 
 ## Indice
-
-1. [Para desarrolladores](#para-desarrolladores)
-   1. [Estructura del proyecto](#estructura-del-proyecto) 
+1. [Instalación, configuración y uso]()
+1. [Documentación API](#documentación-api-de-servicio-de-impresión)
+2. [Para desarrolladores](#para-desarrolladores)
+   1. [Estructura del proyecto](#estructura-del-proyecto)
    2. [Construir el proyecto](#construir-el-proyecto)
-2. [Generación de instaladores](#generación-de-instaladores)
-3. Uso
+3. [Generación de instaladores](#generación-de-instaladores)
 
+## Documentación API de servicio de impresión
+
+### Endpoints
+* /printer/system
+  * get: 
+    Solicita los servicios de impresión instalados en el sistema
+* /printer/open-drawer
 
 ## Para desarrolladores
 
@@ -67,8 +74,10 @@ Servicio de impresión para puntos de venta, utilizando http y comandos EscPOS.
 
 Existe dos formas en la que podemos generar los instaladores para windows, mac y distribuciones linux.
 Siendo la mas sencilla y recomedada JDeploy, por que automatiza de mejor forma la generación de instaladores,
-y trae integrado un mecanismo de actualización automatica para las aplicaciones y tambien integración con github actions.
-Sin embargo por razones historicas tambien existe JPackage, este modo con el tiempo quedara deprecado debido a que se esta
+y trae integrado un mecanismo de actualización automatica para las aplicaciones y tambien integración con github
+actions.
+Sin embargo por razones historicas tambien existe JPackage, este modo con el tiempo quedara deprecado debido a que se
+esta
 migrando toda la generación de instaladores a JDeploy.
 
 1. [Generar instaladores con JDeploy](docs/jdeploy.md)
