@@ -6,17 +6,17 @@
   "description": "Servicio de impresión de PUYU, para puntos de venta, utilizando http y comandos EscPOS.",
   "main": "index.js",
   "preferGlobal": true,
-  "repository": "https://github.com/puyu-pe/puka-http.git",
-  "version": "2.2.16",
+  "repository": "https://github.com/puyu-pe/puka-http",
+  "version": "2.2.17",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "17",
-    "jar": "target/PukaHTTP-1.0-SNAPSHOT.jar",
-    "javafx": true,
-    "title": "PukaHTTP",
     "urlSchemes": [
       "pukahttp"
-    ]
+    ],
+    "jar": "target/PukaHTTP-1.0-SNAPSHOT.jar",
+    "javafx": true,
+    "title": "PukaHTTP"
   },
   "dependencies": {
     "command-exists-promise": "^2.0.2",
@@ -32,5 +32,6 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  },
+  "homepage": "https://github.com/puyu-pe/puka-http"
 }
