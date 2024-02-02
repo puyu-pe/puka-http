@@ -38,6 +38,7 @@ que seguir una serie de pasos antes de hacer el deploy:
    ```bash
    git push --all & git push origin $(cat VERSION)
    ```
+   > Warning: **No** ejecutar **git push --tags**, ya que puede entrar en conflicto con el tag jdeploy
 
 
 ## Generar instaladores con github actions
