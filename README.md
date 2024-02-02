@@ -55,7 +55,7 @@ Se puede probar en diferentes ticketeras y configuraciones, util para luego conf
 
 #### Ventana oculta de configuración
 Es una ventana a la cual se puede acceder haciendo click en el **numero de version** situada en la
-[ventana inicial](#ventana-inicial) y pedira una contraseña la cual se configuro la . En esta ventana se puede parar el servidor http en segundo plano y tambien volverlo
+[ventana inicial](#ventana-inicial) y pedira una contraseña la cual se configuro en [la instalación](#instalación-y-uso). En esta ventana se puede parar el servidor http en segundo plano y tambien volverlo
 a ejecutar, asi mismo se puede abrir los directorios donde esta situado los logs y la configuración.
 
 ### Uso
