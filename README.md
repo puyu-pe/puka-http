@@ -22,7 +22,8 @@ Servicio de impresión para puntos de venta, utilizando http y comandos EscPOS.
 3. [Para desarrolladores](#para-desarrolladores)
    * [Estructura del proyecto](#estructura-del-proyecto)
    * [Construir el proyecto](#construir-el-proyecto)
-4. [Generación de instaladores](#generación-de-instaladores)
+   * [Lanzar nuevas versiones](#preparar-una-nueva-versión)
+4. [Generar instaladores](#generar-los-instaladores)
 
 ## Instalación y uso
 
@@ -359,18 +360,52 @@ para ver ejemplos de ticket json real. El objeto ticket en general se veria asi:
    mvn clean compile javafx:run
    ```
 
-## Generación de instaladores
+## Preparar una nueva versión
 
+1. Ejecutar un git flow hotfix o release
+   ```bash
+   git flow release start
+   ```
+   ó
+   ```bash
+   git flow hotfix start
+   ```
+2. Ejecutar el script update-package.sh
+   ```bash
+   ./update-package.sh
+   ```
+   > Nota: En windows modificar la version de package.json de forma manual
+3. Confirmar los cambios
+   ```bash
+   git add . && git commit
+   ```
+4. Finalizar la rama del hotfix o release
+   ```bash
+   git flow hotfix finish
+   ```
+   'o'
+   ```bash
+   git flow release finish
+   ```
+5. Hacer push -all y a la ultima etiqueta generada
+   ```bash
+   git push --all & git push origin $(cat VERSION)
+   ```
+   > Warning: **No** ejecutar **git push --tags**, ya que puede entrar en conflicto con el tag jdeploy
+
+## Generar los instaladores
 Existe dos formas en la que podemos generar los instaladores para windows, mac y distribuciones linux.
 Siendo la mas sencilla y recomedada JDeploy, por que automatiza de mejor forma la generación de instaladores,
 y trae integrado un mecanismo de actualización automatica para las aplicaciones y tambien integración con github
 actions.
-Sin embargo por razones historicas tambien existe JPackage, este modo con el tiempo quedara deprecado debido a que se
-esta
-migrando toda la generación de instaladores a JDeploy.
+El otro mecanismo es utilizando JPackage, que es la forma en la que se generaba anteriormente los instaladores de PukaHTTP,
+es mas complejo y no soporta compilación cruzada, este modo estará deprecado por que no se actualizara su documentación y su forma de trabajo
+con puka.
 
-1. [Generar instaladores con JDeploy](docs/jdeploy.md)
-2. [Generar instaladores con JPackage](docs/jpackage.md)
+
+
+1. [Generar instaladores con JDeploy (Oficial)](docs/jdeploy.md)
+2. [Generar instaladores con JPackage (Deprecado)](docs/jpackage.md)
 
 
 

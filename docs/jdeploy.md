@@ -2,48 +2,12 @@
 ## Indice
 
 1. [Requirimientos](#requirimientos)
-2. [Pasos previos](#pasos-previos)
+2. [Mediante GitHub Actions](#generar-instaladores-con-github-actions)
 3. [Forma manual](#generar-instaladores-de-forma-manual-en-npm)
-4. [Mediante Github Actions](#generar-instaladores-con-github-actions)
-5. [Referencias](#referencias)
+4. [Referencias](#referencias)
 
-## Pasos previos
-Ya sea para generar de forma manual o con github actions se tiene
-que seguir una serie de pasos antes de hacer el deploy:
-1. Ejecutar un git flow hotfix o release
-   ```bash
-   git flow release start
-   ```
-   ó
-   ```bash
-   git flow hotfix start
-   ```
-2. Ejecutar el script update-package.sh
-   ```bash
-   ./update-package.sh
-   ```
-   > Nota: En windows modificar la version de package.json de forma manual
-3. Confirmar los cambios
-   ```bash
-   git add . && git commit
-   ```
-4. Finalizar la rama del hotfix o release
-   ```bash
-   git flow hotfix finish
-   ```
-   'o'
-   ```bash
-   git flow release finish
-   ```
-5. Hacer push -all y a la ultima etiqueta generada
-   ```bash
-   git push --all & git push origin $(cat VERSION)
-   ```
-   > Warning: **No** ejecutar **git push --tags**, ya que puede entrar en conflicto con el tag jdeploy
-
-
-## Generar instaladores con github actions
-* Primero completar [pasos previos](#pasos-previos).
+## Generar instaladores con GitHub actions
+* Importante!!, primero completar [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
 * En la pestaña Actions del proyecto ejecutar la ["jDeploy CI with maven"](https://github.com/puyu-pe/puka-http/actions/workflows/jdeploy-manual.yml) action
 haciendo click en el boton run workflow en la tag mas reciente.
   > Importate!!!: Run workflow no tiene que ejecutarse en ninguna rama, solo en la ultima tag
@@ -70,7 +34,7 @@ jdeploy.
    ```
 
 ### Pasos para publicar
-1. Importante haber realizado los [pasos previos](#pasos-previos).
+1. Importante!!, primero realizar el [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
 2. Ejecutar jdeploy
    ```bash
    jdeploy publish
