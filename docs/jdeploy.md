@@ -22,13 +22,24 @@ que seguir una serie de pasos antes de hacer el deploy:
    ./update-package.sh
    ```
    > Nota: En windows modificar la version de package.json de forma manual
-3. Confirmar los cambios y finalizar la rama
+3. Confirmar los cambios
    ```bash
    git add . && git commit
    ```
+4. Finalizar la rama del hotfix o release
+   ```bash
+   git flow hotfix finish
+   ```
+   'o'
    ```bash
    git flow release finish
    ```
+5. Hacer push -all y a la ultima etiqueta generada
+   ```bash
+   git push --all & git push origin $(cat VERSION)
+   ```
+
+
 ## Generar instaladores con github actions
 * Primero completar [pasos previos](#pasos-previos).
 * En la pestaña Actions del proyecto ejecutar la ["jDeploy CI with maven"](https://github.com/puyu-pe/puka-http/actions/workflows/jdeploy-manual.yml) action
