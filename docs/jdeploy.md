@@ -5,6 +5,7 @@
 2. [Pasos previos](#pasos-previos)
 3. [Forma manual](#generar-instaladores-de-forma-manual-en-npm)
 4. [Mediante Github Actions](#generar-instaladores-con-github-actions)
+5. [Referencias](#referencias)
 
 ## Pasos previos
 Ya sea para generar de forma manual o con github actions se tiene
