@@ -221,7 +221,7 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
   - **Type:** `json`
   - **Código:** `200`
   - **Cuerpo:**
-    ```json lines
+    ```text 
     {
       "status": "success",
       "message": "Operacion completada exitosamente",
