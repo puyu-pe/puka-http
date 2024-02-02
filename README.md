@@ -143,7 +143,7 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
   - **Type:** `json`
   - **Código:** `200`
   - **Cuerpo:**
-    ```json lines
+    ```text 
     {
       "status": "success",
       "message": "Trabajo de impresión no lanzo ningun error.",
@@ -170,7 +170,7 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
   - **Type:** `json`
   - **Código:** `200`
   - **Cuerpo:**
-    ```json lines
+    ```text
     {
       "status": "success",
       "message": "Se libero todos los tickets en memoria",
@@ -196,18 +196,18 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
   - **Type:** `json`
   - **Código:** `200`
   - **Cuerpo:**
-    ```json lines
+    ```text 
     {
       "status": "success",
       "message": "La operacion se completo exitosamente",
-      "data": 0 //Es el número de elementos en cola
+      "data": 0 // numero de elementos en cola
     }
     ```
 - **Respuesta de error:**
   - **Type:** `json`
   - **Código:** `400 - 500`
   - **Cuerpo:**
-    ```json lines
+    ```json
     {
         "status": "error",
         "message": "Alguna excepción del lado del servidor",
@@ -232,7 +232,7 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
   - **Type:** `json`
   - **Código:** `400 - 500`
   - **Cuerpo:**
-    ```json lines
+    ```json 
     {
         "status": "error",
         "message": "Alguna excepción del lado del servidor",
@@ -251,11 +251,11 @@ se especifica algunos detalles sobre la estructura de los objetos json
 que deben ir en body.
 
 #### Objeto Printer
-  ```json lines
+  ```text
    {
-     "name_system": "Alguna impresora instalada, red, serial o samba",
-     "port": 9100, // Puerto si es una impresora en red
-     "type": "Tipo de interfaz"
+     name_system: "Alguna impresora instalada, red, serial o samba",
+     port: 9100, // Puerto si es una impresora en red
+     type: "Tipo de interfaz"
    }
   ``` 
   - **name_system:**
@@ -292,7 +292,7 @@ propiedades adicionales para el [objeto printer](#objeto-printer) en [caracteris
 ##### Estructura final de Objeto json ticket
 [Ver ejemplos de tickets en jticketdesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#ejemplos-de-json-validos) 
 para ver ejemplos de ticket json real. El objeto ticket en general se veria asi:
-```json lines
+```text
 {
     type: "tipo de documento (ver JTicketDesing)",
     printer: {
