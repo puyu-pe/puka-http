@@ -374,7 +374,7 @@ para ver ejemplos de ticket json real. El objeto ticket en general se veria asi:
    ```bash
    ./update-package.sh
    ```
-   > Nota: En windows modificar la version de package.json de forma manual
+   > Nota: El script funciona solo en maquinas Linux y Mac, en windows modificar la versión en package.develop.json y package.production.json de forma manual
 3. Confirmar los cambios
    ```bash
    git add . && git commit
