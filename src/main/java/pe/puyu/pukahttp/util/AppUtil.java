@@ -63,10 +63,6 @@ public class AppUtil {
 	}
 
 	public static String getLogsDirectory() {
-		return Path.of(getTempDirectory(), "puyu").toString();
-	}
-
-	public static String getTempDirectory() {
 		return LogsDirectoryProperty.get().value();
 	}
 
