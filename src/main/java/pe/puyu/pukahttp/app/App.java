@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
+import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.api.PrintServer;
 import ch.qos.logback.classic.Level;
@@ -19,10 +20,18 @@ import java.util.Optional;
 
 public class App extends Application {
 	// Level error : TRACE DEBUG INFO WARN ERROR
-	public static final Logger rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
+	private Logger rootLogger;
+
+	public App(){
+		// important set properties into constructor!, first execution
+		var logsDirectoryProperty = LogsDirectoryProperty.get();
+		System.setProperty(logsDirectoryProperty.key(), logsDirectoryProperty.value());
+	}
+
 
 	@Override
 	public void init() {
+		this.rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		rootLogger.setLevel(Level.INFO);
 	}
 

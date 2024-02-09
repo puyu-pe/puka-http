@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import javafx.application.Platform;
 import org.slf4j.LoggerFactory;
+import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.App;
 import pe.puyu.pukahttp.repository.AppDatabase;
 import pe.puyu.pukahttp.util.AppUtil;
@@ -133,19 +134,21 @@ public class PrintServer {
 
 	private void updateLogLevel(Context ctx) {
 		var newLevel = JsonParser.parseString(ctx.body()).getAsString();
-		App.rootLogger.setLevel(Level.toLevel(newLevel));
+		Logger rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
+		rootLogger.setLevel(Level.toLevel(newLevel));
 		var response = new ResponseApi<String>();
 		response.setStatus("success");
 		response.setMessage("Se actualizó el nivel de logs");
-		response.setData(App.rootLogger.getLevel().toString());
+		response.setData(rootLogger.getLevel().toString());
 		ctx.json(response);
 	}
 
 	private void getLogLevel(Context ctx) {
+		Logger rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		var response = new ResponseApi<String>();
 		response.setStatus("success");
 		response.setMessage("Se recupera el nivel de logs del servidor");
-		response.setData(App.rootLogger.getLevel().toString());
+		response.setData(rootLogger.getLevel().toString());
 		ctx.json(response);
 	}
 

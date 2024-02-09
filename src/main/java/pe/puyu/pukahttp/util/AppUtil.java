@@ -17,6 +17,7 @@ import javafx.util.Duration;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 import pe.puyu.pukahttp.Constants;
+import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
 
 import java.io.BufferedReader;
@@ -66,7 +67,7 @@ public class AppUtil {
 	}
 
 	public static String getTempDirectory() {
-		return System.getProperty("java.io.tmpdir");
+		return LogsDirectoryProperty.get().value();
 	}
 
 	public static String getAppVersion() {
