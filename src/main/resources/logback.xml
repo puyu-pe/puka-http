@@ -1,6 +1,6 @@
 <configuration debug="false">
   <property name="LOG_FILE" value="pukahttp" />
-  <property name="LOG_DIR" value="${java.io.tmpdir}/puyu" />
+  <property name="LOG_DIR" value="${logs.directory}" />
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>${LOG_DIR}/${LOG_FILE}.log</file>
