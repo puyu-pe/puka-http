@@ -40,11 +40,11 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
    ```bash
    npx jdeploy publish
    ```
-4. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http).
+4. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http-dev).
 5. Si puka ya esta instalado, entonces solo cerrar y volver a ejecutar Puka para que se actualice a la nueva versión.
 5. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version desarrollo).
    ```bash
-   npm i puka-http
+   npm i puka-http-dev
    ```
 
 ## Lanzamiento a producción.
