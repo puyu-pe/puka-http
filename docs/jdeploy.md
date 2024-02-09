@@ -36,13 +36,17 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
    ```bash
    cp package.develop.json package.json
    ```
-4. Ejecutar jdeploy
+4. Empaquetar aplicación.
+   ```bash
+   mvn clean compile package
+   ```
+5. Ejecutar jdeploy
    ```bash
    npx jdeploy publish
    ```
-5. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http-dev).
-6. Si puka ya esta instalado, entonces solo cerrar y volver a ejecutar Puka para que se actualice a la nueva versión.
-7. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version desarrollo).
+6. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http-dev).
+7. Si puka ya esta instalado, entonces solo cerrar y volver a ejecutar Puka para que se actualice a la nueva versión.
+8. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version desarrollo).
    ```bash
    npm i puka-http-dev
    ```
