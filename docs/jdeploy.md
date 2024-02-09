@@ -21,10 +21,6 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
 * Tener una [cuenta npm](https://www.npmjs.com/signup).
 * Pedir permisos para publicar al autor (cuenta npm de puyu).
   Asociar cuenta a la de la empresa como miembro del proyecto.
-* Logerse mediante linea de comandos en npm.
-   ```bash
-   npm login --registry=https://registry.npmjs.org/  --scope=@puyu    
-   ```
 * Instalar JDeploy.
    ```bash
    npm install jdeploy
@@ -32,17 +28,21 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
 
 ### Pasos para publicar (desarrollo)
 1. Importante!!, primero realizar el [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
-2. Copiar package.develop.json a package.json
+2. Logerse mediante linea de comandos en npm.
+   ```bash
+   npm login --registry=https://registry.npmjs.org/  --scope=@puyu    
+   ```
+3. Copiar package.develop.json a package.json
    ```bash
    cp package.develop.json package.json
    ```
-3. Ejecutar jdeploy
+4. Ejecutar jdeploy
    ```bash
    npx jdeploy publish
    ```
-4. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http-dev).
-5. Si puka ya esta instalado, entonces solo cerrar y volver a ejecutar Puka para que se actualice a la nueva versión.
-5. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version desarrollo).
+5. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http-dev).
+6. Si puka ya esta instalado, entonces solo cerrar y volver a ejecutar Puka para que se actualice a la nueva versión.
+7. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version desarrollo).
    ```bash
    npm i puka-http-dev
    ```
