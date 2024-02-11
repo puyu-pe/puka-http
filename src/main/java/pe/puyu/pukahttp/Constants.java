@@ -9,4 +9,5 @@ public class Constants {
 	public static final String TEST_PANEL_FXML = FXML_PATH_BASE + "/test-panel.fxml";
 	public static final String PASSWORD_FXML = FXML_PATH_BASE + "/password.fxml";
 	public static final String ADMIN_PANEL_FXML = FXML_PATH_BASE + "/admin-panel.fxml";
+	public static final long TIME_EXPIRED_TICKETS_MILLISECONDS = 5 * 60 * 60 * 1000;
 }

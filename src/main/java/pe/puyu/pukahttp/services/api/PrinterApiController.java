@@ -17,6 +17,7 @@ import pe.puyu.pukahttp.services.printer.SweetTicketPrinter;
 import pe.puyu.pukahttp.util.AppUtil;
 
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.time.Duration;
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -89,16 +90,22 @@ public class PrinterApiController {
 		);
 	}
 
-	public void deleteTickets(Context ctx) {
+	public void deleteTickets(Context ctx) throws ParseException {
 		var response = new ResponseApi<Integer>();
-		if (!(ticketRepository == null)) {
-			ticketRepository.deleteAll();
-			response.setData(ticketRepository.countAll());
-		} else {
-			response.setData(0);
-		}
-		response.setMessage("Se libero todos los tickets en memoria");
+		response.setData(0);
+		response.setMessage("Se libero todos tickets en memoria");
 		response.setStatus("success");
+		if (ticketRepository != null) {
+			var dateString = ctx.queryParam("date");
+			if (dateString != null && !dateString.isEmpty()) {
+				var date = AppUtil.getDateTimeFormatter().parse(dateString);
+				var rowsDeleted = ticketRepository.deleteWithDatesBefore(date);
+				response.setMessage(String.format("Se eliminaron %d tickets en memoria.", rowsDeleted));
+			} else {
+				ticketRepository.deleteAll();
+			}
+			response.setData(ticketRepository.countAll());
+		}
 		ctx.json(response);
 	}
 
@@ -199,12 +206,14 @@ public class PrinterApiController {
 					ctx.send(count);
 				}
 			};
-			ticketRepository.addObserver(observer);
-			ws.onClose(closeCtx -> {
-				logger.info("close ws connection, then remove observer ticketrepository.");
-				ticketRepository.removeObserver(observer);
-			});
-			ws.onError(ctxError -> logger.error("Exception on websockets connection", ctxError.error()));
+			if (ticketRepository != null) {
+				ticketRepository.addObserver(observer);
+				ws.onClose(closeCtx -> {
+					logger.info("close ws connection, then remove observer ticketrepository.");
+					ticketRepository.removeObserver(observer);
+				});
+				ws.onError(ctxError -> logger.error("Exception on websockets connection", ctxError.error()));
+			}
 		});
 	}
 }

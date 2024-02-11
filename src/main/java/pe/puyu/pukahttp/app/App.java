@@ -22,7 +22,7 @@ public class App extends Application {
 	// Level error : TRACE DEBUG INFO WARN ERROR
 	private Logger rootLogger;
 
-	public App(){
+	public App() {
 		// important set properties into constructor!, first execution
 		var logsDirectoryProperty = LogsDirectoryProperty.get();
 		System.setProperty(logsDirectoryProperty.key(), logsDirectoryProperty.value());
@@ -41,10 +41,14 @@ public class App extends Application {
 			var posConfig = recoverPosConfig();
 			if (posConfig.isPresent()) {
 				PrintServer server = new PrintServer();
+				final var ip = posConfig.get().getIp();
+				final var port = posConfig.get().getPort();
 				if (server.isRunningInOtherProcess()) {
+					AppUtil.releaseExpiredTickets(ip, port);
 					showActionsPanel(stage);
 				} else {
-					server.listen(posConfig.get().getIp(), posConfig.get().getPort());
+					server.listen(ip, port);
+					AppUtil.releaseExpiredTickets(ip, port);
 				}
 			} else {
 				showPosConfigPanel(stage);

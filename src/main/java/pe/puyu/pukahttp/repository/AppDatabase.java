@@ -10,17 +10,15 @@ import org.h2.tools.Server;
 
 import java.util.Optional;
 
-
 public class AppDatabase {
 	private JdbcPooledConnectionSource connectionSource;
 	private Server server;
-	private final String DATABASE_NAME = "pukahttp_db";
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("AppDatabase"));
 
 	public AppDatabase() {
 		try {
 			server = Server.createTcpServer("-tcpAllowOthers", "-ifNotExists", "-tcpPort", "9130").start();
-			var url = String.format("jdbc:h2:%s/file:%s/%s", server.getURL(), AppUtil.getDatabaseDirectory(), DATABASE_NAME);
+			var url = String.format("jdbc:h2:%s/file:%s/%s", server.getURL(), AppUtil.getDatabaseDirectory(), "pukahttp_db");
 			connectionSource = new JdbcPooledConnectionSource(url);
 			connectionSource.setLoginTimeoutSecs(15);
 			createTables();
@@ -50,15 +48,12 @@ public class AppDatabase {
 		}
 	}
 
-	public void clearTables() {
-		try {
-			TableUtils.clearTable(connectionSource, Ticket.class);
-		} catch (Exception e) {
-			logger.error("Exception at clear tables: {}", e.getLocalizedMessage(), e);
-		}
+	public void dropTables() throws Exception {
+		TableUtils.dropTable(connectionSource, Ticket.class, false);
 	}
 
 	private void createTables() throws Exception {
+		dropTables(); // TODO: remove line
 		TableUtils.createTableIfNotExists(connectionSource, Ticket.class);
 	}
 }
