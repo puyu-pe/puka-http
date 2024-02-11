@@ -3,38 +3,38 @@
 JDeploy es una solución multiplataforma para la creación de instaladores y ofrece un
 mecanismo de actualización automatica. Ver mas detalles en su [documentación oficial](https://www.jdeploy.com/docs/manual/#_getting_started).
 
-* Antes de lanzar una nueva versión se recomienda realizar los pasos de [Pre-release](#lanzamiento-en-desarrollo-pre-release).
-* Y cuando todo este correcto con la aplicación en versión de desarrollo realizar [Lanzamiento a producción](#lanzamiento-a-producción).
+* Antes de lanzar una nueva versión se recomienda realizar lanzamiento a [versión beta](#lanzamiento-versión-beta-o-pre-release).
+* Y cuando todo este correcto con la aplicación en versión beta, realizar [Lanzamiento a producción](#lanzamiento-a-producción).
 
 
 ## Indice
 
-1. [Lanzamiento en desarrollo o Pre-release](#lanzamiento-en-desarrollo-pre-release).
+1. [Lanzamiento version beta o Pre-release](#lanzamiento-versión-beta-o-pre-release).
 2. [Lanzamiento a producción](#lanzamiento-a-producción).
 3. [Referencias](#referencias).
 
-## Lanzamiento en desarrollo, Pre-release
+## Lanzamiento versión beta o Pre-release
 
 ### Requirimientos
 * Se tiene que tener instalado Java 17 o superior.
 * Tener instalado npm.
 * Tener una [cuenta npm](https://www.npmjs.com/signup).
 * Pedir permisos para publicar al autor (cuenta npm de puyu).
-  Asociar cuenta a la de la empresa como miembro del proyecto.
+  Ser invitado por la cuenta **npm de puyu** como colaborador del proyecto puka-http.
 * Instalar JDeploy.
    ```bash
    npm install jdeploy
    ```
 
-### Pasos para publicar (desarrollo)
+### Pasos para publicar (versión beta)
 1. Importante!!, primero realizar el [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
-2. Logerse mediante linea de comandos en npm.
+2. Login mediante linea de comandos en npm.
    ```bash
    npm login --registry=https://registry.npmjs.org/  --scope=@puyu    
    ```
-3. Copiar package.develop.json a package.json
+3. Copiar package.beta.json a package.json
    ```bash
-   cp package.develop.json package.json
+   cp package.beta.json package.json
    ```
 4. Empaquetar aplicación.
    ```bash
@@ -44,15 +44,15 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
    ```bash
    npx jdeploy publish
    ```
-6. Si todo sale correctamente, comprobar en la [pagina de descarga, versión develop](https://www.jdeploy.com/~puka-http-dev).
-7. Si puka ya esta instalado, entonces solo cerrar y volver a ejecutar Puka para que se actualice a la nueva versión.
-8. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version desarrollo).
+6. Si todo sale correctamente, comprobar en la [pagina de descarga, versión beta](https://www.jdeploy.com/~puka-http-beta).
+7. Si **PukaHTTP-beta** ya esta instalado, entonces solo cerrar y volver a ejecutar para que se actualice a la nueva versión.
+8. Opcionalmente, si aun no esta instalado, tambien se puede instalar mediante npm (solo version beta).
    ```bash
-   npm i puka-http-dev
+   npm i puka-http-beta
    ```
 
 ## Lanzamiento a producción.
-* Importante!, Si **previamente NO** se hizo [Pre-release](#lanzamiento-en-desarrollo-pre-release), primero completar [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
+* Importante!, Si **previamente NO** se hizo [lanzamiento versión beta](#lanzamiento-versión-beta-o-pre-release), primero completar [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
 * En la pestaña Actions del proyecto ejecutar la ["jDeploy CI with maven"](https://github.com/puyu-pe/puka-http/actions/workflows/jdeploy-manual.yml) action
   haciendo click en el boton run workflow en la tag mas reciente.
   > Importate!!!: Run workflow no tiene que ejecutarse en ninguna rama, solo en la ultima tag
