@@ -14,7 +14,7 @@ public class Ticket {
 	@DatabaseField(canBeNull = false, dataType = DataType.LONG_STRING)
 	private String data;
 
-	@DatabaseField(dataType = DataType.DATE_STRING, columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL", readOnly = true, canBeNull = false)
+	@DatabaseField(dataType = DataType.DATE_STRING, columnDefinition = "DATETIME(0) DEFAULT CURRENT_TIMESTAMP NOT NULL", readOnly = true, canBeNull = false, format = "yyyy-MM-dd HH:mm:ss")
 	private Date created_at;
 
 	public Ticket() {

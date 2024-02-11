@@ -25,7 +25,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -138,7 +143,7 @@ public class AppUtil {
 		clipboard.setContent(content);
 	}
 
-	public static PosConfig recoverPosConfig(){
+	public static PosConfig recoverPosConfig() {
 		PosConfig config = new PosConfig();
 		config.setIp(AppUtil.getHostIp());
 		config.setPort(8175);
@@ -168,5 +173,16 @@ public class AppUtil {
 		}
 	}
 
+	public static SimpleDateFormat getDateTimeFormatter() {
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	}
 
+	public static void releaseExpiredTickets(String ip, int port) throws Exception {
+		var currentDate = new Date();
+		var expiredDateTime = currentDate.getTime() - Constants.TIME_EXPIRED_TICKETS_MILLISECONDS;
+		String expiredDate = AppUtil.getDateTimeFormatter().format(new Date(expiredDateTime));
+		String encodeExpiredDate = URLEncoder.encode(expiredDate, StandardCharsets.UTF_8);
+		var baseUrl = String.format("http://%s:%d/printer/ticket?date=%s", ip, port, encodeExpiredDate);
+		HttpUtil.delete(baseUrl);
+	}
 }

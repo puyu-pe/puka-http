@@ -74,10 +74,11 @@ caracteristicas, [ver Documentación api](#documentación-api-de-servicio-de-imp
 ### Descripción
 
 La url del servicio de impresión varia en función de la Ip y el puerto en la que se instalo en el [proceso de instalación](#instalación-y-uso).
-  * La estructura de la url es de la forma: `http://ip:port/endpoint`
+  * La estructura de la url es de la forma: `http://ip:port/endpoint?query`
     * ip: Ip donde se configuro puka en la [instalación](#instalación-y-uso)
     * port: Puerto donde se configuro puka en la [instalación](#instalación-y-uso)
     * endpoint: Alguna ruta de la api, [ver endpoints](#endpoints)
+    * query: Algun paremetro de consulta opcional, depende del endpoint.
 
 ### Endpoints
 
@@ -167,6 +168,11 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
 
 - **Método HTTP:** `DELETE`
 - **Descripción:** Elimina tickets que hayan quedado en cola.
+- **Query Params (opcional):**
+  - **date:** una fecha con el formato ""yyyy-MM-dd HH:mm:ss""  
+  - > Nota: si o si, el campo date tiene que cumplir con el formato.
+- **Ejemplo de url:**
+  - http://ip:port/printer/ticket?date=2024-02-11 13:02:43
 - **Respuesta exitosa:**
   - **Type:** `json`
   - **Código:** `200`

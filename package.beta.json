@@ -1,22 +1,22 @@
 {
   "bin": {
-    "PukaHTTP-develop": "jdeploy-bundle/jdeploy.js"
+    "PukaHTTP-beta": "jdeploy-bundle/jdeploy.js"
   },
   "author": "PUYU",
-  "description": "Versión de desarrollo de PukaHTTP. Prerelease.",
+  "description": "Versión beta de PukaHTTP (pre lanzamiento).",
   "main": "index.js",
   "preferGlobal": true,
   "repository": "https://github.com/puyu-pe/puka-http",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "jdeploy": {
     "jdk": false,
     "javaVersion": "17",
     "urlSchemes": [
-      "pukahttpdev"
+      "pukahttpbeta"
     ],
     "jar": "target/PukaHTTP-1.0-SNAPSHOT.jar",
     "javafx": true,
-    "title": "PukaHTTP-develop"
+    "title": "PukaHTTP-beta"
   },
   "dependencies": {
     "command-exists-promise": "^2.0.2",
@@ -26,7 +26,7 @@
     "shelljs": "^0.8.4"
   },
   "license": "ISC",
-  "name": "puka-http-dev",
+  "name": "puka-http-beta",
   "files": [
     "jdeploy-bundle"
   ],
