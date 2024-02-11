@@ -26,6 +26,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -168,5 +170,8 @@ public class AppUtil {
 		}
 	}
 
+	public static SimpleDateFormat getDateTimeFormatter(){
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	}
 
 }

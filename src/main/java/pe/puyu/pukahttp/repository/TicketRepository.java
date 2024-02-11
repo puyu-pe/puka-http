@@ -4,11 +4,14 @@ import ch.qos.logback.classic.Logger;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.table.TableUtils;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.repository.model.Ticket;
 import pe.puyu.pukahttp.util.AppUtil;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -28,7 +31,7 @@ public class TicketRepository {
 
 	public int countAll() {
 		try {
-			return (int)ticketDao.countOf();
+			return (int) ticketDao.countOf();
 		} catch (Exception e) {
 			logger.error("Exception at countOf ticketDao: {}", e.getLocalizedMessage(), e);
 			return 0;
@@ -52,6 +55,23 @@ public class TicketRepository {
 			notifyObservers();
 		} catch (Exception e) {
 			logger.error("Exception on release tickets: {}", e.getMessage());
+		}
+	}
+
+	public int deleteWithDatesBefore(Date dateTime) {
+		try {
+			DeleteBuilder<Ticket, Long> deleteBuilder = ticketDao.deleteBuilder();
+			deleteBuilder.where().le("created_at", dateTime);
+			int rowsDeleted = deleteBuilder.delete();
+			notifyObservers();
+			return rowsDeleted;
+		} catch (Exception e) {
+			logger.error(
+				"Exception on delete tickets before date {}: {}",
+				dateTime,
+				e.getMessage()
+			);
+			return 0;
 		}
 	}
 

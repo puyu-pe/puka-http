@@ -10,7 +10,6 @@ import org.h2.tools.Server;
 
 import java.util.Optional;
 
-
 public class AppDatabase {
 	private JdbcPooledConnectionSource connectionSource;
 	private Server server;
@@ -50,12 +49,8 @@ public class AppDatabase {
 		}
 	}
 
-	public void clearTables() {
-		try {
-			TableUtils.clearTable(connectionSource, Ticket.class);
-		} catch (Exception e) {
-			logger.error("Exception at clear tables: {}", e.getLocalizedMessage(), e);
-		}
+	public void dropTables() throws Exception {
+		TableUtils.dropTable(connectionSource, Ticket.class, false);
 	}
 
 	private void createTables() throws Exception {
