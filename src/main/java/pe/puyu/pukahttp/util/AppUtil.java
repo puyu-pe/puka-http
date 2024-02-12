@@ -27,9 +27,9 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,10 +48,10 @@ public class AppUtil {
 	}
 
 	public static String getUserConfigFileDir() throws IOException {
-		return getConfigFileDir("user.json");
+		return getConfigAppFileDir("user.json");
 	}
 
-	public static String getConfigFileDir(String jsonFileName) throws IOException {
+	public static String getConfigAppFileDir(String jsonFileName) throws IOException {
 		File file = new File(Path.of(getUserDataDir(), jsonFileName).toString());
 		if (!file.exists()) {
 			var ignored = file.createNewFile();
@@ -60,7 +60,7 @@ public class AppUtil {
 	}
 
 	public static String getPosConfigFileDir() throws Exception {
-		return getConfigFileDir("pos.json");
+		return getConfigAppFileDir("pos.json");
 	}
 
 	public static String getDatabaseDirectory() {
@@ -146,7 +146,7 @@ public class AppUtil {
 	public static PosConfig recoverPosConfig() {
 		PosConfig config = new PosConfig();
 		config.setIp(AppUtil.getHostIp());
-		config.setPort(8175);
+		config.setPort(7172);
 		config.setPassword("semiotica");
 		try {
 			var configOpt = JsonUtil.convertFromJson(AppUtil.getPosConfigFileDir(), PosConfig.class);
@@ -184,5 +184,31 @@ public class AppUtil {
 		String encodeExpiredDate = URLEncoder.encode(expiredDate, StandardCharsets.UTF_8);
 		var baseUrl = String.format("http://%s:%d/printer/ticket?date=%s", ip, port, encodeExpiredDate);
 		HttpUtil.delete(baseUrl);
+	}
+
+	public static String getConfigAppFileDir() throws Exception {
+		return createFileDirFromResourceIfNotExists(
+			getUserDataDir(),
+			"/",
+			"config.ini"
+		);
+	}
+
+	public static String createFileDirFromResourceIfNotExists(
+		String destinationDir, String pathToResource, String resourceFileName
+	) throws Exception {
+		//note: pathToResource es una ruta relativa al directorio de paquetes del proyecto (classpath)
+		//por ejemplo /pe/puyu/main-package/anyPackage../, ver getConfigFileDir() y getLogoFileDir()
+		var destinationPath = Path.of(destinationDir, resourceFileName);
+		var destinationFile = destinationPath.toFile();
+		if (!destinationFile.exists()) {
+			if (!pathToResource.endsWith("/")) {
+				pathToResource += "/";
+			}
+			var resourceDir = pathToResource + resourceFileName;
+			var resourceStream = Objects.requireNonNull(AppUtil.class.getResourceAsStream(resourceDir));
+			Files.copy(resourceStream, destinationPath);
+		}
+		return destinationFile.getAbsolutePath();
 	}
 }

@@ -10,13 +10,17 @@ import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.api.PrintServer;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
+import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
+import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FxUtil;
+import pe.puyu.pukahttp.util.HttpUtil;
 import pe.puyu.pukahttp.util.JsonUtil;
 import pe.puyu.pukahttp.validations.PosConfigValidator;
 
 import java.util.LinkedList;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class App extends Application {
 	// Level error : TRACE DEBUG INFO WARN ERROR
@@ -33,6 +37,7 @@ public class App extends Application {
 	public void init() {
 		this.rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		rootLogger.setLevel(Level.INFO);
+		configTrayIconEnabled();
 	}
 
 	@Override
@@ -49,6 +54,7 @@ public class App extends Application {
 				} else {
 					server.listen(ip, port);
 					AppUtil.releaseExpiredTickets(ip, port);
+					initTrayIcon(stage, ip, port);
 				}
 			} else {
 				showPosConfigPanel(stage);
@@ -98,6 +104,46 @@ public class App extends Application {
 			rootLogger.error("Exception on recover PosConfig: {}", e.getLocalizedMessage());
 			return Optional.empty();
 		}
+	}
+
+	private void configTrayIconEnabled() {
+		ConfigAppProperties config = new ConfigAppProperties();
+		if (config.trayIconEnabled().isPresent()) {
+			return;
+		}
+		String os = System.getProperty("os.name").toLowerCase();
+		if (os.contains("win") || os.contains("mac")) {
+			config.trayIconEnabled(true);
+		} else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+			config.trayIconEnabled(false);
+		} else {
+			rootLogger.warn("Unidentified Operating System, trayIconEnabled not set.");
+		}
+	}
+
+	private void initTrayIcon(Stage stage, String ip, int port) {
+		var config = new ConfigAppProperties();
+		var trayIconEnabled = config.trayIconEnabled();
+		if (trayIconEnabled.isEmpty() || !trayIconEnabled.get()) {
+			return;
+		}
+		var trayIcon = new TrayIconService(stage);
+		trayIcon.setOnExit(() -> {
+			try {
+				String baseUrl = String.format("http://%s:%d", ip, port);
+				var url = baseUrl + "/stop-service";
+				var response = HttpUtil.get(url);
+				if (response.getStatus().equals("success")) {
+					rootLogger.info("status success stop-service from trayIcon");
+				} else {
+					rootLogger.warn("status error stop-service from trayIcon: {}", response.getMessage());
+				}
+			} catch (Exception e) {
+				rootLogger.error("Exception on exit trayicon: {}", e.getMessage(), e);
+			}
+		});
+		trayIcon.show();
+		trayIcon.showInfoMessage("Servicio online.", "Servicio de impresión ejecutandose en segundo plano.");
 	}
 
 }
