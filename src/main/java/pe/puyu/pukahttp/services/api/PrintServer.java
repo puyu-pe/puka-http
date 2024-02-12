@@ -10,8 +10,8 @@ import io.javalin.plugin.bundled.CorsPluginConfig;
 import javafx.application.Platform;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
-import pe.puyu.pukahttp.app.App;
 import pe.puyu.pukahttp.repository.AppDatabase;
+import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FileSystemLock;
 
@@ -159,8 +159,12 @@ public class PrintServer {
 		ctx.json(response);
 		//Necesario envolver en un hilo, de lo contrario no habra respuesta de la accion en el cliente
 		new Thread(() -> {
-			closeService();
-			Platform.exit();
+			this.closeService();
+			var config = new ConfigAppProperties();
+			var uniqueProcess = config.uniqueProcess();
+			if(!(uniqueProcess.isPresent() && uniqueProcess.get())){
+				Platform.exit();
+			}
 		}).start();
 	}
 

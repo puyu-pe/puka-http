@@ -20,7 +20,6 @@ import pe.puyu.pukahttp.validations.PosConfigValidator;
 
 import java.util.LinkedList;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 public class App extends Application {
 	// Level error : TRACE DEBUG INFO WARN ERROR
@@ -30,6 +29,7 @@ public class App extends Application {
 		// important set properties into constructor!, first execution
 		var logsDirectoryProperty = LogsDirectoryProperty.get();
 		System.setProperty(logsDirectoryProperty.key(), logsDirectoryProperty.value());
+		Platform.setImplicitExit(false);
 	}
 
 
@@ -37,7 +37,7 @@ public class App extends Application {
 	public void init() {
 		this.rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		rootLogger.setLevel(Level.INFO);
-		configTrayIconEnabled();
+		configUniqueProcess();
 	}
 
 	@Override
@@ -46,11 +46,19 @@ public class App extends Application {
 			var posConfig = recoverPosConfig();
 			if (posConfig.isPresent()) {
 				PrintServer server = new PrintServer();
+				var uniqueProcess = new ConfigAppProperties().uniqueProcess();
 				final var ip = posConfig.get().getIp();
 				final var port = posConfig.get().getPort();
 				if (server.isRunningInOtherProcess()) {
-					AppUtil.releaseExpiredTickets(ip, port);
-					showActionsPanel(stage);
+					// importante hacer esta validación para ya no ejecutar un segundo proceso
+					// si hay trayicon por defecto
+					if(!(uniqueProcess.isPresent() && uniqueProcess.get())){
+						AppUtil.releaseExpiredTickets(ip, port);
+						showActionsPanel(stage);
+					}else{
+						Platform.exit();
+						System.exit(0);
+					}
 				} else {
 					server.listen(ip, port);
 					AppUtil.releaseExpiredTickets(ip, port);
@@ -66,16 +74,28 @@ public class App extends Application {
 		}
 	}
 
-	private void showActionsPanel(Stage stage) throws Exception {
-		stage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
-		stage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
-		stage.show();
+	private void showActionsPanel(Stage stage) {
+		Platform.runLater(() -> {
+			try {
+				stage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
+				stage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
+				stage.show();
+			} catch (Exception e) {
+				rootLogger.error("Exception on show Actions panel: {}", e.getMessage(), e);
+			}
+		});
 	}
 
-	private void showPosConfigPanel(Stage stage) throws Exception {
-		stage.setScene(FxUtil.loadScene(Constants.POS_CONFIG_FXML));
-		stage.setTitle(String.format("Configuración %s", Constants.APP_NAME));
-		stage.show();
+	private void showPosConfigPanel(Stage stage) {
+		Platform.runLater(() -> {
+			try {
+				stage.setScene(FxUtil.loadScene(Constants.POS_CONFIG_FXML));
+				stage.setTitle(String.format("Configuración %s", Constants.APP_NAME));
+				stage.show();
+			} catch (Exception e) {
+				rootLogger.error("Exception on show PosConfig panel: {}", e.getMessage(), e);
+			}
+		});
 	}
 
 	@Override
@@ -106,25 +126,25 @@ public class App extends Application {
 		}
 	}
 
-	private void configTrayIconEnabled() {
+	private void configUniqueProcess() {
 		ConfigAppProperties config = new ConfigAppProperties();
-		if (config.trayIconEnabled().isPresent()) {
+		if (config.uniqueProcess().isPresent()) {
 			return;
 		}
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.contains("win") || os.contains("mac")) {
-			config.trayIconEnabled(true);
+			config.uniqueProcess(true);
 		} else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
-			config.trayIconEnabled(false);
+			config.uniqueProcess(false);
 		} else {
-			rootLogger.warn("Unidentified Operating System, trayIconEnabled not set.");
+			rootLogger.warn("Unidentified Operating System, uniquerProcess not set.");
 		}
 	}
 
 	private void initTrayIcon(Stage stage, String ip, int port) {
 		var config = new ConfigAppProperties();
-		var trayIconEnabled = config.trayIconEnabled();
-		if (trayIconEnabled.isEmpty() || !trayIconEnabled.get()) {
+		var uniqueProcess = config.uniqueProcess();
+		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
 			return;
 		}
 		var trayIcon = new TrayIconService(stage);

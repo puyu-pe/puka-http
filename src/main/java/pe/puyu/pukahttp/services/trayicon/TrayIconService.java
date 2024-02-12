@@ -2,6 +2,7 @@ package pe.puyu.pukahttp.services.trayicon;
 
 import ch.qos.logback.classic.Logger;
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
 import javafx.stage.Stage;
@@ -90,19 +91,22 @@ public class TrayIconService {
 	}
 
 	private void onClickShowInitWindow(Stage parentStage) {
-		try {
-			parentStage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
-			parentStage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
-			parentStage.show();
-		} catch (Exception e) {
-			logger.error("Error on show init window: {}", e.getMessage(), e);
-			showErrorMessage("Error", "No se pudo abrir la ventana de acciones: " + e.getLocalizedMessage());
-		}
+		Platform.runLater(() -> {
+			try {
+				parentStage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
+				parentStage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
+				parentStage.show();
+			} catch (Exception e) {
+				logger.error("Error on show init window: {}", e.getMessage(), e);
+				showErrorMessage("Error", "No se pudo abrir la ventana de acciones: " + e.getLocalizedMessage());
+			}
+		});
 	}
 
 	private void onClickCloseMenu(ActionEvent event) {
 		CompletableFuture.runAsync(() -> {
 			onExit.run();
+			Platform.exit();
 			System.exit(0);
 		});
 	}

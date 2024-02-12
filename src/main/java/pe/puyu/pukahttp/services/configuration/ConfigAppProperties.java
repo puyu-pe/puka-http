@@ -19,21 +19,21 @@ public class ConfigAppProperties {
 		}
 	}
 
-	public Optional<Boolean> trayIconEnabled() {
+	public Optional<Boolean> uniqueProcess() {
 		try {
-			return Optional.of(properties.get("trayIconEnabled").equalsIgnoreCase("si"));
+			return Optional.of(properties.get("uniqueProcess").equalsIgnoreCase("si"));
 		} catch (Exception e) {
-			logger.error("Exception on get trayIconEnabled configuration: {}", e.getMessage(), e);
+			logger.error("Exception on get uniqueProcess configuration: {}", e.getMessage(), e);
 			return Optional.empty();
 		}
 	}
 
-	public void trayIconEnabled(boolean value) {
+	public void uniqueProcess(boolean value) {
 		try {
 			var configValue = value ? "si" : "no";
-			properties.set("trayIconEnabled", configValue);
+			properties.set("uniqueProcess", configValue);
 		} catch (Exception e) {
-			logger.error("Exception on set trayIconEnabled: {}", e.getMessage(), e);
+			logger.error("Exception on set uniqueProcess: {}", e.getMessage(), e);
 		}
 	}
 
