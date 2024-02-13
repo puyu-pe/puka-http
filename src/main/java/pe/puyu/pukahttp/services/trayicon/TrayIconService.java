@@ -2,7 +2,6 @@ package pe.puyu.pukahttp.services.trayicon;
 
 import ch.qos.logback.classic.Logger;
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
 import javafx.stage.Stage;
@@ -15,7 +14,6 @@ import pe.puyu.pukahttp.util.FileSystemLock;
 import pe.puyu.pukahttp.util.FxUtil;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 public class TrayIconService {
 	private FXTrayIcon trayIcon;
@@ -24,19 +22,17 @@ public class TrayIconService {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TrayIconService"));
 
 	private static FileSystemLock lock;
-	private Runnable onExit;
 
-	public TrayIconService(Stage parentStage) {
+	public TrayIconService() {
 		configProperties = new ConfigAppProperties();
 		enableNotificationMenuItem = new CheckMenuItem(MenuItemLabel.ENABLE_NOTIFICATIONS.getValue());
 		enableNotificationMenuItem.setOnAction(this::onClickEnableNotificationsMenu);
-		loadTrayIcon(parentStage);
+		loadTrayIcon(getParentStage());
 	}
 
-	public TrayIconService show() {
+	public void show() {
 		configProperties.notificationEnabled().ifPresent(enableNotificationMenuItem::setSelected);
 		trayIcon.show();
-		return this;
 	}
 
 	public void showInfoMessage(String title, String message) {
@@ -60,24 +56,12 @@ public class TrayIconService {
 		}
 	}
 
-	public void setOnExit(Runnable onExit) {
-		this.onExit = onExit;
-	}
-
 	private void loadTrayIcon(Stage parentStage) {
-		var builder = new FXTrayIcon.Builder(parentStage, Objects.requireNonNull(getClass().getResource(Constants.ICON_PATH)))
+		this.trayIcon = new FXTrayIcon.Builder(parentStage, Objects.requireNonNull(getClass().getResource(Constants.ICON_PATH)))
 			.menuItem(MenuItemLabel.ABOUT.getValue(), this::onClickAboutMenu)
-			.separator()
 			.checkMenuItem(enableNotificationMenuItem)
-			.menuItem(MenuItemLabel.SHOW_INIT_WINDOW.getValue(), (event) -> onClickShowInitWindow(parentStage));
-		// Activate close service only mac
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.contains("mac")) {
-			builder
-				.separator()
-				.menuItem(MenuItemLabel.CLOSE.getValue(), this::onClickCloseMenu);
-		}
-		this.trayIcon = builder.build();
+			.separator()
+			.menuItem(MenuItemLabel.CLOSE.getValue(), this::onClickCloseMenu).build();
 	}
 
 	private void onClickAboutMenu(ActionEvent event) {
@@ -93,32 +77,26 @@ public class TrayIconService {
 		configProperties.notificationEnabled(enableNotificationMenuItem.isSelected());
 	}
 
-	private void onClickShowInitWindow(Stage parentStage) {
-		Platform.runLater(() -> {
-			try {
-				parentStage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
-				parentStage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
-				parentStage.show();
-			} catch (Exception e) {
-				logger.error("Error on show init window: {}", e.getMessage(), e);
-				showErrorMessage("Error", "No se pudo abrir la ventana de acciones: " + e.getLocalizedMessage());
-			}
-		});
+	private Stage getParentStage() {
+		Stage parentStage = new Stage();
+		try {
+			parentStage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
+			parentStage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
+		} catch (Exception e) {
+			logger.error("Error on show init window: {}", e.getMessage(), e);
+			showErrorMessage("Error", "No se pudo abrir la ventana de acciones: " + e.getLocalizedMessage());
+		}
+		return parentStage;
 	}
 
 	private void onClickCloseMenu(ActionEvent event) {
-		CompletableFuture.runAsync(() -> {
-			onExit.run();
-			unLock();
-			Platform.exit();
-			System.exit(0);
-		});
+		AppUtil.safelyShutDownApp();
 	}
 
 	public static boolean isTrayIconLock() {
 		var otherLock = new FileSystemLock(AppUtil.makeLockFile("lockTrayIconService"));
 		var isLock = otherLock.hasLock();
-		if(!isLock){
+		if (!isLock) {
 			otherLock.unLock();
 		}
 		return isLock;

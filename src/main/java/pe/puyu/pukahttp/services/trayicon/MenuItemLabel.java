@@ -3,7 +3,6 @@ package pe.puyu.pukahttp.services.trayicon;
 public enum MenuItemLabel {
 	ABOUT("Acerca de..."),
 	ENABLE_NOTIFICATIONS("Activar notificaciones"),
-	SHOW_INIT_WINDOW("Abrir panel de acciones"),
 	CLOSE("Salir");
 	private final String value;
 
