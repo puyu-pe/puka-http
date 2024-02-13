@@ -42,6 +42,11 @@ public class ActionsPanelController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+		try {
+			AppUtil.releaseExpiredTickets(posConfig.getIp(), posConfig.getPort());
+		} catch (Exception e) {
+			logger.error("Error al liberar tickets: {}", e.getMessage(),e);
+		}
 		lblVersion.setText(AppUtil.getAppVersion());
 		lblQueueSize.setText(requestQueueSize());
 		recoverLogo();
@@ -115,9 +120,10 @@ public class ActionsPanelController implements Initializable {
 	void onHideWindow() {
 		this.getStage().close();
 	}
+
 	@FXML
 	void onMouseEnteredWindow() {
-		if(container != null)
+		if (container != null)
 			return;
 		try {
 			container = ContainerProvider.getWebSocketContainer();

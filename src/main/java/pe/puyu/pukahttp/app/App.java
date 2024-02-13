@@ -59,7 +59,6 @@ public class App extends Application {
 						Platform.exit();
 						System.exit(0);
 					} else {
-						AppUtil.releaseExpiredTickets(ip, port);
 						showActionsPanel(stage);
 					}
 				} else {
