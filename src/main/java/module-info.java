@@ -37,4 +37,6 @@ module pe.puyu.pukahttp {
 	exports pe.puyu.pukahttp.repository.model;
 	exports pe.puyu.pukahttp.util;
 	exports pe.puyu.pukahttp.model;
+	exports pe.puyu.pukahttp.services.api;
+	exports pe.puyu.pukahttp.repository;
 }

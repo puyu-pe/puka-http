@@ -14,6 +14,9 @@ import pe.puyu.pukahttp.repository.AppDatabase;
 import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FileSystemLock;
+import pe.puyu.pukahttp.util.Notifier;
+
+import java.util.function.BiConsumer;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -21,10 +24,12 @@ public class PrintServer {
 	private final Javalin app;
 	private final FileSystemLock lock;
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PrintServer"));
+	private final Notifier notifier = new Notifier();
 	private PrinterApiController controller;
 	private AppDatabase db;
 
 	public PrintServer() {
+		notifier.setDefaultTitle("Servicio de impresión");
 		app = Javalin.create(this::serverConfig);
 		lock = new FileSystemLock(AppUtil.makeLockFile("lockPrintService"));
 		if (!isRunningInOtherProcess()) {
@@ -48,6 +53,7 @@ public class PrintServer {
 				logger.info("An attempt was made to launch server on {}:{}", ip, port);
 				logger.info("Service already run in other process");
 			}
+			notifier.info(String.format("online en %s:%d", ip, port));
 		} catch (Exception e) {
 			logger.error("Exception on star service on {}:{} -> {}", ip, port, e.getLocalizedMessage());
 			throw new Exception(e);
@@ -60,9 +66,22 @@ public class PrintServer {
 			app.close();
 			db.close();
 			logger.info("close service.");
+			notifier.info("Se cerro correctamente.");
 		} catch (Exception e) {
 			logger.error("Exception on stopService {}", e.getMessage(), e);
 		}
+	}
+
+	public void addListenerInfoNotification(BiConsumer<String, String> listener) {
+		notifier.addInfoSubscriber(listener);
+	}
+
+	public void addListenerErrorNotification(BiConsumer<String, String> listener) {
+		notifier.addErrorSubscriber(listener);
+	}
+
+	public void addListenerWarnNotification(BiConsumer<String, String> listener) {
+		notifier.addWarnSubscriber(listener);
 	}
 
 	private void serverConfig(JavalinConfig config) {
@@ -76,15 +95,15 @@ public class PrintServer {
 		app.routes(() -> {
 				path("printer", () -> {
 					path("system", () -> get(controller::getAllPrinterSystem));
-					path("open-drawer", () -> post(controller::openDrawer));
+					path("open-drawer", () -> post(ctx -> controller.openDrawer(ctx, notifier)));
 					path("ticket", () -> {
-						path("reprint", () -> get(controller::reprintTickets));
+						path("reprint", () -> get(ctx -> controller.reprintTickets(ctx, notifier)));
 						path("queue", () -> {
 							get(controller::getSizeQueue);
 							ws("events", controller::getQueueEvents);
 						});
-						post(controller::printTickets);
-						delete(controller::deleteTickets);
+						post(ctx -> controller.printTickets(ctx, notifier));
+						delete(ctx -> controller.deleteTickets(ctx, notifier));
 					});
 				});
 				get("test-connection", (ctx) -> ctx.result("service online"));
@@ -95,7 +114,7 @@ public class PrintServer {
 				});
 			}
 		);
-		app.exception(Exception.class, controller::genericErrorHandling);
+		app.exception(Exception.class, (e, ctx) -> controller.genericErrorHandling(e, ctx, notifier));
 		/*
 		app.routes(() -> {
 			path("printer"-> {
@@ -160,7 +179,7 @@ public class PrintServer {
 		//Necesario envolver en un hilo, de lo contrario no habra respuesta de la accion en el cliente
 		new Thread(() -> {
 			this.closeService();
-			if(!TrayIconService.isTrayIconLock()){
+			if (!TrayIconService.isTrayIconLock()) {
 				Platform.exit();
 			}
 		}).start();

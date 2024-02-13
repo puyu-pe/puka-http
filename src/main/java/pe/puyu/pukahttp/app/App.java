@@ -3,6 +3,7 @@ package pe.puyu.pukahttp.app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
@@ -49,7 +50,6 @@ public class App extends Application {
 			var posConfig = recoverPosConfig();
 			if (posConfig.isPresent()) {
 				PrintServer server = new PrintServer();
-				var uniqueProcess = new ConfigAppProperties().uniqueProcess();
 				final var ip = posConfig.get().getIp();
 				final var port = posConfig.get().getPort();
 				if (server.isRunningInOtherProcess()) {
@@ -63,9 +63,9 @@ public class App extends Application {
 						showActionsPanel(stage);
 					}
 				} else {
+					initTrayIcon(stage, ip, port, server);
 					server.listen(ip, port);
 					AppUtil.releaseExpiredTickets(ip, port);
-					initTrayIcon(stage, ip, port);
 				}
 			} else {
 				showPosConfigPanel(stage);
@@ -145,16 +145,25 @@ public class App extends Application {
 		return config.uniqueProcess().get();
 	}
 
-	private void initTrayIcon(Stage stage, String ip, int port) {
+	private void initTrayIcon(Stage stage, String ipSnapshot, int portSnapshot, PrintServer server) {
 		var config = new ConfigAppProperties();
 		var uniqueProcess = config.uniqueProcess();
 		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
 			return;
 		}
+		var trayIcon = getTrayIconService(stage, ipSnapshot, portSnapshot);
+		server.addListenerErrorNotification(trayIcon::showErrorMessage);
+		server.addListenerInfoNotification(trayIcon::showInfoMessage);
+		server.addListenerWarnNotification(trayIcon::showWarningMessage);
+		trayIcon.show();
+	}
+
+	@NotNull
+	private TrayIconService getTrayIconService(Stage stage, String ipSnapshot, int portSnapshot) {
 		var trayIcon = new TrayIconService(stage);
 		trayIcon.setOnExit(() -> {
 			try {
-				String baseUrl = String.format("http://%s:%d", ip, port);
+				String baseUrl = String.format("http://%s:%d", ipSnapshot, portSnapshot);
 				var url = baseUrl + "/stop-service";
 				var response = HttpUtil.get(url);
 				if (response.getStatus().equals("success")) {
@@ -166,8 +175,7 @@ public class App extends Application {
 				rootLogger.error("Exception on exit trayicon: {}", e.getMessage(), e);
 			}
 		});
-		trayIcon.show();
-		trayIcon.showInfoMessage("Servicio online.", "Servicio de impresión ejecutandose en segundo plano.");
+		return trayIcon;
 	}
 
 }
