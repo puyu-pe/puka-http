@@ -16,6 +16,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.dustinredmond.fxtrayicon</groupId>
+      <artifactId>FXTrayIcon</artifactId>
+      <version>4.0.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
       <version>17.0.6</version>
@@ -139,6 +144,7 @@
                 <resource>
                   <directory>${basedir}</directory>
                   <includes>
+                    <include>config.ini</include>
                     <include>VERSION</include>
                   </includes>
                 </resource>

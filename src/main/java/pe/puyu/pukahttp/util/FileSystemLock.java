@@ -23,11 +23,15 @@ public class FileSystemLock {
 			lock = channel.tryLock();
 			Runtime.getRuntime().addShutdownHook(new Thread(this::unLock));
 		} catch (Exception e) {
-			logger.error("Exception create lock file: {}", e.getMessage(), e);
+			logger.error("Exception create lock file {}: {}", fileLockDir, e.getMessage(), e);
 		}
 	}
 
 	public boolean hasLock() {
+		// Si algun otro proceso o codigo instancia un lock con el mismo fileLockDir
+		// entonces lock sera null  y por lo tanto indica que esta bloqueado
+		// en otras palabras si no se pudo inicializar el lock es por que otro proceso
+		// ya esta haciendo uso del lock.
 		return lock == null;
 	}
 
