@@ -105,9 +105,9 @@ public class PrinterApiController {
 			if (dateString != null && !dateString.isEmpty()) {
 				var date = AppUtil.getDateTimeFormatter().parse(dateString);
 				var rowsDeleted = ticketRepository.deleteWithDatesBefore(date);
-				if(rowsDeleted > 0){
-					response.setMessage(String.format("Se eliminaron %d tickets en memoria.", rowsDeleted));
-					serverNotifier.info(String.format("Se eliminaron %d tickets", rowsDeleted));
+				if (rowsDeleted > 0) {
+					response.setMessage(String.format("Se eliminaron %d tickets", rowsDeleted));
+					serverNotifier.info(String.format("Se eliminaron %d tickets, por que expiro su tiempo de vida.", rowsDeleted));
 				}
 			} else {
 				if (countTickets > 0) {
