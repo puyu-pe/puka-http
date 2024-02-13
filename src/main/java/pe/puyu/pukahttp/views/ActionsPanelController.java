@@ -89,22 +89,26 @@ public class ActionsPanelController implements Initializable {
 
 	@FXML
 	void onClickLabelVersion() {
-		try {
-			FxUtil.newStage(Constants.PASSWORD_FXML, "password").show();
-			getStage().close();
-		} catch (Exception e) {
-			logger.error("Exception on click label version. {}", e.getMessage());
-		}
+		Platform.runLater(() -> {
+			try {
+				FxUtil.newStage(Constants.PASSWORD_FXML, "password").show();
+				getStage().close();
+			} catch (Exception e) {
+				logger.error("Exception on click label version. {}", e.getMessage());
+			}
+		});
 	}
 
 	@FXML
 	void onTestPrint() {
-		try {
-			FxUtil.newStage(Constants.TEST_PANEL_FXML, "Pruebas de impresión").show();
-			getStage().close();
-		} catch (Exception e) {
-			logger.error("Exception on show test print: {}", e.getMessage(), e);
-		}
+		Platform.runLater(() -> {
+			try {
+				FxUtil.newStage(Constants.TEST_PANEL_FXML, "Pruebas de impresión").show();
+				getStage().close();
+			} catch (Exception e) {
+				logger.error("Exception on show test print: {}", e.getMessage(), e);
+			}
+		});
 	}
 
 	@FXML

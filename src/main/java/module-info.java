@@ -27,6 +27,7 @@ module pe.puyu.pukahttp {
 	requires ormlite.jdbc;
 	requires java.sql;
 	requires com.h2database;
+	requires com.dustinredmond.fxtrayicon;
 	opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
 
 	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
@@ -35,4 +36,7 @@ module pe.puyu.pukahttp {
 	exports pe.puyu.pukahttp.app;
 	exports pe.puyu.pukahttp.repository.model;
 	exports pe.puyu.pukahttp.util;
+	exports pe.puyu.pukahttp.model;
+	exports pe.puyu.pukahttp.services.api;
+	exports pe.puyu.pukahttp.repository;
 }
