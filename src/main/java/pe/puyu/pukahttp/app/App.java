@@ -3,7 +3,6 @@ package pe.puyu.pukahttp.app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
@@ -15,7 +14,6 @@ import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FxUtil;
-import pe.puyu.pukahttp.util.HttpUtil;
 import pe.puyu.pukahttp.util.JsonUtil;
 import pe.puyu.pukahttp.validations.PosConfigValidator;
 
@@ -62,7 +60,7 @@ public class App extends Application {
 						showActionsPanel(stage);
 					}
 				} else {
-					initTrayIcon(stage, ip, port, server);
+					initTrayIcon(server);
 					server.listen(ip, port);
 					AppUtil.releaseExpiredTickets(ip, port);
 				}
@@ -144,37 +142,17 @@ public class App extends Application {
 		return config.uniqueProcess().get();
 	}
 
-	private void initTrayIcon(Stage stage, String ipSnapshot, int portSnapshot, PrintServer server) {
+	private void initTrayIcon(PrintServer server) {
 		var config = new ConfigAppProperties();
 		var uniqueProcess = config.uniqueProcess();
 		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
 			return;
 		}
-		var trayIcon = getTrayIconService(stage, ipSnapshot, portSnapshot);
+		var trayIcon = new TrayIconService();
 		server.addListenerErrorNotification(trayIcon::showErrorMessage);
 		server.addListenerInfoNotification(trayIcon::showInfoMessage);
 		server.addListenerWarnNotification(trayIcon::showWarningMessage);
 		trayIcon.show();
-	}
-
-	@NotNull
-	private TrayIconService getTrayIconService(Stage stage, String ipSnapshot, int portSnapshot) {
-		var trayIcon = new TrayIconService(stage);
-		trayIcon.setOnExit(() -> {
-			try {
-				String baseUrl = String.format("http://%s:%d", ipSnapshot, portSnapshot);
-				var url = baseUrl + "/stop-service";
-				var response = HttpUtil.get(url);
-				if (response.getStatus().equals("success")) {
-					rootLogger.info("status success stop-service from trayIcon");
-				} else {
-					rootLogger.warn("status error stop-service from trayIcon: {}", response.getMessage());
-				}
-			} catch (Exception e) {
-				rootLogger.error("Exception on exit trayicon: {}", e.getMessage(), e);
-			}
-		});
-		return trayIcon;
 	}
 
 }

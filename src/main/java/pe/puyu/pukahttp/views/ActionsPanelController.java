@@ -35,7 +35,7 @@ public class ActionsPanelController implements Initializable {
 
 	public ActionsPanelController() {
 		posConfig = new PosConfig();
-		posConfig.copyFrom(AppUtil.recoverPosConfig());
+		posConfig.copyFrom(AppUtil.recoverPosConfigDefaultValues());
 		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
 		container = null;
 	}
@@ -117,8 +117,8 @@ public class ActionsPanelController implements Initializable {
 	}
 
 	@FXML
-	void onHideWindow() {
-		this.getStage().close();
+	void onCloseService() {
+		AppUtil.safelyShutDownApp();
 	}
 
 	@FXML

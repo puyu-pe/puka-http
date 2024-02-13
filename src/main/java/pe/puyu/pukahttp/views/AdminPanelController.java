@@ -47,7 +47,7 @@ public class AdminPanelController implements Initializable {
 			}
 		});
 		portNumberProperty.addListener((observable, oldValue, newValue) -> txtPort.setText(newValue.toString()));
-		posConfig.copyFrom(AppUtil.recoverPosConfig());
+		posConfig.copyFrom(AppUtil.recoverPosConfigDefaultValues());
 		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
 		initCmbLevelLogs();
 	}
