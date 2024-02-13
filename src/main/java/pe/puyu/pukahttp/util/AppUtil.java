@@ -1,6 +1,8 @@
 package pe.puyu.pukahttp.util;
 
+import ch.qos.logback.classic.Logger;
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
@@ -16,9 +18,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
+import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
+import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 public class AppUtil {
 
@@ -143,7 +148,7 @@ public class AppUtil {
 		clipboard.setContent(content);
 	}
 
-	public static PosConfig recoverPosConfig() {
+	public static PosConfig recoverPosConfigDefaultValues() {
 		PosConfig config = new PosConfig();
 		config.setIp(AppUtil.getHostIp());
 		config.setPort(7172);
@@ -210,5 +215,36 @@ public class AppUtil {
 			Files.copy(resourceStream, destinationPath);
 		}
 		return destinationFile.getAbsolutePath();
+	}
+
+	public static void safelyShutDownApp() {
+		CompletableFuture.runAsync(() -> Platform.runLater(() -> {
+			var isOk = AppAlerts.showConfirmation(
+				"¿Seguro que deseas cerrar el servicio de impresión?",
+				"* Se dejaran de imprimir tickets."
+			);
+			if (isOk) {
+				final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ShutdownApp"));
+				try {
+					// Delegar responsablidad al servidor http para que finalice su proceso y sus dependencias
+					var posConfig = recoverPosConfigDefaultValues();
+					String baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
+					var url = baseUrl + "/stop-service";
+					var response = HttpUtil.get(url);
+					if (response.getStatus().equals("success")) {
+						logger.info("status success on stop-service");
+					} else {
+						logger.error("status error on stop-service:  {}", response.getMessage());
+					}
+					// Liberar TrayIcon
+					TrayIconService.unLock();
+					// Asegurar que se cierre todo
+					Platform.exit();
+					System.exit(0);
+				} catch (Exception e) {
+					logger.error("Exception on exit safelyShutdownApp: {}", e.getMessage(), e);
+				}
+			}
+		}));
 	}
 }

@@ -15,7 +15,6 @@ import pe.puyu.pukahttp.util.FileSystemLock;
 import pe.puyu.pukahttp.util.FxUtil;
 
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 public class TrayIconService {
 	private FXTrayIcon trayIcon;
@@ -24,7 +23,6 @@ public class TrayIconService {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TrayIconService"));
 
 	private static FileSystemLock lock;
-	private Runnable onExit;
 
 	public TrayIconService(Stage parentStage) {
 		configProperties = new ConfigAppProperties();
@@ -33,10 +31,9 @@ public class TrayIconService {
 		loadTrayIcon(parentStage);
 	}
 
-	public TrayIconService show() {
+	public void show() {
 		configProperties.notificationEnabled().ifPresent(enableNotificationMenuItem::setSelected);
 		trayIcon.show();
-		return this;
 	}
 
 	public void showInfoMessage(String title, String message) {
@@ -60,24 +57,14 @@ public class TrayIconService {
 		}
 	}
 
-	public void setOnExit(Runnable onExit) {
-		this.onExit = onExit;
-	}
-
 	private void loadTrayIcon(Stage parentStage) {
-		var builder = new FXTrayIcon.Builder(parentStage, Objects.requireNonNull(getClass().getResource(Constants.ICON_PATH)))
+		this.trayIcon = new FXTrayIcon.Builder(parentStage, Objects.requireNonNull(getClass().getResource(Constants.ICON_PATH)))
 			.menuItem(MenuItemLabel.ABOUT.getValue(), this::onClickAboutMenu)
 			.separator()
 			.checkMenuItem(enableNotificationMenuItem)
-			.menuItem(MenuItemLabel.SHOW_INIT_WINDOW.getValue(), (event) -> onClickShowInitWindow(parentStage));
-		// Activate close service only mac
-		String os = System.getProperty("os.name").toLowerCase();
-		if (os.contains("mac")) {
-			builder
-				.separator()
-				.menuItem(MenuItemLabel.CLOSE.getValue(), this::onClickCloseMenu);
-		}
-		this.trayIcon = builder.build();
+			.menuItem(MenuItemLabel.SHOW_INIT_WINDOW.getValue(), (event) -> onClickShowInitWindow(parentStage))
+			.separator()
+			.menuItem(MenuItemLabel.CLOSE.getValue(), this::onClickCloseMenu).build();
 	}
 
 	private void onClickAboutMenu(ActionEvent event) {
@@ -107,18 +94,13 @@ public class TrayIconService {
 	}
 
 	private void onClickCloseMenu(ActionEvent event) {
-		CompletableFuture.runAsync(() -> {
-			onExit.run();
-			unLock();
-			Platform.exit();
-			System.exit(0);
-		});
+		AppUtil.safelyShutDownApp();
 	}
 
 	public static boolean isTrayIconLock() {
 		var otherLock = new FileSystemLock(AppUtil.makeLockFile("lockTrayIconService"));
 		var isLock = otherLock.hasLock();
-		if(!isLock){
+		if (!isLock) {
 			otherLock.unLock();
 		}
 		return isLock;
