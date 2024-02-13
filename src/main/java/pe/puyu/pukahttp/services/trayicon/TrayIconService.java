@@ -2,7 +2,6 @@ package pe.puyu.pukahttp.services.trayicon;
 
 import ch.qos.logback.classic.Logger;
 import com.dustinredmond.fxtrayicon.FXTrayIcon;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.CheckMenuItem;
 import javafx.stage.Stage;
@@ -24,11 +23,11 @@ public class TrayIconService {
 
 	private static FileSystemLock lock;
 
-	public TrayIconService(Stage parentStage) {
+	public TrayIconService() {
 		configProperties = new ConfigAppProperties();
 		enableNotificationMenuItem = new CheckMenuItem(MenuItemLabel.ENABLE_NOTIFICATIONS.getValue());
 		enableNotificationMenuItem.setOnAction(this::onClickEnableNotificationsMenu);
-		loadTrayIcon(parentStage);
+		loadTrayIcon(getParentStage());
 	}
 
 	public void show() {
@@ -60,9 +59,7 @@ public class TrayIconService {
 	private void loadTrayIcon(Stage parentStage) {
 		this.trayIcon = new FXTrayIcon.Builder(parentStage, Objects.requireNonNull(getClass().getResource(Constants.ICON_PATH)))
 			.menuItem(MenuItemLabel.ABOUT.getValue(), this::onClickAboutMenu)
-			.separator()
 			.checkMenuItem(enableNotificationMenuItem)
-			.menuItem(MenuItemLabel.SHOW_INIT_WINDOW.getValue(), (event) -> onClickShowInitWindow(parentStage))
 			.separator()
 			.menuItem(MenuItemLabel.CLOSE.getValue(), this::onClickCloseMenu).build();
 	}
@@ -80,17 +77,16 @@ public class TrayIconService {
 		configProperties.notificationEnabled(enableNotificationMenuItem.isSelected());
 	}
 
-	private void onClickShowInitWindow(Stage parentStage) {
-		Platform.runLater(() -> {
-			try {
-				parentStage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
-				parentStage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
-				parentStage.show();
-			} catch (Exception e) {
-				logger.error("Error on show init window: {}", e.getMessage(), e);
-				showErrorMessage("Error", "No se pudo abrir la ventana de acciones: " + e.getLocalizedMessage());
-			}
-		});
+	private Stage getParentStage() {
+		Stage parentStage = new Stage();
+		try {
+			parentStage.setScene(FxUtil.loadScene(Constants.ACTIONS_PANEL_FXML));
+			parentStage.setTitle(String.format("Panel de acciones %s", Constants.APP_NAME));
+		} catch (Exception e) {
+			logger.error("Error on show init window: {}", e.getMessage(), e);
+			showErrorMessage("Error", "No se pudo abrir la ventana de acciones: " + e.getLocalizedMessage());
+		}
+		return parentStage;
 	}
 
 	private void onClickCloseMenu(ActionEvent event) {

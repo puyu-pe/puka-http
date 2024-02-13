@@ -60,7 +60,7 @@ public class App extends Application {
 						showActionsPanel(stage);
 					}
 				} else {
-					initTrayIcon(stage, server);
+					initTrayIcon(server);
 					server.listen(ip, port);
 					AppUtil.releaseExpiredTickets(ip, port);
 				}
@@ -142,13 +142,13 @@ public class App extends Application {
 		return config.uniqueProcess().get();
 	}
 
-	private void initTrayIcon(Stage stage, PrintServer server) {
+	private void initTrayIcon(PrintServer server) {
 		var config = new ConfigAppProperties();
 		var uniqueProcess = config.uniqueProcess();
 		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
 			return;
 		}
-		var trayIcon = new TrayIconService(stage);
+		var trayIcon = new TrayIconService();
 		server.addListenerErrorNotification(trayIcon::showErrorMessage);
 		server.addListenerInfoNotification(trayIcon::showInfoMessage);
 		server.addListenerWarnNotification(trayIcon::showWarningMessage);

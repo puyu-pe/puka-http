@@ -117,8 +117,8 @@ public class ActionsPanelController implements Initializable {
 	}
 
 	@FXML
-	void onHideWindow() {
-		this.getStage().close();
+	void onCloseService() {
+		AppUtil.safelyShutDownApp();
 	}
 
 	@FXML

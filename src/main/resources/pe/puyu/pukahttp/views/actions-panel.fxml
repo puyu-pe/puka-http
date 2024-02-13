@@ -36,7 +36,7 @@
             </Label>
          </children>
       </HBox>
-      <Button cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onHideWindow" text="OCULTAR" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Button cancelButton="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onCloseService" text="Terminar Servicio" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
          <padding>
             <Insets bottom="10.0" top="10.0" />
          </padding>
