@@ -37,7 +37,10 @@ public class App extends Application {
 	public void init() {
 		this.rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		rootLogger.setLevel(Level.INFO);
-		configUniqueProcess();
+		var isUniqueProcess = configUniqueProcess();
+		if (isUniqueProcess) {
+			TrayIconService.lockTrayIcon();
+		}
 	}
 
 	@Override
@@ -51,13 +54,13 @@ public class App extends Application {
 				final var port = posConfig.get().getPort();
 				if (server.isRunningInOtherProcess()) {
 					// importante hacer esta validación para ya no ejecutar un segundo proceso
-					// si hay trayicon por defecto
-					if(!(uniqueProcess.isPresent() && uniqueProcess.get())){
-						AppUtil.releaseExpiredTickets(ip, port);
-						showActionsPanel(stage);
-					}else{
+					// esto solo si se esta en modo uniqueProcess
+					if (TrayIconService.isTrayIconLock()) {
 						Platform.exit();
 						System.exit(0);
+					} else {
+						AppUtil.releaseExpiredTickets(ip, port);
+						showActionsPanel(stage);
 					}
 				} else {
 					server.listen(ip, port);
@@ -126,10 +129,10 @@ public class App extends Application {
 		}
 	}
 
-	private void configUniqueProcess() {
+	private boolean configUniqueProcess() {
 		ConfigAppProperties config = new ConfigAppProperties();
 		if (config.uniqueProcess().isPresent()) {
-			return;
+			return config.uniqueProcess().get();
 		}
 		String os = System.getProperty("os.name").toLowerCase();
 		if (os.contains("win") || os.contains("mac")) {
@@ -139,6 +142,7 @@ public class App extends Application {
 		} else {
 			rootLogger.warn("Unidentified Operating System, uniquerProcess not set.");
 		}
+		return config.uniqueProcess().get();
 	}
 
 	private void initTrayIcon(Stage stage, String ip, int port) {

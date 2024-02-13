@@ -11,6 +11,7 @@ import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.util.AppAlerts;
 import pe.puyu.pukahttp.util.AppUtil;
+import pe.puyu.pukahttp.util.FileSystemLock;
 import pe.puyu.pukahttp.util.FxUtil;
 
 import java.util.Objects;
@@ -21,6 +22,8 @@ public class TrayIconService {
 	private final ConfigAppProperties configProperties;
 	private final CheckMenuItem enableNotificationMenuItem;
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TrayIconService"));
+
+	private static FileSystemLock lock;
 	private Runnable onExit;
 
 	public TrayIconService(Stage parentStage) {
@@ -69,7 +72,7 @@ public class TrayIconService {
 			.menuItem(MenuItemLabel.SHOW_INIT_WINDOW.getValue(), (event) -> onClickShowInitWindow(parentStage));
 		// Activate close service only mac
 		String os = System.getProperty("os.name").toLowerCase();
-		if(os.contains("mac")){
+		if (os.contains("mac")) {
 			builder
 				.separator()
 				.menuItem(MenuItemLabel.CLOSE.getValue(), this::onClickCloseMenu);
@@ -106,9 +109,28 @@ public class TrayIconService {
 	private void onClickCloseMenu(ActionEvent event) {
 		CompletableFuture.runAsync(() -> {
 			onExit.run();
+			unLock();
 			Platform.exit();
 			System.exit(0);
 		});
 	}
 
+	public static boolean isTrayIconLock() {
+		var otherLock = new FileSystemLock(AppUtil.makeLockFile("lockTrayIconService"));
+		var isLock = otherLock.hasLock();
+		if(!isLock){
+			otherLock.unLock();
+		}
+		return isLock;
+	}
+
+	public static void lockTrayIcon() {
+		lock = new FileSystemLock(AppUtil.makeLockFile("lockTrayIconService"));
+	}
+
+	public static void unLock() {
+		if (lock != null) {
+			lock.unLock();
+		}
+	}
 }
