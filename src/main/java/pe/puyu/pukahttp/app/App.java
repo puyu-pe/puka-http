@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
+import pe.puyu.pukahttp.app.properties.EnvironmentProperty;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.api.PrintServer;
@@ -28,7 +29,9 @@ public class App extends Application {
 	public App() {
 		// important set properties into constructor!, first execution
 		var logsDirectoryProperty = LogsDirectoryProperty.get();
+		var environmentProperty = EnvironmentProperty.get();
 		System.setProperty(logsDirectoryProperty.key(), logsDirectoryProperty.value());
+		System.setProperty(environmentProperty.key(), environmentProperty.value());
 		Platform.setImplicitExit(false);
 	}
 
