@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.api.PrintServer;
 import pe.puyu.pukahttp.services.api.ResponseApi;
+import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.HttpUtil;
@@ -142,10 +143,12 @@ public class AdminPanelController implements Initializable {
 				server.listen(txtIp.getText(), Integer.parseInt(txtPort.getText()));
 				JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
 				Platform.runLater(() -> getStage().close());
-				var trayIcon = TrayIconServiceProvider.get();
-				server.addListenerErrorNotification(trayIcon::showErrorMessage);
-				server.addListenerInfoNotification(trayIcon::showInfoMessage);
-				server.addListenerWarnNotification(trayIcon::showWarningMessage);
+				if(TrayIconService.isTrayIconLock()){
+					var trayIcon = TrayIconServiceProvider.get();
+					server.addListenerErrorNotification(trayIcon::showErrorMessage);
+					server.addListenerInfoNotification(trayIcon::showInfoMessage);
+					server.addListenerWarnNotification(trayIcon::showWarningMessage);
+				}
 				return true;
 			} else {
 				return false;
