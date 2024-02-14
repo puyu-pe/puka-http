@@ -67,6 +67,7 @@ public class PrintServer {
 			db.close();
 			logger.info("close service.");
 			notifier.info("Se cerro correctamente.");
+			notifier.closeNotification();
 		} catch (Exception e) {
 			logger.error("Exception on stopService {}", e.getMessage(), e);
 		}
