@@ -23,6 +23,7 @@ import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.trayicon.TrayIconService;
+import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -238,14 +239,15 @@ public class AppUtil {
 					} else {
 						logger.error("status error on stop-service:  {}", response.getMessage());
 					}
-					// Liberar TrayIcon
-					TrayIconService.unLock();
-					// Asegurar que se cierre todo
-					Platform.exit();
-					System.exit(0);
 				} catch (Exception e) {
 					logger.error("Exception on exit safelyShutdownApp: {}", e.getMessage(), e);
 				}
+				// Liberar TrayIcon
+//				TrayIconServiceProvider.closeTrayIconService();
+				TrayIconService.unLock();
+				// Asegurar que se cierre todo
+				Platform.exit();
+				System.exit(0);
 			}
 		}));
 	}
