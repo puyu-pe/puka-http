@@ -78,7 +78,7 @@ public class AppUtil {
 	}
 
 	public static String getAppVersion() {
-		var isBeta = AppUtil.class.getResource("/PRODUCTION") == null;
+		var isBeta = !isProductionEnvironment();
 		var suffix = isBeta ? "-beta" : "";
 		try {
 			var resourceUrl = AppUtil.class.getResource("/VERSION");
@@ -89,6 +89,10 @@ public class AppUtil {
 		} catch (Exception e) {
 			return "0.1.0" + suffix;
 		}
+	}
+
+	public static boolean isProductionEnvironment() {
+		return AppUtil.class.getResource("/PRODUCTION") != null;
 	}
 
 	public static Optional<File> showPngFileChooser(Stage parent) {
@@ -105,7 +109,6 @@ public class AppUtil {
 		Label message = new Label(text);
 		message.setStyle("-fx-text-fill: #2cfc03; -fx-font-weight: bold; -fx-font-size: 16px");
 		message.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.0), CornerRadii.EMPTY, Insets.EMPTY)));
-
 		StackPane pane = new StackPane(message);
 		pane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); -fx-padding: 10px; -fx-background-radius: 5px;");
 		popup.getContent().add(pane);
