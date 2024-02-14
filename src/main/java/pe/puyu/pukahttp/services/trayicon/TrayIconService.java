@@ -23,7 +23,7 @@ public class TrayIconService {
 
 	private static FileSystemLock lock;
 
-	public TrayIconService() {
+	TrayIconService() {
 		configProperties = new ConfigAppProperties();
 		enableNotificationMenuItem = new CheckMenuItem(MenuItemLabel.ENABLE_NOTIFICATIONS.getValue());
 		enableNotificationMenuItem.setOnAction(this::onClickEnableNotificationsMenu);

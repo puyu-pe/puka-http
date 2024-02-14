@@ -20,7 +20,10 @@ public class FileSystemLock {
 			file = new File(fileLockDir);
 			//noinspection resource
 			channel = new RandomAccessFile((file), "rw").getChannel();
-			lock = channel.tryLock();
+			try {
+				lock = channel.tryLock();
+			} catch (Exception ignore) {
+			}
 			Runtime.getRuntime().addShutdownHook(new Thread(this::unLock));
 		} catch (Exception e) {
 			logger.error("Exception create lock file {}: {}", fileLockDir, e.getMessage(), e);

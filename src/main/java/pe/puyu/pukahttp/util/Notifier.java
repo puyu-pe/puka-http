@@ -72,4 +72,10 @@ public class Notifier {
 	public void setDefaultTitle(String title) {
 		this.defaultTitle = title;
 	}
+
+	public void closeNotification(){
+		infoObservers.clear();
+		warningObservers.clear();
+		errorObservers.clear();
+	}
 }

@@ -12,6 +12,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.services.trayicon.TrayIconService;
+import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FxUtil;
 import pe.puyu.pukahttp.util.JsonUtil;
@@ -148,7 +149,7 @@ public class App extends Application {
 		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
 			return;
 		}
-		var trayIcon = new TrayIconService();
+		var trayIcon = TrayIconServiceProvider.get();
 		server.addListenerErrorNotification(trayIcon::showErrorMessage);
 		server.addListenerInfoNotification(trayIcon::showInfoMessage);
 		server.addListenerWarnNotification(trayIcon::showWarningMessage);

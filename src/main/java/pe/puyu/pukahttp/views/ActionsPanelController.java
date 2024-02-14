@@ -43,9 +43,11 @@ public class ActionsPanelController implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		try {
+			// la primera vez lanzara una excepción, por que el trayicon se inicio antes
+			// que el servidor, es normal , talvez en el futuro se pude mejorar esto
 			AppUtil.releaseExpiredTickets(posConfig.getIp(), posConfig.getPort());
 		} catch (Exception e) {
-			logger.error("Error al liberar tickets: {}", e.getMessage(),e);
+			logger.warn("Error al liberar tickets: {}", e.getMessage());
 		}
 		lblVersion.setText(AppUtil.getAppVersion());
 		lblQueueSize.setText(requestQueueSize());
@@ -150,7 +152,7 @@ public class ActionsPanelController implements Initializable {
 			ResponseApi<Double> response = HttpUtil.get(url);
 			return String.valueOf(Math.round(response.getData()));
 		} catch (Exception e) {
-			logger.error("Exception at request queue size: {}", e.getLocalizedMessage());
+			logger.warn("Exception at request queue size: {}", e.getLocalizedMessage());
 			return "0";
 		}
 	}
