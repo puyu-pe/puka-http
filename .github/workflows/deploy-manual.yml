@@ -16,6 +16,8 @@ jobs:
           fetch-depth: 0
       - name: Set package.json.production to package.json
         run: mv package.production.json package.json
+      - name: Add PRODUCTION file
+        run: touch PRODUCTION
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
