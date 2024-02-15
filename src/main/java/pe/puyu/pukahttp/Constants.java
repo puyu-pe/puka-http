@@ -11,4 +11,5 @@ public class Constants {
 	public static final String ADMIN_PANEL_FXML = FXML_PATH_BASE + "/admin-panel.fxml";
 	public static final String ICON_PATH = "/pe/puyu/pukahttp/assets/icon.png";
 	public static final long TIME_EXPIRED_TICKETS_MILLISECONDS = 5 * 60 * 60 * 1000;
+	public static final String DB_VERSION = "V2";
 }
