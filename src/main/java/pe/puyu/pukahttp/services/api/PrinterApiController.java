@@ -233,7 +233,10 @@ public class PrinterApiController {
 					logger.info("close ws connection, then remove observer ticketrepository.");
 					ticketRepository.removeObserver(observer);
 				});
-				ws.onError(ctxError -> logger.error("Exception on websockets connection", ctxError.error()));
+				ws.onError(ctxError -> {
+					assert ctxError.error() != null;
+					logger.error("Exception on websockets connection: {}", ctxError.error().getMessage());
+				});
 			}
 		});
 	}
