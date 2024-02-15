@@ -21,7 +21,8 @@ public class ConfigAppProperties {
 
 	public Optional<Boolean> uniqueProcess() {
 		try {
-			return Optional.of(properties.get("uniqueProcess").equalsIgnoreCase("si"));
+			var uniqueProcess = Optional.ofNullable(properties.get("uniqueProcess"));
+			return uniqueProcess.map(s -> s.equalsIgnoreCase("si"));
 		} catch (Exception e) {
 			logger.error("Exception on get uniqueProcess configuration: {}", e.getMessage(), e);
 			return Optional.empty();
@@ -37,7 +38,7 @@ public class ConfigAppProperties {
 		}
 	}
 
-	public void notificationEnabled(boolean value){
+	public void notificationEnabled(boolean value) {
 		try {
 			var configValue = value ? "si" : "no";
 			properties.set("notificationEnabled", configValue);
@@ -46,7 +47,7 @@ public class ConfigAppProperties {
 		}
 	}
 
-	public Optional<Boolean> notificationEnabled(){
+	public Optional<Boolean> notificationEnabled() {
 		try {
 			return Optional.of(properties.get("notificationEnabled").equalsIgnoreCase("si"));
 		} catch (Exception e) {

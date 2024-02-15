@@ -70,7 +70,8 @@ public class AppUtil {
 	}
 
 	public static String getDatabaseDirectory() {
-		return getLookDirectory();
+		var folderDbPath = Path.of(getUserDataDir(), ".db", Constants.DB_VERSION);
+		return folderDbPath.toString();
 	}
 
 	public static String getLogsDirectory() {
