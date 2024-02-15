@@ -48,12 +48,7 @@ public class AppDatabase {
 		}
 	}
 
-	public void dropTables() throws Exception {
-		TableUtils.dropTable(connectionSource, Ticket.class, false);
-	}
-
 	private void createTables() throws Exception {
-		dropTables(); // TODO: remove line
 		TableUtils.createTableIfNotExists(connectionSource, Ticket.class);
 	}
 }
