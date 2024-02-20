@@ -23,13 +23,13 @@ import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.trayicon.TrayIconService;
-import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -51,10 +51,6 @@ public class AppUtil {
 			var ignored = file.mkdirs();
 		}
 		return userDataDir;
-	}
-
-	public static String getUserConfigFileDir() throws IOException {
-		return getConfigAppFileDir("user.json");
 	}
 
 	public static String getConfigAppFileDir(String jsonFileName) throws IOException {
@@ -206,6 +202,10 @@ public class AppUtil {
 		);
 	}
 
+	public static Path getLogoFileDir() {
+		return Path.of(getUserDataDir(), "logo.png");
+	}
+
 	public static String createFileDirFromResourceIfNotExists(
 		String destinationDir, String pathToResource, String resourceFileName
 	) throws Exception {
@@ -254,5 +254,14 @@ public class AppUtil {
 				System.exit(0);
 			}
 		}));
+	}
+
+	public static Optional<URL> recoverLogoURL() throws Exception {
+		var logoPath = AppUtil.getLogoFileDir().toString();
+		File logoFile = new File(logoPath);
+		if (logoFile.exists()) {
+			return Optional.of(logoFile.toURI().toURL());
+		}
+		return Optional.empty();
 	}
 }
