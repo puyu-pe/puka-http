@@ -16,18 +16,12 @@ import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.api.PrintServer;
 import pe.puyu.pukahttp.services.api.ResponseApi;
-import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.HttpUtil;
 import pe.puyu.pukahttp.util.JsonUtil;
-import pe.puyu.pukahttp.util.WebSocketClient;
 import pe.puyu.pukahttp.validations.PosConfigValidator;
 
-import javax.websocket.ContainerProvider;
-import javax.websocket.Session;
-import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
@@ -142,8 +136,8 @@ public class AdminPanelController implements Initializable {
 					throw new Exception(errors.toString());
 				JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
 				Platform.runLater(() -> getStage().close());
-				if(TrayIconService.isTrayIconLock()){
-					var trayIcon = TrayIconServiceProvider.get();
+				if(TrayIconServiceProvider.isLock()){
+					var trayIcon = TrayIconServiceProvider.instance();
 					server.addListenerErrorNotification(trayIcon::showErrorMessage);
 					server.addListenerInfoNotification(trayIcon::showInfoMessage);
 					server.addListenerWarnNotification(trayIcon::showWarningMessage);

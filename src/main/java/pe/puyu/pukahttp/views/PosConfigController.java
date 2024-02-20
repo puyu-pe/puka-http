@@ -72,6 +72,7 @@ public class PosConfigController implements Initializable {
 					// (TODO: realizar un request a stop-service api)
 					throw new Exception("Whats!!! Print Server is already run in other process, STRANGE!!.");
 				}
+				AppUtil.initTrayIcon(printServer);
 				printServer.listen(posConfig.getIp(), posConfig.getPort());
 			} else {
 				AppAlerts.showWarning("Configuración invalida detectada.", String.join("\n", errors));

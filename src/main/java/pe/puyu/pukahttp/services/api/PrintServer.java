@@ -11,7 +11,7 @@ import javafx.application.Platform;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.repository.AppDatabase;
-import pe.puyu.pukahttp.services.trayicon.TrayIconService;
+import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FileSystemLock;
 import pe.puyu.pukahttp.util.Notifier;
@@ -180,7 +180,7 @@ public class PrintServer {
 		//Necesario envolver en un hilo, de lo contrario no habra respuesta de la accion en el cliente
 		new Thread(() -> {
 			this.closeService();
-			if (!TrayIconService.isTrayIconLock()) {
+			if (!TrayIconServiceProvider.isLock()) {
 				Platform.exit();
 			}
 		}).start();

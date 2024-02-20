@@ -21,8 +21,6 @@ public class TrayIconService {
 	private final CheckMenuItem enableNotificationMenuItem;
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TrayIconService"));
 
-	private static FileSystemLock lock;
-
 	TrayIconService() {
 		configProperties = new ConfigAppProperties();
 		enableNotificationMenuItem = new CheckMenuItem(MenuItemLabel.ENABLE_NOTIFICATIONS.getValue());
@@ -93,22 +91,4 @@ public class TrayIconService {
 		AppUtil.safelyShutDownApp();
 	}
 
-	public static boolean isTrayIconLock() {
-		var otherLock = new FileSystemLock(AppUtil.makeLockFile("lockTrayIconService"));
-		var isLock = otherLock.hasLock();
-		if (!isLock) {
-			otherLock.unLock();
-		}
-		return isLock;
-	}
-
-	public static void lockTrayIcon() {
-		lock = new FileSystemLock(AppUtil.makeLockFile("lockTrayIconService"));
-	}
-
-	public static void unLock() {
-		if (lock != null) {
-			lock.unLock();
-		}
-	}
 }
