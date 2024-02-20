@@ -140,7 +140,6 @@ public class AdminPanelController implements Initializable {
 				errors.addAll(PosConfigValidator.validatePort(txtPort.getText()));
 				if (!errors.isEmpty())
 					throw new Exception(errors.toString());
-				server.listen(txtIp.getText(), Integer.parseInt(txtPort.getText()));
 				JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
 				Platform.runLater(() -> getStage().close());
 				if(TrayIconService.isTrayIconLock()){
@@ -149,6 +148,7 @@ public class AdminPanelController implements Initializable {
 					server.addListenerInfoNotification(trayIcon::showInfoMessage);
 					server.addListenerWarnNotification(trayIcon::showWarningMessage);
 				}
+				server.listen(txtIp.getText(), Integer.parseInt(txtPort.getText()));
 				return true;
 			} else {
 				return false;
