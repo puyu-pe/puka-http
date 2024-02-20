@@ -12,7 +12,6 @@ import pe.puyu.pukahttp.services.api.PrintServer;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
-import pe.puyu.pukahttp.services.trayicon.TrayIconService;
 import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FxUtil;
@@ -35,14 +34,13 @@ public class App extends Application {
 		Platform.setImplicitExit(false);
 	}
 
-
 	@Override
 	public void init() {
 		this.rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		rootLogger.setLevel(Level.INFO);
 		var isUniqueProcess = configUniqueProcess();
 		if (isUniqueProcess) {
-			TrayIconService.lockTrayIcon();
+			TrayIconServiceProvider.lock();
 		}
 	}
 
@@ -57,14 +55,14 @@ public class App extends Application {
 				if (server.isRunningInOtherProcess()) {
 					// importante hacer esta validación para ya no ejecutar un segundo proceso
 					// esto solo si se esta en modo uniqueProcess
-					if (TrayIconService.isTrayIconLock()) {
+					if (TrayIconServiceProvider.isLock()) {
 						Platform.exit();
 						System.exit(0);
 					} else {
 						showActionsPanel(stage);
 					}
 				} else {
-					initTrayIcon(server);
+					AppUtil.initTrayIcon(server);
 					server.listen(ip, port);
 					AppUtil.releaseExpiredTickets(ip, port);
 				}
@@ -144,19 +142,6 @@ public class App extends Application {
 			rootLogger.warn("Unidentified Operating System, uniquerProcess not set.");
 		}
 		return config.uniqueProcess().get();
-	}
-
-	private void initTrayIcon(PrintServer server) {
-		var config = new ConfigAppProperties();
-		var uniqueProcess = config.uniqueProcess();
-		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
-			return;
-		}
-		var trayIcon = TrayIconServiceProvider.get();
-		server.addListenerErrorNotification(trayIcon::showErrorMessage);
-		server.addListenerInfoNotification(trayIcon::showInfoMessage);
-		server.addListenerWarnNotification(trayIcon::showWarningMessage);
-		trayIcon.show();
 	}
 
 }

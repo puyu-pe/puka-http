@@ -22,7 +22,9 @@ import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
-import pe.puyu.pukahttp.services.trayicon.TrayIconService;
+import pe.puyu.pukahttp.services.api.PrintServer;
+import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
+import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -248,7 +250,7 @@ public class AppUtil {
 				}
 				// Liberar TrayIcon
 //				TrayIconServiceProvider.closeTrayIconService();
-				TrayIconService.unLock();
+				TrayIconServiceProvider.unLock();
 				// Asegurar que se cierre todo
 				Platform.exit();
 				System.exit(0);
@@ -264,4 +266,18 @@ public class AppUtil {
 		}
 		return Optional.empty();
 	}
+
+	public static void initTrayIcon(PrintServer server) {
+		var config = new ConfigAppProperties();
+		var uniqueProcess = config.uniqueProcess();
+		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
+			return;
+		}
+		var trayIcon = TrayIconServiceProvider.instance();
+		server.addListenerErrorNotification(trayIcon::showErrorMessage);
+		server.addListenerInfoNotification(trayIcon::showInfoMessage);
+		server.addListenerWarnNotification(trayIcon::showWarningMessage);
+		trayIcon.show();
+	}
+
 }
