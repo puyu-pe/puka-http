@@ -13,14 +13,12 @@ import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.model.PosConfig;
-import pe.puyu.pukahttp.model.UserConfig;
 import pe.puyu.pukahttp.services.api.ResponseApi;
 import pe.puyu.pukahttp.util.*;
 
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -159,16 +157,10 @@ public class ActionsPanelController implements Initializable {
 
 	private void recoverLogo() {
 		try {
-			var userConfig = JsonUtil.convertFromJson(AppUtil.getUserConfigFileDir(), UserConfig.class);
-			if (userConfig.isPresent()) {
-				File logoFile = new File(userConfig.get().getLogoPath());
-				if (logoFile.exists()) {
-					String imgUrl = logoFile.toURI().toURL().toString();
-					imgViewLogo.setImage(new Image(imgUrl));
-				}
-			}
+			var logoOptional = AppUtil.recoverLogoURL();
+			logoOptional.ifPresent(logoURL -> imgViewLogo.setImage(new Image(logoURL.toString())));
 		} catch (Exception e) {
-			logger.error("Exception on recover logo: {}", e.getMessage(), e);
+			logger.error("Excepción al recuperar el logo: {}", e.getMessage(), e);
 		}
 	}
 

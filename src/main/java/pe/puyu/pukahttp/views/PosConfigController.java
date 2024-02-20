@@ -13,7 +13,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.model.PosConfig;
-import pe.puyu.pukahttp.model.UserConfig;
 
 import pe.puyu.pukahttp.services.api.PrintServer;
 import pe.puyu.pukahttp.util.JsonUtil;
@@ -22,7 +21,6 @@ import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.validations.PosConfigValidator;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,7 +31,6 @@ import java.util.ResourceBundle;
 
 public class PosConfigController implements Initializable {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("PosConfigController"));
-	private final UserConfig userConfig = new UserConfig();
 	private final PosConfig posConfig = new PosConfig();
 	private final SimpleIntegerProperty portNumberProperty = new SimpleIntegerProperty(7172);
 
@@ -108,39 +105,28 @@ public class PosConfigController implements Initializable {
 
 	@FXML
 	void onMouseEnteredWindow() {
-		recoverUserConfig();
+		recoverLogoImg();
 	}
 
 	private void persistUserLogoPath(File logoFile) {
 		try {
 			Path sourcePath = Path.of(logoFile.toString());
-			Path destinationPath = Path.of(AppUtil.getUserDataDir(), "logo.png");
+			Path destinationPath = AppUtil.getLogoFileDir();
 			if (Files.exists(destinationPath)) {
 				Files.delete(destinationPath);
 			}
 			Files.copy(sourcePath, destinationPath);
-			userConfig.setLogoPath(destinationPath.toString());
-			JsonUtil.saveJson(AppUtil.getUserConfigFileDir(), userConfig);
 		} catch (Exception e) {
-			logger.error("Excepción al persistir la información en el archivo de configuración del usuario: {}",
-				e.getMessage(),
-				e);
+			logger.error("Excepción al persistir el logo: {}", e.getMessage(), e);
 		}
 	}
 
-	private void recoverUserConfig() {
+	private void recoverLogoImg() {
 		try {
-			var userConfigOpt = JsonUtil.convertFromJson(AppUtil.getUserConfigFileDir(), UserConfig.class);
-			if (userConfigOpt.isPresent()) {
-				userConfig.copyFrom(userConfigOpt.get());
-				File logoFile = new File(userConfig.getLogoPath());
-				if (logoFile.exists()) {
-					String imgUrl = logoFile.toURI().toURL().toString();
-					imgViewLogo.setImage(new Image(imgUrl));
-				}
-			}
-		} catch (IOException e) {
-			logger.error("Excepción al recuperar la configuración del usuario: {}", e.getMessage(), e);
+			var logoOptional = AppUtil.recoverLogoURL();
+			logoOptional.ifPresent(logoURL -> imgViewLogo.setImage(new Image(logoURL.toString())));
+		} catch (Exception e) {
+			logger.error("Excepción al recuperar el logo: {}", e.getMessage(), e);
 		}
 	}
 
