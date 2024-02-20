@@ -202,12 +202,8 @@ public class AppUtil {
 		);
 	}
 
-	public static String getLogoFileDir() throws Exception {
-		return createFileDirFromResourceIfNotExists(
-			getUserDataDir(),
-			"/pe/puyu/pukahttp/assets",
-			"logo.png"
-		);
+	public static Path getLogoFileDir() {
+		return Path.of(getUserDataDir(), "logo.png");
 	}
 
 	public static String createFileDirFromResourceIfNotExists(
@@ -261,7 +257,7 @@ public class AppUtil {
 	}
 
 	public static Optional<URL> recoverLogoURL() throws Exception {
-		var logoPath = AppUtil.getLogoFileDir();
+		var logoPath = AppUtil.getLogoFileDir().toString();
 		File logoFile = new File(logoPath);
 		if (logoFile.exists()) {
 			return Optional.of(logoFile.toURI().toURL());

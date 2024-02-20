@@ -8,6 +8,8 @@ import pe.puyu.pukahttp.services.printer.interfaces.Cancelable;
 import pe.puyu.pukahttp.util.AppUtil;
 
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.function.Consumer;
 
 public class SweetTicketPrinter {
@@ -33,13 +35,14 @@ public class SweetTicketPrinter {
 		this.onUncaughtException = onUncaughtException;
 	}
 
-	private void loadMetadata() throws Exception {
+	private void loadMetadata() {
 		var metadata = new JsonObject();
 		if (ticket.has("metadata") && !ticket.get("metadata").isJsonNull()) {
 			metadata = ticket.getAsJsonObject("metadata");
 		}
-		if (!metadata.has("logoPath") || metadata.get("logoPath").isJsonNull()) {
-			metadata.addProperty("logoPath", AppUtil.getLogoFileDir());
+		var logo = AppUtil.getLogoFileDir();
+		if ((!metadata.has("logoPath") || metadata.get("logoPath").isJsonNull()) && Files.exists(logo)) {
+			metadata.addProperty("logoPath", logo.toString());
 			ticket.add("metadata", metadata);
 		}
 	}

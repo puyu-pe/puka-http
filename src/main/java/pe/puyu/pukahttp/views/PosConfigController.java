@@ -111,7 +111,7 @@ public class PosConfigController implements Initializable {
 	private void persistUserLogoPath(File logoFile) {
 		try {
 			Path sourcePath = Path.of(logoFile.toString());
-			Path destinationPath = Path.of(AppUtil.getLogoFileDir());
+			Path destinationPath = AppUtil.getLogoFileDir();
 			if (Files.exists(destinationPath)) {
 				Files.delete(destinationPath);
 			}
