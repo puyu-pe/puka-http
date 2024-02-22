@@ -16,13 +16,17 @@ Servicio de impresión para puntos de venta, utilizando http y comandos EscPOS.
 
 1. [Instalación y uso](#instalación-y-uso)
 2. [Documentación API](#documentación-api-de-servicio-de-impresión)
-   * [Descripcion](#descripción)
-   * [Endpoints](#endpoints)
-   * [Objetos solicitud](#objetos-dentro-de-body-en-cada-solicitud)
+
+* [Descripcion](#descripción)
+* [Endpoints](#endpoints)
+* [Objetos solicitud](#objetos-dentro-de-body-en-cada-solicitud)
+
 3. [Para desarrolladores](#para-desarrolladores)
-   * [Estructura del proyecto](#estructura-del-proyecto)
-   * [Construir el proyecto](#construir-el-proyecto)
-   * [Lanzar nuevas versiones](#preparar-una-nueva-versión)
+
+* [Estructura del proyecto](#estructura-del-proyecto)
+* [Construir el proyecto](#construir-el-proyecto)
+* [Lanzar nuevas versiones](#preparar-una-nueva-versión)
+
 4. [Generar instaladores](#generar-los-instaladores)
 
 ## Instalación y uso
@@ -30,42 +34,54 @@ Servicio de impresión para puntos de venta, utilizando http y comandos EscPOS.
 * PukaHTTP esta disponible para su descarga en su ultima
   version: [Pagina de descarga](https://www.jdeploy.com/gh/puyu-pe/puka-http).
 * Despues de instalar, al abrir PukaHTTP por primera vez, se tendra que configurar la **IP** y el **Puerto** del
-  servidor local http y una contraseña para acceder a la [ventana oculta](#ventana-oculta-de-configuración), opcionalmente se le puede configurar un logo que servira para la impresion de boletas y facturas.
-    > IMPORTANTE!!: El **IP** tiene que ser el mismo ip que la maquina host (se puede averiguar con el comando **ipconfig** en windows y 
-      **ifconfig** de net-tools en linux y mac).
-      Por defecto Puka tratara de identificar la IP de la maquina host, pero puede no ser tan certero.
-* Una vez hecho esto, si todo salio bien, el servidor http de puka deberia estar ejecutandose en segundo 
-  plano, para comprobarlo puede abrir nuevamente puka y se abrira una [ventana](#ventana-inicial), si algo salió mal no se abrira esta [ventana](#ventana-inicial).
+  servidor local http y una contraseña para acceder a la [ventana oculta](#ventana-oculta-de-configuración),
+  opcionalmente se le puede configurar un logo que servira para la impresion de boletas y facturas.
+  > IMPORTANTE!!: El **IP** tiene que ser el mismo ip que la maquina host (se puede averiguar con el comando **ipconfig
+  ** en windows y
+  **ifconfig** de net-tools en linux y mac).
+  Por defecto Puka tratara de identificar la IP de la maquina host, pero puede no ser tan certero.
+* Una vez hecho esto, si todo salio bien, el servidor http de puka deberia estar ejecutandose en segundo
+  plano, para comprobarlo puede abrir nuevamente puka y se abrira una [ventana](#ventana-inicial), si algo salió mal no
+  se abrira esta [ventana](#ventana-inicial).
   Vea la el flujo de funcionamiento a continuación.
+
 #### Flujo de trabajo puka
+
 ![imagen flujo de trabajo](docs/workflow-puka.png)
 
 #### Ventana de configuración
-Esta ventana solo tiene pensado abrirse una vez despues la primera instalación, a partir de esto ya no 
-deberia volver a abrirse a menos que se hubiera borrado la configuración almacenada. En esta ventana se configura el Ip, puerto y
+
+Esta ventana solo tiene pensado abrirse una vez despues la primera instalación, a partir de esto ya no
+deberia volver a abrirse a menos que se hubiera borrado la configuración almacenada. En esta ventana se configura el Ip,
+puerto y
 contraseña mencionados en la [instalación](#instalación-y-uso).
 
 #### Ventana inicial
-Es aquella ventana que se abre cuando ejecutas puka y ya esta corriendo el servidor http en segundo plano. 
+
+Es aquella ventana que se abre cuando ejecutas puka y ya esta corriendo el servidor http en segundo plano.
 [ver flujo de trabajo puka](#flujo-de-trabajo-puka).
 
 #### Ventana de pruebas de impresión
+
 A esta ventana se puede acceder mediante un boton ubicando en la [ventana inicial](#ventana-inicial)
-Se puede probar en diferentes ticketeras y configuraciones, util para luego configurar los 
+Se puede probar en diferentes ticketeras y configuraciones, util para luego configurar los
 [objectos solicitud](#objetos-dentro-de-body-en-cada-solicitud).
 
 #### Ventana oculta de configuración
+
 Es una ventana a la cual se puede acceder haciendo click en el **numero de version** situada en la
-[ventana inicial](#ventana-inicial) y pedira una contraseña la cual se configuro en [la instalación](#instalación-y-uso). En esta ventana se puede parar el servidor http en segundo plano y tambien volverlo
+[ventana inicial](#ventana-inicial) y pedira una contraseña la cual se configuro
+en [la instalación](#instalación-y-uso). En esta ventana se puede parar el servidor http en segundo plano y tambien
+volverlo
 a ejecutar, asi mismo se puede abrir los directorios donde esta situado los logs y la configuración.
 
 ### Uso
 
 * PukaHTTP funciona como un servidor http, por lo tanto una vez que se este ejecutando en segundo plano
-se le puede mandar tickets mediantes peticiones POST, tambien tiene otras
-caracteristicas, [ver Documentación api](#documentación-api-de-servicio-de-impresión). 
-* Cuenta con un modulo de pruebas de impresión en la 
-[ventanas de pruebas de impresión](#ventana-de-pruebas-de-impresión).
+  se le puede mandar tickets mediantes peticiones POST, tambien tiene otras
+  caracteristicas, [ver Documentación api](#documentación-api-de-servicio-de-impresión).
+* Cuenta con un modulo de pruebas de impresión en la
+  [ventanas de pruebas de impresión](#ventana-de-pruebas-de-impresión).
 * Se puede reimprimir o eliminar tickets en cola en la [ventana inicial](#ventana-inicial).
 * Se puede reiniciar el servidor http en la [ventana oculta](#ventana-oculta-de-configuración).
 
@@ -73,16 +89,18 @@ caracteristicas, [ver Documentación api](#documentación-api-de-servicio-de-imp
 
 ### Descripción
 
-La url del servicio de impresión varia en función de la Ip y el puerto en la que se instalo en el [proceso de instalación](#instalación-y-uso).
-  * La estructura de la url es de la forma: `http://ip:port/endpoint?query`
-    * ip: Ip donde se configuro puka en la [instalación](#instalación-y-uso)
-    * port: Puerto donde se configuro puka en la [instalación](#instalación-y-uso)
-    * endpoint: Alguna ruta de la api, [ver endpoints](#endpoints)
-    * query: Algun paremetro de consulta opcional, depende del endpoint.
+La url del servicio de impresión varia en función de la Ip y el puerto en la que se instalo en
+el [proceso de instalación](#instalación-y-uso).
+
+* La estructura de la url es de la forma: `http://ip:port/endpoint?query`
+  * ip: Ip donde se configuro puka en la [instalación](#instalación-y-uso)
+  * port: Puerto donde se configuro puka en la [instalación](#instalación-y-uso)
+  * endpoint: Alguna ruta de la api, [ver endpoints](#endpoints)
+  * query: Algun paremetro de consulta opcional, depende del endpoint.
 
 ### Endpoints
 
-#### 1. Impresoras del sistema: `/printer/system`
+#### 1. Impresoras del sistema: `/test-connection`
 
 - **Método HTTP:** `GET`
 - **Descripción:** Devuelve un array con las impresoras intaladas en el sistema.
@@ -105,7 +123,34 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
     }
     ```
 
-#### 2. Abrir caja: `/printer/open-drawer`
+#### 2. Impresoras del sistema: `/printer/system`
+
+- **Método HTTP:** `GET`
+- **Descripción:** Devuelve un array con las impresoras intaladas en el sistema.
+- **Respuesta exitosa:**
+  - **Type:** `json`
+  - **Código:** `200`
+  - **Cuerpo:**
+    ```text
+    {
+    "status": "success",
+    "message": "algun mensaje de exito",
+    "data": [] // Array con los nombres de la impresora
+    }
+    ```
+- **Respuesta de error:**
+  - **Type:** `json`
+  - **Código:** `400 - 500`
+  - **Cuerpo:**
+    ```json
+    {
+        "error": "Excepción ocurrida en el servidor",
+        "status": "error",
+        "message": "Algun mensaje contextual"
+    }
+    ```
+
+#### 3. Abrir caja: `/printer/open-drawer`
 
 - **Método HTTP:** `POST`
 - **Descripción:** Abre la caja registradora asociada a una ticketera especifica.
@@ -133,13 +178,14 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
     }
     ```
 
-#### 3. Imprimir tickets: `/printer/ticket`
+#### 4. Imprimir tickets: `/printer/ticket`
 
 - **Método HTTP:** `POST`
 - **Descripción:** Imprime boletas, facturas, notas de venta, etc.
 - **Cuerpo de la solicitud :**
   El body tiene que ser un objeto que contenga al [objeto printer](#objeto-printer)
-  y tambien los demas campos segun [JTicketDesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#estructura-general),
+  y tambien los demas campos
+  segun [JTicketDesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#estructura-general),
   mas detalles en [Objecto ticket](#objeto-ticket).
 - **Respuesta exitosa:**
   - **Type:** `json`
@@ -164,12 +210,12 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
     }
     ```
 
-#### 4. Eliminar tickets en cola: `/printer/ticket`
+#### 5. Eliminar tickets en cola: `/printer/ticket`
 
 - **Método HTTP:** `DELETE`
 - **Descripción:** Elimina tickets que hayan quedado en cola.
 - **Query Params (opcional):**
-  - **date:** una fecha con el formato ""yyyy-MM-dd HH:mm:ss""  
+  - **date:** una fecha con el formato ""yyyy-MM-dd HH:mm:ss""
   - > Nota: si o si, el campo date tiene que cumplir con el formato.
 - **Ejemplo de url:**
   - http://ip:port/printer/ticket?date=2024-02-11 13:02:43
@@ -196,7 +242,8 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
     }
     ```
 
-#### 5. Reimprimir tickets en cola: `/printer/ticket/reprint`
+#### 6. Reimprimir tickets en cola: `/printer/ticket/reprint`
+
 - **Método HTTP:** `GET`
 - **Descripción:** Reimprime tickets que hayan quedado en cola.
 - **Respuesta exitosa:**
@@ -221,7 +268,9 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
         "error": "Mensaje de excepción"
     }
     ```
-#### 6. Obtener tickets en cola: `/printer/ticket/queue`
+
+#### 7. Obtener tickets en cola: `/printer/ticket/queue`
+
 - **Método HTTP:** `GET`
 - **Descripción:** Devuelve tickets en cola.
 - **Respuesta exitosa:**
@@ -246,18 +295,22 @@ La url del servicio de impresión varia en función de la Ip y el puerto en la q
         "error": "Mensaje de excepción"
     }
     ```
-#### 7. Obtener eventos cola de impresión websockets: `/printer/ticket/queue/events`
+
+#### 8. Obtener eventos cola de impresión websockets: `/printer/ticket/queue/events`
+
 Al conectarnos a este endpoint mediante websockets, obtendremos actaulizaciones en tiempo real
-sobre los elementos en cola, el mismo mecanismo que se utiliza en la [ventana inicial](#ventana-inicial) para ver 
+sobre los elementos en cola, el mismo mecanismo que se utiliza en la [ventana inicial](#ventana-inicial) para ver
 el número de tickets en cola en tiempo real.
 
 ### Objetos dentro de body en cada solicitud
-Ya sea para abrir la caja, o enviar tickets se necesita enviar datos en el 
-body de la solicitud para que las operaciones se ejecuten segun los esperado. A continuación 
-se especifica algunos detalles sobre la estructura de los objetos json 
+
+Ya sea para abrir la caja, o enviar tickets se necesita enviar datos en el
+body de la solicitud para que las operaciones se ejecuten segun los esperado. A continuación
+se especifica algunos detalles sobre la estructura de los objetos json
 que deben ir en body.
 
 #### Objeto Printer
+
   ```text
    {
      name_system: "Alguna impresora instalada, red, serial o samba",
@@ -265,40 +318,45 @@ que deben ir en body.
      type: "Tipo de interfaz"
    }
   ``` 
-  - **name_system:**
-    Puede ser uno de los tres siguientes:
-    - Nombre de la impresora instalada en el sistema
-    - Ip de la ticketera en red
-    - Protocolo samba, ejemplo: \\\192.168.1.53\tickets
-    - Puerto serial, ejemplo: com6, com5, com4, etc.
-  - **port:**
-    Representa el puerto en caso **name_system** sea una ticketera en red
-  - **type:**
-    Se cuenta con soporte para:
-    - Para impresoras instaladas en el sistema
-      - windows-usb
-      - linux-usb
-      - samba: (Impresoras compartidas instaladas en el sistema)
-      - cups: (Impresoras instaladas en sistemas linux con cups)
-    - Otros
-      - smbfile: Protocolo samba ejm: \\\192.168.1.53\tickets
-      - serial
-      - ethernet
+
+- **name_system:**
+  Puede ser uno de los tres siguientes:
+  - Nombre de la impresora instalada en el sistema
+  - Ip de la ticketera en red
+  - Protocolo samba, ejemplo: \\\192.168.1.53\tickets
+  - Puerto serial, ejemplo: com6, com5, com4, etc.
+- **port:**
+  Representa el puerto en caso **name_system** sea una ticketera en red
+- **type:**
+  Se cuenta con soporte para:
+  - Para impresoras instaladas en el sistema
+    - windows-usb
+    - linux-usb
+    - samba: (Impresoras compartidas instaladas en el sistema)
+    - cups: (Impresoras instaladas en sistemas linux con cups)
+  - Otros
+    - smbfile: Protocolo samba ejm: \\\192.168.1.53\tickets
+    - serial
+    - ethernet
 
 #### Objeto Ticket
-Es un objeto json que tiene consigo información del impresora destino [objecto printer](#objeto-printer), 
+
+Es un objeto json que tiene consigo información del impresora destino [objecto printer](#objeto-printer),
 la data que se tiene que imprimir , el tipo de documento.
 En [JTicketDesing](https://github.com/puyu-pe/JTicketDesign) se puede obtener mas información para
 personalizar la gran parte del objeto ticket, a excepción del [objeto printer](#objeto-printer), Incluso hay algunas
-propiedades adicionales para el [objeto printer](#objeto-printer) en [caracteristicas configurables de jticketdesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#caracteristicas-configurables).
+propiedades adicionales para el [objeto printer](#objeto-printer)
+en [caracteristicas configurables de jticketdesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#caracteristicas-configurables).
 
-> Importante!!: JTicketDesing ya viene integrado en puka, solo tiene que revisarse la documentación para obtener detalles sobre como 
+> Importante!!: JTicketDesing ya viene integrado en puka, solo tiene que revisarse la documentación para obtener
+> detalles sobre como
 > configurar el **objeto json ticket** final.
 
-
 ##### Estructura final de Objeto json ticket
-[Ver ejemplos de tickets en jticketdesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#ejemplos-de-json-validos) 
+
+[Ver ejemplos de tickets en jticketdesing](https://github.com/puyu-pe/JTicketDesign?tab=readme-ov-file#ejemplos-de-json-validos)
 para ver ejemplos de ticket json real. El objeto ticket en general se veria asi:
+
 ```text
 {
     type: "tipo de documento (ver JTicketDesing)",
@@ -380,7 +438,8 @@ para ver ejemplos de ticket json real. El objeto ticket en general se veria asi:
    ```bash
    ./update-package.sh
    ```
-   > Nota: El script funciona solo en maquinas Linux y Mac, en windows modificar la versión en package.develop.json y package.production.json de forma manual
+   > Nota: El script funciona solo en maquinas Linux y Mac, en windows modificar la versión en package.develop.json y
+   package.production.json de forma manual
 3. Confirmar los cambios
    ```bash
    git add . && git commit
@@ -400,15 +459,16 @@ para ver ejemplos de ticket json real. El objeto ticket en general se veria asi:
    > Warning: **No** ejecutar **git push --tags**, ya que puede entrar en conflicto con el tag jdeploy
 
 ## Generar los instaladores
+
 Existe dos formas en la que podemos generar los instaladores para windows, mac y distribuciones linux.
 Siendo la mas sencilla y recomedada JDeploy, por que automatiza de mejor forma la generación de instaladores,
 y trae integrado un mecanismo de actualización automatica para las aplicaciones y tambien integración con github
 actions.
-El otro mecanismo es utilizando JPackage, que es la forma en la que se generaba anteriormente los instaladores de PukaHTTP,
-es mas complejo y no soporta compilación cruzada, este modo estará deprecado por que no se actualizara su documentación y su forma de trabajo
+El otro mecanismo es utilizando JPackage, que es la forma en la que se generaba anteriormente los instaladores de
+PukaHTTP,
+es mas complejo y no soporta compilación cruzada, este modo estará deprecado por que no se actualizara su documentación
+y su forma de trabajo
 con puka.
-
-
 
 1. [Generar instaladores con JDeploy (Oficial)](docs/jdeploy.md)
 2. [Generar instaladores con JPackage (Deprecado)](docs/jpackage.md)
