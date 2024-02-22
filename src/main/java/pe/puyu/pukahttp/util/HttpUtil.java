@@ -22,6 +22,16 @@ public class HttpUtil {
 		return mapper.fromJsonString(response.body(), ResponseApi.class);
 	}
 
+	public static String getString(String endpoint) throws Exception {
+		HttpClient client = buildClient();
+		HttpRequest request = HttpRequest.newBuilder()
+			.uri(URI.create(endpoint))
+			.GET()
+			.build();
+		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+		return response.body();
+	}
+
 	//data debe ser un string , si es un objeto json se debe convertir a string antes
 	public static <DataType> ResponseApi<DataType> put(String endpoint, String data) throws Exception {
 		HttpClient client = buildClient();
