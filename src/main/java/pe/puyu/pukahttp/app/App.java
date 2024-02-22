@@ -13,6 +13,7 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
+import pe.puyu.pukahttp.util.AppAlerts;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FxUtil;
 import pe.puyu.pukahttp.util.JsonUtil;
@@ -63,7 +64,12 @@ public class App extends Application {
 					}
 				} else {
 					AppUtil.initTrayIcon(server);
-					server.listen(ip, port);
+					try{
+						server.listen(ip, port);
+					}catch (Exception e){
+						server.closeService();
+						throw e;
+					}
 					AppUtil.releaseExpiredTickets(ip, port);
 				}
 			} else {
@@ -71,8 +77,21 @@ public class App extends Application {
 			}
 		} catch (Exception e) {
 			rootLogger.error("Exception on start App!!!, {}", e.getMessage(), e);
-			Platform.exit();
-			System.exit(0);
+			var isOk = AppAlerts.showConfirmation(
+				"Servicio de impresión no inicio correctamente.",
+				"Por favor informar al equipo de soporte PUYU para poder solucionarlo."
+			);
+			if(isOk){
+				try{
+					FxUtil.newStage(Constants.PASSWORD_FXML, "password").show();
+				}
+				catch (Exception ignored){
+					rootLogger.warn("fail on recover recover exception app.");
+				}
+			}else{
+				Platform.exit();
+				System.exit(0);
+			}
 		}
 	}
 
