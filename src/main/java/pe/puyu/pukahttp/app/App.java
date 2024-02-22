@@ -63,7 +63,12 @@ public class App extends Application {
 					}
 				} else {
 					AppUtil.initTrayIcon(server);
-					server.listen(ip, port);
+					try{
+						server.listen(ip, port);
+					}catch (Exception e){
+						server.closeService();
+						throw e;
+					}
 					AppUtil.releaseExpiredTickets(ip, port);
 				}
 			} else {
