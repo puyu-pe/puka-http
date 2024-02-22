@@ -35,9 +35,6 @@ public class AdminPanelController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		btnStart.setDisable(true);
-		txtIp.setDisable(true);
-		txtPort.setDisable(true);
 		posConfig.ipProperty().bindBidirectional(txtIp.textProperty());
 		posConfig.portProperty().bindBidirectional(portNumberProperty);
 		txtPort.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -50,6 +47,7 @@ public class AdminPanelController implements Initializable {
 		portNumberProperty.addListener((observable, oldValue, newValue) -> txtPort.setText(newValue.toString()));
 		posConfig.copyFrom(AppUtil.recoverPosConfigDefaultValues());
 		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
+		testConnectionServer();
 		initCmbLevelLogs();
 	}
 
@@ -136,7 +134,7 @@ public class AdminPanelController implements Initializable {
 					throw new Exception(errors.toString());
 				JsonUtil.saveJson(AppUtil.getPosConfigFileDir(), posConfig);
 				Platform.runLater(() -> getStage().close());
-				if(TrayIconServiceProvider.isLock()){
+				if (TrayIconServiceProvider.isLock()) {
 					var trayIcon = TrayIconServiceProvider.instance();
 					server.addListenerErrorNotification(trayIcon::showErrorMessage);
 					server.addListenerInfoNotification(trayIcon::showInfoMessage);
@@ -173,6 +171,24 @@ public class AdminPanelController implements Initializable {
 			logger.info("Update Log Level into server to {}", response.getData());
 		} catch (Exception e) {
 			logger.error("Exception at change log level: {}", e.getLocalizedMessage());
+		}
+	}
+
+	private void testConnectionServer() {
+		var url = baseUrl + "/test-connection";
+		try{
+			HttpUtil.getString(url);
+			btnStart.setDisable(true);
+			btnStop.setDisable(false);
+			cmbLevelLogs.setDisable(false);
+			txtIp.setDisable(true);
+			txtPort.setDisable(true);
+		}catch (Exception e){
+			btnStart.setDisable(false);
+			btnStop.setDisable(true);
+			cmbLevelLogs.setDisable(true);
+			txtIp.setDisable(false);
+			txtPort.setDisable(false);
 		}
 	}
 
