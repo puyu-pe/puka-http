@@ -29,13 +29,12 @@ public class ActionsPanelController implements Initializable {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ActionsPanelController"));
 	private final String baseUrl;
 	private final PosConfig posConfig;
-	private WebSocketContainer container;
+	private boolean itWasAlreadyExecutedTheFirstTimeMouseEvent = false;
 
 	public ActionsPanelController() {
 		posConfig = new PosConfig();
 		posConfig.copyFrom(AppUtil.recoverPosConfigDefaultValues());
 		baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
-		container = null;
 	}
 
 	@Override
@@ -48,7 +47,6 @@ public class ActionsPanelController implements Initializable {
 			logger.warn("Error al liberar tickets: {}", e.getMessage());
 		}
 		lblVersion.setText(AppUtil.getAppVersion());
-		lblQueueSize.setText(requestQueueSize());
 		recoverLogo();
 	}
 
@@ -123,10 +121,20 @@ public class ActionsPanelController implements Initializable {
 
 	@FXML
 	void onMouseEnteredWindow() {
-		if (container != null)
+		//here is the code that will always be executed
+
+		if (itWasAlreadyExecutedTheFirstTimeMouseEvent)
 			return;
+
+		//here is the code that will only be executed once
+		lblQueueSize.setText(requestQueueSize());
+		initWebSocketQueueEvents();
+		itWasAlreadyExecutedTheFirstTimeMouseEvent = true;
+	}
+
+	private void initWebSocketQueueEvents() {
 		try {
-			container = ContainerProvider.getWebSocketContainer();
+			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			String uri = String.format("ws://%s:%d/printer/ticket/queue/events", posConfig.getIp(), posConfig.getPort());
 			WebSocketClient client = new WebSocketClient("queue-events");
 			Session session = container.connectToServer(client, URI.create(uri));
@@ -137,7 +145,6 @@ public class ActionsPanelController implements Initializable {
 				} catch (IOException ignored) {
 				}
 			};
-			getStage().setOnCloseRequest((event) -> closeSession.run());
 			Runtime.getRuntime().addShutdownHook(new Thread(closeSession));
 		} catch (Exception e) {
 			logger.error("Exception on connectQueueEvents: {}", e.getMessage());
