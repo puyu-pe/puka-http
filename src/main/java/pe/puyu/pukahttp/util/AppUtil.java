@@ -249,7 +249,6 @@ public class AppUtil {
 					logger.error("Exception on exit safelyShutdownApp: {}", e.getMessage(), e);
 				}
 				// Liberar TrayIcon
-//				TrayIconServiceProvider.closeTrayIconService();
 				TrayIconServiceProvider.unLock();
 				// Asegurar que se cierre todo
 				Platform.exit();
