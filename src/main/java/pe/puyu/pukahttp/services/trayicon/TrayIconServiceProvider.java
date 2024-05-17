@@ -17,7 +17,7 @@ public class TrayIconServiceProvider {
 	}
 
 	public static boolean isLock() {
-		var otherLock = new FileSystemLock(AppUtil.makeLockFile(NAME_LOCK_FILE));
+		var otherLock = new FileSystemLock(AppUtil.makeLockFile(NAME_LOCK_FILE), false);
 		var isLock = otherLock.hasLock();
 		if (!isLock) {
 			otherLock.unLock();

@@ -16,6 +16,11 @@ public class FileSystemLock {
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("FileSystemLock"));
 
 	public FileSystemLock(String fileLockDir) {
+		this(fileLockDir, true);
+	}
+
+
+	public FileSystemLock(String fileLockDir, boolean enableHook) {
 		try {
 			file = new File(fileLockDir);
 			//noinspection resource
@@ -24,10 +29,14 @@ public class FileSystemLock {
 				lock = channel.tryLock();
 			} catch (Exception ignore) {
 			}
-			Runtime.getRuntime().addShutdownHook(new Thread(this::unLock));
+			if (enableHook) {
+				Runtime.getRuntime().addShutdownHook(new Thread(this::unLock));
+			}
 		} catch (Exception e) {
-			logger.error("Exception create lock file {}: {}", fileLockDir, e.getMessage(), e);
+			logger.warn("Exception create lock file {}: {}", fileLockDir, e.getMessage());
+			logger.trace("traceback: ", e);
 		}
+
 	}
 
 	public boolean hasLock() {
