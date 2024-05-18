@@ -9,6 +9,7 @@ import pe.puyu.pukahttp.util.AppUtil;
 import org.h2.tools.Server;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class AppDatabase {
 	private JdbcPooledConnectionSource connectionSource;
@@ -37,14 +38,13 @@ public class AppDatabase {
 		try {
 			if (connectionSource != null) {
 				connectionSource.close();
-				connectionSource = null;
 				server.stop();
-				server.shutdown();
 				logger.info("close connection success DB :)");
-				connectionSource = null;
 			}
 		} catch (Exception e) {
 			logger.error("Exception at close connection DB: {}", e.getMessage());
+		}finally {
+			connectionSource = null;
 		}
 	}
 

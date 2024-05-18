@@ -16,6 +16,7 @@ import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FileSystemLock;
 import pe.puyu.pukahttp.util.Notifier;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -143,13 +144,15 @@ public class PrintServer {
 		response.setStatus("success");
 		response.setMessage("Try force stop Service.");
 		ctx.json(response);
-		//Necesario envolver en un hilo, de lo contrario no habra respuesta de la accion en el cliente
-		new Thread(() -> {
+		//Necesario ejecutar lo siguiente de forma asincrona,
+		//Ya que el servicio se libera completamente
+		//y se pierde la conexión completamente ocasionando un error null connection
+		CompletableFuture.runAsync(() -> {
 			this.closeService();
 			if (!TrayIconServiceProvider.isLock()) {
 				Platform.exit();
 			}
-		}).start();
+		});
 	}
 
 }
