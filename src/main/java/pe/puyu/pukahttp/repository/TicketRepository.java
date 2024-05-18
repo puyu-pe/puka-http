@@ -9,16 +9,14 @@ import com.j256.ormlite.table.TableUtils;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.repository.model.Ticket;
 import pe.puyu.pukahttp.util.AppUtil;
+import pe.puyu.pukahttp.util.UUIDGenerator;
 
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class TicketRepository {
 	private Dao<Ticket, Long> ticketDao;
-	private final List<Consumer<Integer>> observers = new LinkedList<>();
+	private final HashMap<String, Consumer<Integer>> observers = new LinkedHashMap<>();
 	private final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("TicketRepository"));
 
 	public TicketRepository(JdbcPooledConnectionSource connectionSource) {
@@ -84,15 +82,21 @@ public class TicketRepository {
 		}
 	}
 
-	public void addObserver(Consumer<Integer> consumer) {
-		observers.add(consumer);
+	public void addObserver(String idObserver, Consumer<Integer> consumer) {
+		observers.put(idObserver, consumer);
 	}
 
-	public void removeObserver(Consumer<Integer> consumer) {
-		observers.remove(consumer);
+	public void removeObserver(String idObserver) {
+		observers.remove(idObserver);
 	}
 
 	private void notifyObservers() {
-		observers.forEach(observer -> observer.accept(countAll()));
+		observers.forEach((id, observer) -> {
+			try{
+				observer.accept(countAll());
+			}catch (Exception e){
+				logger.error("Exception on notifyObservers: {}", e.getMessage());
+			}
+		});
 	}
 }

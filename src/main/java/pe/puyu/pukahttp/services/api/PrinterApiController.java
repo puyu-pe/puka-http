@@ -222,22 +222,27 @@ public class PrinterApiController {
 	public void getQueueEvents(WsConfig ws) {
 		ws.onConnect(ctx -> {
 			ctx.session.setIdleTimeout(Duration.ofDays(1));
-			Consumer<Integer> observer = (count) -> {
-				if (ticketRepository != null) {
-					ctx.send(count);
-				}
-			};
 			if (ticketRepository != null) {
-				ticketRepository.addObserver(observer);
+				Consumer<Integer> observer = (count) -> {
+					if (ticketRepository != null) {
+						ctx.send(count);
+					}
+				};
+				String observerId = ctx.getSessionId();
+				ticketRepository.addObserver(observerId, observer);
+				logger.info("Add observer {} to queue events websocket.", observerId);
 				ws.onClose(closeCtx -> {
-					logger.info("close ws connection, then remove observer ticketrepository.");
-					ticketRepository.removeObserver(observer);
-				});
-				ws.onError(ctxError -> {
-					assert ctxError.error() != null;
-					logger.error("Exception on websockets connection: {}", ctxError.error().getMessage());
+					String idToRemove = closeCtx.getSessionId();
+					ticketRepository.removeObserver(idToRemove);
+					logger.info("close ws connection, then remove observer {}.", idToRemove);
 				});
 			}
+			ws.onError(ctxError -> {
+				if (ctxError.error() != null) {
+					logger.warn("Exception an occurred in websockets queue-events with message: {}", ctxError.error().getMessage());
+					logger.trace("more details into fillInStackTrace: ", ctxError.error().fillInStackTrace());
+				}
+			});
 		});
 	}
 }
