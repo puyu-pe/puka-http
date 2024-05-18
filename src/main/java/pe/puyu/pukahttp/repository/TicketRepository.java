@@ -9,7 +9,6 @@ import com.j256.ormlite.table.TableUtils;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.repository.model.Ticket;
 import pe.puyu.pukahttp.util.AppUtil;
-import pe.puyu.pukahttp.util.UUIDGenerator;
 
 import java.util.*;
 import java.util.function.Consumer;

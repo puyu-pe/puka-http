@@ -116,40 +116,6 @@ public class PrintServer {
 			}
 		);
 		app.exception(Exception.class, (e, ctx) -> controller.genericErrorHandling(e, ctx, notifier));
-		/*
-		app.routes(() -> {
-			path("printer"-> {
-				get(PrinterApiController::getSavedPrinters)
-				path("{name}",() -> {
-					get(PrinterApiController::getPrinter)
-					post(PrinterApiController::savePrinter)
-					put(PrinterApiController::updatePrinter)
-					delete(PrinterApiController::deletePrinter)
-					path("queue",() -> {
-						get(PrinterApiController::getSizeQueueByPrinter)
-						ws("events", PrinterApiController::getQueueEventsByPrinter)
-					})
-				})
-				path("system", () -> {
-					get(PrinterApiController::getAllPrintersSystem)
-				})
-				path("ticket", () -> {
-					post(PrinterApiController::printTickets)
-					path("queue", () -> {
-						get(PrinterApiController::getSizeQueue)
-						ws("events", PrinterApiController::getQueueEvents)
-					})
-				})
-				path("test" , () -> {
-					get(PrinterApiController::printerTest)
-				})
-			})
-			path("info", () -> {
-				get("server", ...) // informacion sobre la dependencias o estado del servidor, ip , puerto ,etc
-				put("debug", ...) // modifica el nivel de depuración
-			})
-		})
-		* */
 	}
 
 	private void updateLogLevel(Context ctx) {

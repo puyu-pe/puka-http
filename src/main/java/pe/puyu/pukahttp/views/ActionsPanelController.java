@@ -57,8 +57,7 @@ public class ActionsPanelController implements Initializable {
 		CompletableFuture.runAsync(() -> {
 			try {
 				var url = baseUrl + "/printer/ticket";
-				ResponseApi<Double> response = HttpUtil.delete(url);
-				Platform.runLater(() -> lblQueueSize.setText(String.valueOf(Math.round(response.getData()))));
+				HttpUtil.delete(url);
 			} catch (Exception e) {
 				logger.error("Exception on release queue: {}", e.getMessage());
 			} finally {

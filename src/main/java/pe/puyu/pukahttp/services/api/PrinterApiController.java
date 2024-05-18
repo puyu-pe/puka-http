@@ -106,13 +106,13 @@ public class PrinterApiController {
 				var date = AppUtil.getDateTimeFormatter().parse(dateString);
 				var rowsDeleted = ticketRepository.deleteWithDatesBefore(date);
 				if (rowsDeleted > 0) {
-					response.setMessage(String.format("Se eliminaron %d tickets", rowsDeleted));
+					response.setMessage(String.format("to deleted %d tickets", rowsDeleted));
 					serverNotifier.info(String.format("Se eliminaron %d tickets, por que expiro su tiempo de vida.", rowsDeleted));
 				}
 			} else {
 				if (countTickets > 0) {
 					ticketRepository.deleteAll();
-					serverNotifier.info("Se eliminaron todos los tickets almacenados");
+					serverNotifier.info("All tickets, They were removed.");
 				}
 			}
 			response.setData(countTickets);
