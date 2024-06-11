@@ -4,7 +4,6 @@ import ch.qos.logback.classic.Logger;
 import com.github.anastaciocintra.escpos.EscPos;
 import com.github.anastaciocintra.escpos.EscPos.CharacterCodeTable;
 import com.github.anastaciocintra.escpos.EscPos.CutMode;
-import com.github.anastaciocintra.escpos.Style.FontSize;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
@@ -14,7 +13,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 import pe.puyu.jticketdesing.util.escpos.EscPosWrapper;
-import pe.puyu.jticketdesing.util.escpos.StyleWrapper;
+import pe.puyu.jticketdesing.util.escpos.JustifyAlign;
+import pe.puyu.jticketdesing.util.escpos.StyleText;
 import pe.puyu.pukahttp.model.PrinterConnection;
 import pe.puyu.pukahttp.model.TicketInfo;
 import pe.puyu.pukahttp.services.printer.Printer;
@@ -91,18 +91,26 @@ public class TestPanelController implements Initializable {
 				var escpos = new EscPos(buffer);
 				var width = ticketInfo.getWidth();
 				escpos.setCharacterCodeTable(CharacterCodeTable.WPC1252);
-				var escposWrapper = new EscPosWrapper(escpos, StyleWrapper.textBold());
-				escposWrapper.toCenter("-- PUYU - PUKA --", width, FontSize._2);
-				escposWrapper.toCenter("Esta es una prueba de impresión", width);
-				escposWrapper.removeStyleBold();
+				var escposWrapper = new EscPosWrapper(escpos);
+				StyleText titleStyle = StyleText.builder()
+					.align(JustifyAlign.CENTER)
+					.bold(true)
+					.fontSize(2)
+					.build();
+				StyleText subtitleStyle = StyleText.builder()
+					.bold(true)
+					.align(JustifyAlign.CENTER)
+					.build();
+				StyleText sayingStyle = StyleText.builder().align(JustifyAlign.CENTER).build();
+				escposWrapper.printText("-- PUYU - PUKA --", width, titleStyle);
+				escposWrapper.printText("Esta es una prueba de impresión", width, subtitleStyle);
 				escposWrapper.printLine('-', width);
-				escposWrapper.toLeft(String.format("name_system: %s", name_system), width);
-				escposWrapper.toLeft(String.format("port:        %s", port), width);
-				escposWrapper.toLeft(String.format("type:        %s", type), width);
-				escposWrapper.toLeft(String.format("width:       %s", width), width);
+				escposWrapper.printText(String.format("name_system: %s", name_system), width);
+				escposWrapper.printText(String.format("port:        %s", port), width);
+				escposWrapper.printText(String.format("type:        %s", type), width);
+				escposWrapper.printText(String.format("width:       %s", width), width);
 				escposWrapper.printLine('-', width);
-				escposWrapper.addStyleBold();
-				escposWrapper.toCenter("Gracias, que tenga un buen dia.", width);
+				escposWrapper.printText("Gracias, que tenga un buen dia.", width, sayingStyle);
 				escpos.feed(4);
 				escpos.cut(CutMode.PART);
 				outputStream.write(buffer.toByteArray());
