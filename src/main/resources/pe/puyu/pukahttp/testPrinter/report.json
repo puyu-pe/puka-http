@@ -24,7 +24,6 @@
       "title": "EGRESOS",
       "body": [
         "Transporte",
-        "-",
         [
           "IRENE DEL PINO CASTILLA",
           "40.00"
@@ -36,9 +35,7 @@
           },
           "40.00"
         ],
-        "-",
         "Gastos Noche",
-        "-",
         [
           "Mercados SAC",
           "49.00"
@@ -54,9 +51,7 @@
           },
           "99.00"
         ],
-        "-",
         "Pagos",
-        "-",
         [
           "Juan Carrasco",
           "50.00"
@@ -72,9 +67,7 @@
           },
           "70.00"
         ],
-        "-",
         "Consumos",
-        "-",
         [
           "Juan Carrasco",
           "20.00"
