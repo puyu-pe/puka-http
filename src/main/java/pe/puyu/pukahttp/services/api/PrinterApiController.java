@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.repository.AppDatabase;
 import pe.puyu.pukahttp.repository.TicketRepository;
 import pe.puyu.pukahttp.services.printer.Printer;
+import pe.puyu.pukahttp.services.printer.SweetTablePrinter;
 import pe.puyu.pukahttp.services.printer.SweetTicketPrinter;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.Notifier;
@@ -85,10 +86,41 @@ public class PrinterApiController {
 			},
 			() -> {
 				JsonArray tickets = JsonParser.parseString(ctx.body()).getAsJsonArray();
-				printJob(tickets, serverNotifier);
+				printTicketJob(tickets, serverNotifier);
 				response.setStatus("success");
 				response.setMessage("Trabajo de impresión no lanzo ningun error.");
 				setResponseItemsQueue(response);
+				ctx.json(response);
+			}
+		);
+	}
+
+	public void printReport(Context ctx, Notifier serverNotifier) {
+		var response = new ResponseApi<String>();
+		ctx.async(
+			20000,
+			() -> {
+				response.setMessage("Ocurrio un error al intentar imprimir el reporte");
+				response.setStatus("error");
+				response.setError("Tiempo de conexión agotado: timeout");
+				ctx.json(response);
+				serverNotifier.error("El reporte no se pudo imprimir, tiempo de conexión agotado.");
+			},
+			() -> {
+				JsonElement body = JsonParser.parseString(ctx.body());
+				if(!body.isJsonObject()){
+					throw new RuntimeException("bad json, expected a Json Object");
+				}
+				JsonObject data = body.getAsJsonObject();
+				logger.trace("report json to print: {}", data);
+				SweetTablePrinter sweetTablePrinter = new SweetTablePrinter(data);
+				sweetTablePrinter.setOnUncaughtException(
+					errorMessage -> serverNotifier.error(String.format("UncaughtException on print report: %s", errorMessage))
+				);
+				sweetTablePrinter.print();
+				response.setStatus("success");
+				response.setMessage("Reporte generado para imprimir correctamente.");
+				response.setData("");
 				ctx.json(response);
 			}
 		);
@@ -140,7 +172,7 @@ public class PrinterApiController {
 						tickets.add(JsonParser.parseString(item.getData()));
 					}
 					ticketRepository.deleteAll();
-					printJob(tickets, serverNotifier);
+					printTicketJob(tickets, serverNotifier);
 					response.setData(ticketRepository.countAll());
 				} else {
 					response.setData(0);
@@ -166,7 +198,7 @@ public class PrinterApiController {
 		serverNotifier.warn(String.format("Exception into server: %s", e.getLocalizedMessage()));
 	}
 
-	public void printJob(JsonArray tickets, Notifier serverNotifier) {
+	public void printTicketJob(JsonArray tickets, Notifier serverNotifier) {
 		var errors = new LinkedList<String>();
 		for (var ticket : tickets) {
 			var printer = ticket.getAsJsonObject().getAsJsonObject("printer");
@@ -178,7 +210,7 @@ public class PrinterApiController {
 					secureInsertTicket(ticket);
 					serverNotifier.warn(String.format("UncaughtException printJob: %s", e));
 				});
-				sweetTicketPrinter.printTicket();
+				sweetTicketPrinter.print();
 			} catch (Exception e) {
 				errors.add(e.getMessage());
 				secureInsertTicket(ticket);
