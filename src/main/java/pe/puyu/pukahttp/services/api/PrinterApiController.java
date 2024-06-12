@@ -118,6 +118,10 @@ public class PrinterApiController {
 					errorMessage -> serverNotifier.error(String.format("UncaughtException on print report: %s", errorMessage))
 				);
 				sweetTablePrinter.print();
+				response.setStatus("success");
+				response.setMessage("Reporte generado para imprimir correctamente.");
+				response.setData("");
+				ctx.json(response);
 			}
 		);
 	}

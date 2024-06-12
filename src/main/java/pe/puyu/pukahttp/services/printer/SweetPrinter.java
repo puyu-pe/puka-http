@@ -2,11 +2,13 @@ package pe.puyu.pukahttp.services.printer;
 
 import ch.qos.logback.classic.Logger;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.services.printer.interfaces.Cancelable;
 import pe.puyu.pukahttp.util.AppUtil;
 
 import java.io.OutputStream;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public abstract class SweetPrinter {
@@ -22,11 +24,13 @@ public abstract class SweetPrinter {
 	public abstract void print() throws Exception;
 
 	protected OutputStream getOutputStreamByPrinterType() throws Exception {
-		if (this.printerInfo.get("name_system").isJsonNull())
-			throw new Exception("name_system esta vacio");
-		var name_system = this.printerInfo.get("name_system").getAsString();
-		var port = this.printerInfo.get("port").getAsInt();
-		var outputStream = Printer.getOutputStreamFor(name_system, port, this.printerInfo.get("type").getAsString());
+		if (!this.printerInfo.has("name_system")  || !this.printerInfo.get("name_system").isJsonPrimitive())
+			throw new Exception("property 'name_system' in printer object is void or it's not string");
+		if (!this.printerInfo.has("type")  || !this.printerInfo.get("type").isJsonPrimitive())
+			throw new Exception("property 'type' in printer object is void or it's not string");
+		String name_system = this.printerInfo.get("name_system").getAsString();
+		int port = Optional.ofNullable(this.printerInfo.get("port")).orElse(new JsonPrimitive(9100)).getAsInt();
+		OutputStream outputStream = Printer.getOutputStreamFor(name_system, port, this.printerInfo.get("type").getAsString());
 		Printer.setOnUncaughtExceptionFor(outputStream, makeUncaughtException(outputStream));
 		return outputStream;
 	}
