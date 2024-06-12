@@ -1,102 +1,5 @@
-# Todos estos metodos son para yures offline
-
-### GET  connection server print
-// Verifica el estado de conexion con el servidor de impresion
-GET {{ server }}/test-connection
-
-### Post  tickets to print
-// Envia una boleta al servidor de impresion
-POST {{ server }}/printer/ticket
-Content-Type: application/json
-
-[
-  {
-    "type": "invoice",
-    "printer": {
-      "name_system": "192.168.18.39",
-      "port": 9100,
-      "type": "ethernet"
-    },
-    "times": 1,
-    "data": {
-      "document": {
-        "description": "PUYU SRL",
-        "identifier": "B001 - 00000071"
-      },
-      "business": {
-        "comercialDescription": {
-          "type": "text",
-          "value": "PUYU SRL."
-        },
-        "description": "Sistemas de facturación electronica",
-        "additional": [
-          "RUC 20450523381 AGENCIA ABANCAY",
-          "DIRECCIÓN : Av. PUYU S/N",
-          "TELÉFONO : 666777888"
-        ]
-      },
-      "customer": [
-        "REMITENTE / CLIENTE",
-        "DNI: 20564379248",
-        "FASTWORKX SRL",
-        "AV CANADA N 159 ABANCAY ABANCAY PUYU"
-      ],
-      "additional": [
-        "FECHA EMISIÓN : 01/10/2019 14:51:26",
-        "MONEDA : Intis",
-        "CONSIGNADO : Ing. Christian"
-      ],
-      "items": [
-        {
-          "description": "Tipo : Silla gamer",
-          "quantity": 2,
-          "totalPrice": "20.00"
-        },
-        {
-          "description": "Ticketera",
-          "quantity": 1,
-          "totalPrice": "5.00"
-        }
-      ],
-      "amounts": {
-        "Operacion no gravada": "25.00",
-        "IGV": 0,
-        "Total": "25.00"
-      },
-      "additionalFooter": [
-        "FECHA IMPR: 02/10/2019 16:12:34",
-        "USUARIO : ADMIN | AGENCIA : ABANCAY"
-      ],
-      "finalMessage": [
-        "PRUEBA DE IMPRESION ELECTRÓNICA",
-        "PARA CONSULTAR EL DOCUMENTO VISITA NEXUS:",
-        "HTTPS://NEXUS.FASTWORKX.COM/123456789",
-        "RESUMEN: Bfdfg+sdfsAfKfVs=",
-        "",
-        "POR FASTWORKX S.R.L. - PERÚ"
-      ],
-      "stringQR": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
-    }
-  }
-]
-
-### DELETE all tickets
-// Elimina todos los tickets de la base de datos
-DELETE {{ server }}/printer/ticket
-
-### DELETE tickets before specific day
-// Elimina tickets anteriores a una fecha dada
-DELETE {{ server }}/printer/ticket?date=2024-02-11 13:02:43
-
-### PRINT REPORT
-POST {{ server }}/printer/report
-Content-Type: application/json
-
 {
   "printer": {
-    "name_system": "192.168.18.39",
-    "port": 9100,
-    "type": "ethernet",
     "properties": {
       "width": 42
     }
@@ -120,10 +23,7 @@ Content-Type: application/json
       },
       "title": "EGRESOS",
       "body": [
-        {
-          "text": "Transporte",
-          "bold": true
-        },
+        "Transporte",
         [
           "IRENE DEL PINO CASTILLA",
           "40.00"

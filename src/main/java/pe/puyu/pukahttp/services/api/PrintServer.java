@@ -107,6 +107,7 @@ public class PrintServer {
 						post(ctx -> controller.printTickets(ctx, notifier));
 						delete(ctx -> controller.deleteTickets(ctx, notifier));
 					});
+					path("report", () -> post(ctx -> controller.printReport(ctx, notifier)));
 				});
 				get("test-connection", (ctx) -> ctx.result("service online"));
 				get("stop-service", this::stopService);
