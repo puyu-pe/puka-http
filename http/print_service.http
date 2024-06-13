@@ -13,9 +13,9 @@ Content-Type: application/json
   {
     "type": "invoice",
     "printer": {
-      "name_system": "192.168.18.39",
+      "name_system": "{{ name_system }}",
       "port": 9100,
-      "type": "ethernet"
+      "type": " {{ type }} "
     },
     "times": 1,
     "data": {
@@ -94,311 +94,42 @@ Content-Type: application/json
 
 {
   "printer": {
-    "name_system": "192.168.18.39",
+    "name_system": "{{ name_system }}",
     "port": 9100,
-    "type": "ethernet",
+    "type": "{{ type }}",
     "properties": {
       "width": 42
     }
   },
-  "title": [
-    "PUYU.PE",
-    "REPORTE DIARIO DE CIERRE DE CAJA"
-  ],
-  "details": [
-    "Terminal caja : CAJA 01",
-    "FECHA - HORA: IMPRESIÓN 30-04-2024",
-    "10:41:47"
-  ],
-  "tables": [
-    {
-      "widthPercents": [
-        80
-      ],
-      "cellBodyStyles": {
-        "1": "right"
-      },
-      "title": "EGRESOS",
-      "body": [
-        {
-          "text": "Transporte",
-          "bold": true
-        },
-        [
-          "IRENE DEL PINO CASTILLA",
-          "40.00"
-        ],
-        [
-          {
-            "text": "TOTAL",
-            "align": "right"
-          },
-          "40.00"
-        ],
-        "Gastos Noche",
-        [
-          "Mercados SAC",
-          "49.00"
-        ],
-        [
-          "Juan Carrasco",
-          "50.00"
-        ],
-        [
-          {
-            "text": "TOTAL",
-            "align": "right"
-          },
-          "99.00"
-        ],
-        "Pagos",
-        [
-          "Juan Carrasco",
-          "50.00"
-        ],
-        [
-          "IRENE DEL PINO CASTILLA",
-          "20.00"
-        ],
-        [
-          {
-            "text": "TOTAL",
-            "align": "right"
-          },
-          "70.00"
-        ],
-        "Consumos",
-        [
-          "Juan Carrasco",
-          "20.00"
-        ],
-        [
-          {
-            "text": "TOTAL",
-            "align": "right"
-          },
-          "20.00"
-        ]
-      ],
-      "footer": [
-        {
-          "text": "EGRESO TOTAL",
-          "align": "right"
-        },
-        {
-          "text": "229.00",
-          "align": "right"
-        }
-      ]
-    },
-    {
-      "title": "CAJA CHICA",
-      "widthPercents": [
-        20,
-        40
-      ],
-      "cellBodyStyles": {
-        "2": "right"
-      },
-      "body": [
-        [
-          "FECHA:",
-          "",
-          "29-04-2024"
-        ],
-        [
-          "MONTO:",
-          "",
-          "1000.00"
-        ]
-      ],
-      "footer": [
-        {
-          "text": "CAJA USUARIO(S):",
-          "span": 2
-        },
-        {
-          "text": "ADMIN",
-          "align": "right"
-        }
-      ]
-    },
-    {
-      "title": "POR TIPO DE PAGO",
-      "widthPercents": [
-        60,
-        5
-      ],
-      "cellBodyStyles": {
-        "1": "center",
-        "2": "right"
-      },
-      "body": [
-        [
-          "TARGETA AMEX",
-          "1",
-          "10.00"
-        ],
-        [
-          "TARGETA DINERS",
-          "1",
-          "7.00"
-        ],
-        [
-          "TARGETA AMEX",
-          "1",
-          "10.00"
-        ],
-        [
-          "TARGETA AMEX",
-          "1",
-          "10.00"
-        ]
-      ],
-      "footer": [
-        {
-          "text": "TOTAL :",
-          "align": "right",
-          "span": 2
-        },
-        {
-          "text": "161.00",
-          "align": "right"
-        }
-      ]
-    },
-    {
-      "title": "OTROS",
-      "cellBodyStyles": {
-        "1": "center",
-        "2": "right"
-      },
-      "widthPercents": [
-        70,
-        10
-      ],
-      "body": [
-        [
-          "DESCUENTO",
-          "1",
-          "2.00"
-        ],
-        [
-          "RECARGO",
-          "0",
-          "0.00"
-        ],
-        [
-          "R. DELIVERY",
-          "2",
-          "2.00"
-        ]
-      ]
-    },
-    {
-      "cellBodyStyles": {
-        "1": "center",
-        "2": "right"
-      },
-      "title": "CONTEO DINERO / SOLES",
-      "headers": [
-        "Billete/Moneda",
-        "Cantidad",
-        {
-          "text": "Subtotal",
-          "align": "right"
-        }
-      ],
-      "body": [
-        [
-          "$ 100.00",
-          "0",
-          "0.00"
-        ],
-        [
-          "$ 50.00",
-          "0",
-          "100.00"
-        ],
-        [
-          "$ 20.00",
-          "1",
-          "20.00"
-        ]
-      ]
-    },
-    {
-      "title": "CONTEO DINERO / DOLARES",
-      "cellBodyStyles": {
-        "1": "center",
-        "2": "right"
-      },
-      "headers": [
-        "BILLETE/MONEDA",
-        "Cantidad",
-        "Subtotal"
-      ],
-      "body": [
-        [
-          "$ 100.00",
-          "0",
-          "0.00"
-        ],
-        [
-          "$ 50.00",
-          "0",
-          "20.00"
-        ],
-        [
-          "$ 0.05",
-          "0",
-          "00.00"
-        ]
-      ],
-      "footer": [
-        {
-          "text": "TOTAL EFECTIVO :",
-          "align": "right",
-          "span": 2
-        },
-        {
-          "text": "30.10",
-          "align": "right"
-        }
-      ]
-    },
-    {
-      "title": "ARQUEO DE CAJA",
-      "widthPercents": [
-        80
-      ],
-      "cellBodyStyles": {
-        "1": "right"
-      },
-      "body": [
-        [
-          "TOTAL MONEDAS SOLES",
-          "203.00"
-        ],
-        [
-          "TOTAL MONEDAS SIN CAJA CHICA",
-          "0.00"
-        ]
-      ]
-    }
-  ],
-  "finalDetails": [
-    "",
-    {
-      "text": "---------------------------",
-      "bold": true
-    },
-    "cajero",
-    "",
-    {
-      "text": "---------------------------",
-      "bold": true
-    },
-    "supervisor"
-  ]
+	"title": "Varias tablas a imprimir",
+	"tables": [
+		{
+			"title": "tabla 1",
+			"body": [
+				["item 1", "item 2", "item 3"],
+				["item 1", "item 2", "item 3"],
+				["item 1", "item 2", "item 3"],
+				["item 1", "item 2", "item 3"]
+			]
+		},
+		{
+			"title": {
+			  "text": "tabla 2",
+			  "decorator": "*"
+			},
+			"separator": "|",
+			"cellBodyStyles": {
+				"0": "center"
+			},
+			"body": [
+				[
+				    "item 4",
+					"item 5"
+				],
+				["Item 6", "Item 7", "Item 8", "Item 9"],
+				["Item 1"],
+				["","", "", "Esta es una frase multilinea"]
+			]
+		}
+	]
 }
