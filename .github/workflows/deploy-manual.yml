@@ -18,17 +18,26 @@ jobs:
         run: mv package.production.json package.json
       - name: Add PRODUCTION file
         run: touch PRODUCTION
-      - name: Set up JDK 17
+      - name: 🛠 Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
-      - name: Build with Maven
+      - name: 📦 Build with Maven
         run: mvn -B package --file pom.xml
       - name: Publish App Installer Bundles GITHUB
         uses: shannah/jdeploy@master
         with:
           github_token: ${{ secrets.GH_TOKEN }}
+      - name: 📣 Notificar en Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+         TAG_MESSAGE=$(git show --format="%S" --no-patch ${{ github.ref }})
+         MESSAGE="@${{ github.actor }} 😃 Hizo deploy a PukaHTTP produción con éxito ✨🚀🚀\n\n $TAG_MESSAGE"
+         curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"$MESSAGE\"}" $SLACK_WEBHOOK_URL
+
+      - run: echo "🔊 Final Status ${{ job.status }}."
 
 
