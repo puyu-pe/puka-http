@@ -24,12 +24,12 @@ public class Printer {
     }
 
     public String getValue() {
-      return this.value;
+      return this.value.trim();
     }
 
     public static Type fromValue(String value) {
       for (Type type : Type.values()) {
-        if (type.value.equals(value)) {
+        if (type.value.equals(value.trim())) {
           return type;
         }
       }

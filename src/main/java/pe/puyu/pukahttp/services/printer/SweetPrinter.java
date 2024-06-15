@@ -29,10 +29,23 @@ public abstract class SweetPrinter {
 		if (!this.printerInfo.has("type")  || !this.printerInfo.get("type").isJsonPrimitive())
 			throw new Exception("property 'type' in printer object is void or it's not string");
 		String name_system = this.printerInfo.get("name_system").getAsString();
-		int port = Optional.ofNullable(this.printerInfo.get("port")).orElse(new JsonPrimitive(9100)).getAsInt();
+		int port = getEthernetPort();
 		OutputStream outputStream = Printer.getOutputStreamFor(name_system, port, this.printerInfo.get("type").getAsString());
 		Printer.setOnUncaughtExceptionFor(outputStream, makeUncaughtException(outputStream));
 		return outputStream;
+	}
+
+	private int getEthernetPort(){
+		JsonPrimitive portProperty = Optional
+			.ofNullable(this.printerInfo.get("port"))
+			.orElse(new JsonPrimitive("9100"))
+			.getAsJsonPrimitive();
+		int port = 9100;
+		try{
+			port = Integer.parseInt(portProperty.getAsString());
+		}catch (Exception ignored){
+		}
+		return port;
 	}
 
 	protected Thread.UncaughtExceptionHandler makeUncaughtException(OutputStream outputStream) {
