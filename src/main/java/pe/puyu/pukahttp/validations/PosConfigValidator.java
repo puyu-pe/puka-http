@@ -12,7 +12,7 @@ public class PosConfigValidator {
 		if (ip.isEmpty()) {
 			errors.add("La IP no debe ser un campo vacio");
 		}
-		var ipPattern = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$", Pattern.MULTILINE);
+		var ipPattern = Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$|^localhost$", Pattern.MULTILINE);
 		var ipMatcher = ipPattern.matcher(ip);
 		boolean isValidIp = ipMatcher.matches();
 		if (!isValidIp) {
