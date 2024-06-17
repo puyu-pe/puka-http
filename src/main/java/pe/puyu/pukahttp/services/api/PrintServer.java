@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.repository.AppDatabase;
+import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 import pe.puyu.pukahttp.util.AppUtil;
 import pe.puyu.pukahttp.util.FileSystemLock;
@@ -124,6 +125,8 @@ public class PrintServer {
 		var newLevel = JsonParser.parseString(ctx.body()).getAsString();
 		Logger rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
 		rootLogger.setLevel(Level.toLevel(newLevel));
+		ConfigAppProperties config = new ConfigAppProperties();
+		config.rootLoggerLevel(Level.toLevel(newLevel));
 		var response = new ResponseApi<String>();
 		response.setStatus("success");
 		response.setMessage("Se actualizó el nivel de logs");

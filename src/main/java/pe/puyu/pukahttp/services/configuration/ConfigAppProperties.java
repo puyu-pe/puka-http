@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.services.configuration;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.util.AppProperties;
@@ -38,7 +39,7 @@ public class ConfigAppProperties {
 		}
 	}
 
-	public void notificationEnabled(boolean value) {
+	public void notifications(boolean value) {
 		try {
 			var configValue = value ? "si" : "no";
 			properties.set("notificationEnabled", configValue);
@@ -47,7 +48,7 @@ public class ConfigAppProperties {
 		}
 	}
 
-	public Optional<Boolean> notificationEnabled() {
+	public Optional<Boolean> notifications() {
 		try {
 			return Optional.of(properties.get("notificationEnabled").equalsIgnoreCase("si"));
 		} catch (Exception e) {
@@ -55,4 +56,22 @@ public class ConfigAppProperties {
 			return Optional.empty();
 		}
 	}
+
+	public void rootLoggerLevel(Level loggerLevel){
+		try{
+			properties.set("rootLoggerLevel", loggerLevel.levelStr);
+		}catch(Exception e){
+			logger.error("Exception on get rootLoggerLevel: {}", e.getMessage(), e);
+		}
+	}
+
+	public Optional<Level> rootLoggerLevel(){
+		try{
+			Optional<String> levelStr = Optional.ofNullable(properties.get("rootLoggerLevel"));
+			return levelStr.flatMap(s -> Optional.of(s).map(Level::toLevel));
+		}catch(Exception e){
+			return Optional.empty();
+		}
+	}
+
 }
