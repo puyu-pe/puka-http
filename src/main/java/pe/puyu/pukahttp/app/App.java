@@ -38,11 +38,12 @@ public class App extends Application {
 	@Override
 	public void init() {
 		this.rootLogger = (Logger) LoggerFactory.getLogger(Constants.PACKAGE_BASE_PATH);
-		rootLogger.setLevel(Level.INFO);
+		rootLogger.setLevel(getConfigRootLoggerLevel());
 		var isUniqueProcess = configUniqueProcess();
 		if (isUniqueProcess) {
 			TrayIconServiceProvider.lock();
 		}
+		initPrintDelay();
 	}
 
 	@Override
@@ -64,9 +65,9 @@ public class App extends Application {
 					}
 				} else {
 					AppUtil.initTrayIcon(server);
-					try{
+					try {
 						server.listen(ip, port);
-					}catch (Exception e){
+					} catch (Exception e) {
 						server.closeService();
 						throw e;
 					}
@@ -81,14 +82,13 @@ public class App extends Application {
 				"Servicio de impresión no inicio correctamente.",
 				"Por favor informar al equipo de soporte PUYU para poder solucionarlo."
 			);
-			if(isOk){
-				try{
+			if (isOk) {
+				try {
 					FxUtil.newStage(Constants.PASSWORD_FXML, "password").show();
-				}
-				catch (Exception ignored){
+				} catch (Exception ignored) {
 					rootLogger.warn("fail on recover recover exception app.");
 				}
-			}else{
+			} else {
 				Platform.exit();
 				System.exit(0);
 			}
@@ -163,4 +163,27 @@ public class App extends Application {
 		return config.uniqueProcess().get();
 	}
 
+	private Level getConfigRootLoggerLevel() {
+		ConfigAppProperties config = new ConfigAppProperties();
+		Optional<Level> rootLoggerLevel = config.rootLoggerLevel();
+		Level loggerLevel;
+		if(rootLoggerLevel.isEmpty()){
+			boolean isProduction = AppUtil.isProductionEnvironment();
+			loggerLevel = isProduction ? Level.INFO : Level.TRACE;
+		}else{
+			loggerLevel = rootLoggerLevel.get();
+		}
+		config.rootLoggerLevel(loggerLevel);
+		return loggerLevel;
+	}
+
+	private void initPrintDelay(){
+		ConfigAppProperties config = new ConfigAppProperties();
+		Optional<Integer> printDelay = config.printDelay();
+		if(printDelay.isEmpty()){
+			config.printDelay(Constants.printDelayDefault);
+		}else{
+			config.printDelay(printDelay.get()); // esto asegura que se cree la propiedad printDelay en config.ini
+		}
+	}
 }
