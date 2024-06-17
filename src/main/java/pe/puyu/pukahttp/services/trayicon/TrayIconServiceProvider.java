@@ -9,6 +9,8 @@ public class TrayIconServiceProvider {
 	private static TrayIconService trayIconService;
 	private final static String NAME_LOCK_FILE = "lockTrayIconService";
 
+	private TrayIconServiceProvider(){}
+
 	public static TrayIconService instance(){
 		if(trayIconService == null){
 			trayIconService = new TrayIconService();

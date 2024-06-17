@@ -12,73 +12,90 @@ Content-Type: application/json
 [
   {
     "type": "invoice",
-    "printer": {
-      "name_system": "{{ name_system }}",
-      "port": 9100,
-      "type": " {{ type }} "
-    },
     "times": 1,
+    "printer": {
+      "type": "{{type}}",
+      "name_system": "{{name_system}}",
+      "port": "9100"
+    },
     "data": {
-      "document": {
-        "description": "PUYU SRL",
-        "identifier": "B001 - 00000071"
-      },
       "business": {
-        "comercialDescription": {
-          "type": "text",
-          "value": "PUYU SRL."
-        },
-        "description": "Sistemas de facturación electronica",
+        "comercialDescription": { "type": "text", "value": "PRIMER TICKET" },
+        "description": "EMPRESA DE TRANSPORTE ECOTURISMO NACIONAL S.R.L.",
         "additional": [
-          "RUC 20450523381 AGENCIA ABANCAY",
-          "DIRECCIÓN : Av. PUYU S/N",
-          "TELÉFONO : 666777888"
+          "RUC 20605333932 AGENCIA ANDAHUAYLAS",
+          "DIRECCIÓN: AV. J. MARIA ARGUEDAS NRO. 414 ANDAHUAYLAS - ANDAHUAYLAS - APURIMAC",
+          "TELÉFONO: 970005003"
         ]
       },
-      "customer": [
-        "REMITENTE / CLIENTE",
-        "DNI: 20564379248",
-        "FASTWORKX SRL",
-        "AV CANADA N 159 ABANCAY ABANCAY PUYU"
+      "document": "TICKET DE VIAJE",
+      "documentId": "002-29",
+      "customer": ["ADQUIRIENTE", " DNI: 73354140", " PALOMINO PACO ROCIO"],
+      "items": [
+        {
+          "description": [
+            "Ruta: ANDAHUAYLAS-ABANCAY",
+            "Embarque: SAN JERONIMO",
+            "Destino: HUANCARAMA",
+            "Asiento: 2    , DNI: 73354140",
+            "Pasajero: PALOMINO PACO ROCIO",
+            "F. Viaje : 14/06/2024 01:00 PM"
+          ],
+          "quanty": null,
+          "unitPrice": null,
+          "totalPrice": "20.00"
+        }
       ],
+      "amounts": { "Total": "20.00" },
       "additional": [
-        "FECHA EMISIÓN : 01/10/2019 14:51:26",
-        "MONEDA : Intis",
-        "CONSIGNADO : Ing. Christian"
+        "MONEDA: SOLES",
+        "FORMA PAGO: Contado PEN 20.00",
+        "F. EMISIÓN: 14/06/2024 12:51:30",
+        "USUARIO: BETSABE - ANDA02"
+      ],
+      "finalMessage": null,
+      "stringQR": null
+    }
+  },
+  {
+    "type": "invoice",
+    "times": 1,
+    "printer": {
+      "type": "{{type}}",
+      "name_system": "{{name_system}}",
+      "port": "9100"
+    },
+    "data": {
+      "business": {
+        "comercialDescription": { "type": "text", "value": "SEGUNDO TICKET" },
+        "description": "EMPRESA DE TRANSPORTE ECOTURISMO NACIONAL S.R.L.",
+        "document": "RUC",
+        "documentNumber": "20605333932"
+      },
+      "document": "Control de",
+      "documentId": "002-29",
+      "additional": [
+        "F. EMISIÓN: 14/06/2024 12:51 PM",
+        "USUARIO: BETSABE - ANDA02"
       ],
       "items": [
         {
-          "description": "Tipo : Silla gamer",
-          "quantity": 2,
+          "description": [
+            "Embarque: SAN JERONIMO",
+            "Destino: HUANCARAMA",
+            "Asiento: 2    , DNI: 73354140",
+            "Pasajero: PALOMINO PACO ROCIO",
+            "Bus: TOYOTA HIACE, Placa: BZU-412",
+            "NAVEROS LIZUNDI CRISHTIAN"
+          ],
           "totalPrice": "20.00"
-        },
-        {
-          "description": "Ticketera",
-          "quantity": 1,
-          "totalPrice": "5.00"
         }
       ],
-      "amounts": {
-        "Operacion no gravada": "25.00",
-        "IGV": 0,
-        "Total": "25.00"
-      },
-      "additionalFooter": [
-        "FECHA IMPR: 02/10/2019 16:12:34",
-        "USUARIO : ADMIN | AGENCIA : ABANCAY"
-      ],
-      "finalMessage": [
-        "PRUEBA DE IMPRESION ELECTRÓNICA",
-        "PARA CONSULTAR EL DOCUMENTO VISITA NEXUS:",
-        "HTTPS://NEXUS.FASTWORKX.COM/123456789",
-        "RESUMEN: Bfdfg+sdfsAfKfVs=",
-        "",
-        "POR FASTWORKX S.R.L. - PERÚ"
-      ],
-      "stringQR": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
+      "finalMessage": ["*** CONTROL DE BUS ***"]
     }
   }
 ]
+
 
 ### DELETE all tickets
 // Elimina todos los tickets de la base de datos

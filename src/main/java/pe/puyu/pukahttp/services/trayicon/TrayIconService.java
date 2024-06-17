@@ -10,7 +10,6 @@ import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.util.AppAlerts;
 import pe.puyu.pukahttp.util.AppUtil;
-import pe.puyu.pukahttp.util.FileSystemLock;
 import pe.puyu.pukahttp.util.FxUtil;
 
 import java.util.Objects;
@@ -29,26 +28,26 @@ public class TrayIconService {
 	}
 
 	public void show() {
-		configProperties.notificationEnabled().ifPresent(enableNotificationMenuItem::setSelected);
+		configProperties.notifications().ifPresent(enableNotificationMenuItem::setSelected);
 		trayIcon.show();
 	}
 
 	public void showInfoMessage(String title, String message) {
-		var notificationEnabled = configProperties.notificationEnabled();
+		var notificationEnabled = configProperties.notifications();
 		if (notificationEnabled.isPresent() && notificationEnabled.get()) {
 			this.trayIcon.showInfoMessage(title, message);
 		}
 	}
 
 	public void showErrorMessage(String title, String message) {
-		var notificationEnabled = configProperties.notificationEnabled();
+		var notificationEnabled = configProperties.notifications();
 		if (notificationEnabled.isPresent() && notificationEnabled.get()) {
 			this.trayIcon.showErrorMessage(title, message);
 		}
 	}
 
 	public void showWarningMessage(String title, String message) {
-		var notificationEnabled = configProperties.notificationEnabled();
+		var notificationEnabled = configProperties.notifications();
 		if (notificationEnabled.isPresent() && notificationEnabled.get()) {
 			this.trayIcon.showWarningMessage(title, message);
 		}
@@ -72,7 +71,7 @@ public class TrayIconService {
 	private void onClickEnableNotificationsMenu(ActionEvent event) {
 		var isSelected = enableNotificationMenuItem.isSelected();
 		enableNotificationMenuItem.setSelected(!isSelected);
-		configProperties.notificationEnabled(enableNotificationMenuItem.isSelected());
+		configProperties.notifications(enableNotificationMenuItem.isSelected());
 	}
 
 	private Stage getParentStage() {

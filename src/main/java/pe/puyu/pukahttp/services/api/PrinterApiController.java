@@ -10,8 +10,10 @@ import com.google.gson.JsonParser;
 import io.javalin.http.Context;
 import io.javalin.websocket.WsConfig;
 import org.slf4j.LoggerFactory;
+import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.repository.AppDatabase;
 import pe.puyu.pukahttp.repository.TicketRepository;
+import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
 import pe.puyu.pukahttp.services.printer.Printer;
 import pe.puyu.pukahttp.services.printer.SweetTablePrinter;
 import pe.puyu.pukahttp.services.printer.SweetTicketPrinter;
@@ -22,6 +24,8 @@ import java.io.OutputStream;
 import java.text.ParseException;
 import java.time.Duration;
 import java.util.LinkedList;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class PrinterApiController {
@@ -108,7 +112,7 @@ public class PrinterApiController {
 			},
 			() -> {
 				JsonElement body = JsonParser.parseString(ctx.body());
-				if(!body.isJsonObject()){
+				if (!body.isJsonObject()) {
 					throw new RuntimeException("bad json, expected a Json Object");
 				}
 				JsonObject data = body.getAsJsonObject();
@@ -200,6 +204,8 @@ public class PrinterApiController {
 
 	public void printTicketJob(JsonArray tickets, Notifier serverNotifier) {
 		var errors = new LinkedList<String>();
+		ConfigAppProperties configurations = new ConfigAppProperties();
+		Optional<Integer> printDelay = configurations.printDelay();
 		for (var ticket : tickets) {
 			var printer = ticket.getAsJsonObject().getAsJsonObject("printer");
 			try {
@@ -211,6 +217,8 @@ public class PrinterApiController {
 					serverNotifier.warn(String.format("UncaughtException printJob: %s", e));
 				});
 				sweetTicketPrinter.print();
+				TimeUnit.MILLISECONDS.sleep(printDelay.orElse(Constants.printDelayDefault));
+			} catch (InterruptedException ignored) {
 			} catch (Exception e) {
 				errors.add(e.getMessage());
 				secureInsertTicket(ticket);
