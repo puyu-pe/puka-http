@@ -43,6 +43,7 @@ public class App extends Application {
 		if (isUniqueProcess) {
 			TrayIconServiceProvider.lock();
 		}
+		initPrintDelay();
 	}
 
 	@Override
@@ -176,4 +177,13 @@ public class App extends Application {
 		return loggerLevel;
 	}
 
+	private void initPrintDelay(){
+		ConfigAppProperties config = new ConfigAppProperties();
+		Optional<Integer> printDelay = config.printDelay();
+		if(printDelay.isEmpty()){
+			config.printDelay(Constants.printDelayDefault);
+		}else{
+			config.printDelay(printDelay.get()); // esto asegura que se cree la propiedad printDelay en config.ini
+		}
+	}
 }
