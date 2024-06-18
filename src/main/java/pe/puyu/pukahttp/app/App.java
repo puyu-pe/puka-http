@@ -64,13 +64,13 @@ public class App extends Application {
 						showActionsPanel(stage);
 					}
 				} else {
-					AppUtil.initTrayIcon(server);
 					try {
 						server.listen(ip, port);
 					} catch (Exception e) {
 						server.closeService();
 						throw e;
 					}
+					AppUtil.initTrayIcon(server);
 					AppUtil.releaseExpiredTickets(ip, port);
 				}
 			} else {
