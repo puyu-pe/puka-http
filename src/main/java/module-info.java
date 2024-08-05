@@ -30,8 +30,10 @@ module pe.puyu.pukahttp {
 	requires com.dustinredmond.fxtrayicon;
 	opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
 
-	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
-	opens pe.puyu.pukahttp.app to javafx.fxml, javafx.graphics;
+//	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
+//	opens pe.puyu.pukahttp.app to javafx.fxml, javafx.graphics;
+	opens pe.puyu.pukahttp.infrastructure.javafx.controllers to javafx.fxml, javafx.graphics;
+	opens pe.puyu.pukahttp.infrastructure.javafx.app to javafx.fxml, javafx.graphics;
 
 	exports pe.puyu.pukahttp.app;
 	exports pe.puyu.pukahttp.repository.model;

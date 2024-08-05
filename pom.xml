@@ -172,7 +172,7 @@
             <!-- Default configuration for running with: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>pe.puyu.pukahttp/pe.puyu.pukahttp.app.App</mainClass>
+              <mainClass>pe.puyu.pukahttp/pe.puyu.pukahttp.infrastructure.javafx.app.JavaFXApplication</mainClass>
               <launcher>app</launcher>
               <jlinkZipName>app</jlinkZipName>
               <jlinkImageName>app</jlinkImageName>
@@ -192,7 +192,7 @@
               <addClasspath>true</addClasspath>
               <classpathPrefix>libs/</classpathPrefix>
               <mainClass>
-                pe.puyu.pukahttp.AppLauncher
+                pe.puyu.pukahttp.infrastructure.AppLauncher
               </mainClass>
             </manifest>
           </archive>
