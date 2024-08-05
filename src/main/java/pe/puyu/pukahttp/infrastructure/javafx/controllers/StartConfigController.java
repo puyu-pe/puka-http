@@ -12,9 +12,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class StartConfigController implements Initializable {
+    String message = "";
+
+    public StartConfigController(String message) {
+        this.message = message;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        txtIP.setText(message);
     }
 
     @FXML
