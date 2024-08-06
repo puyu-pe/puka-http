@@ -2,15 +2,17 @@ package pe.puyu.pukahttp.infrastructure.javafx.app;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javafx.views.StartConfigView;
 
 public class JavaFXApplication extends Application {
 
+    private final AppLog appLog = new AppLog(JavaFXApplication.class);
+
     @Override
     public void init() {
-        System.out.println("start build dependencies !!!");
         configControllerDependencies();
     }
 
@@ -20,8 +22,8 @@ public class JavaFXApplication extends Application {
             StartConfigView view = new StartConfigView();
             view.minimizeInsteadHide(false);
             view.show();
-        } catch (Exception e) {
-
+        } catch (Exception startException) {
+            appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
         }
 
     }
@@ -29,9 +31,9 @@ public class JavaFXApplication extends Application {
     @Override
     public void stop() {
         try {
-            System.out.println("stop application");
-        } catch (Exception ignored) {
-
+            appLog.getLogger().info("stop application success");
+        } catch (Exception stopException) {
+            appLog.getLogger().error("stop application failed: {}", stopException.getMessage(), stopException);
         }
     }
 
@@ -41,6 +43,7 @@ public class JavaFXApplication extends Application {
 
     private void configControllerDependencies() {
         FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController("hello"));
+        appLog.getLogger().info("build injected controller dependencies  success!!!");
     }
 
 }
