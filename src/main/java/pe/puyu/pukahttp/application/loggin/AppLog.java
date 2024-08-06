@@ -9,10 +9,30 @@ public class AppLog {
 
     public AppLog(Class<?> clazz) {
         _logger = (Logger) LoggerFactory.getLogger(clazz);
-        _logger.setLevel(Level.TRACE);
     }
 
     public Logger getLogger() {
         return _logger;
     }
+
+    public static void setErrorLevel(LogLevel level) {
+        Logger rootLogger = (Logger) LoggerFactory.getLogger("pe.puyu.pukahttp");
+        switch (level) {
+            case ERROR:
+                rootLogger.setLevel(Level.ERROR);
+                break;
+            case INFO:
+                rootLogger.setLevel(Level.INFO);
+                break;
+            case WARN:
+                rootLogger.setLevel(Level.WARN);
+                break;
+            case DEBUG:
+                rootLogger.setLevel(Level.DEBUG);
+                break;
+            default:
+                rootLogger.setLevel(Level.TRACE);
+        }
+    }
+
 }
