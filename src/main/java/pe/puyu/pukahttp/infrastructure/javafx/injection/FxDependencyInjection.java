@@ -2,6 +2,8 @@ package pe.puyu.pukahttp.infrastructure.javafx.injection;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,12 +11,15 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 public class FxDependencyInjection {
-
     private static final Map<Class<?>, Supplier<Object>> controllerFactories = new HashMap<>();
 
-    public static Parent load(String fxmlFileName) throws IOException {
-        FXMLLoader loader = getLoader(fxmlFileName);
-        return loader.load();
+    public static Parent load(String fxmlFileName) {
+        try {
+            FXMLLoader loader = getLoader(fxmlFileName);
+            return loader.load();
+        } catch (Exception e) {
+            return new VBox(new Label(String.format("Error on load %s -> %s", fxmlFileName, e.getMessage())));
+        }
     }
 
     public static FXMLLoader getLoader(String fxmlFileName) {

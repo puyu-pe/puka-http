@@ -1,11 +1,10 @@
 package pe.puyu.pukahttp.infrastructure.javafx.app;
 
 import javafx.application.Application;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
+import pe.puyu.pukahttp.infrastructure.javafx.views.StartConfigView;
 
 public class JavaFXApplication extends Application {
 
@@ -18,13 +17,13 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            Parent root = FxDependencyInjection.load("start-config.fxml");
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            StartConfigView view = new StartConfigView();
+            view.minimizeInsteadHide(false);
+            view.show();
         } catch (Exception e) {
 
         }
+
     }
 
     @Override
