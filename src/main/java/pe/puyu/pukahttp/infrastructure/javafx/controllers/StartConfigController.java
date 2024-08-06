@@ -1,31 +1,25 @@
 package pe.puyu.pukahttp.infrastructure.javafx.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+public class StartConfigController {
 
-public class StartConfigController implements Initializable {
-    String message = "";
-
-    public StartConfigController(String message) {
-        this.message = message;
+    public StartConfigController() {
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        txtIP.setText(message);
+    public void initialize() {
     }
 
     @FXML
     void onAccept() {
-
+        //recuperar los datos  dto
+        //service.save(dto)
+        //controla la excepción
     }
 
     @FXML

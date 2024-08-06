@@ -3,7 +3,6 @@ package pe.puyu.pukahttp.application.config;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 import pe.puyu.pukahttp.Constants;
-import pe.puyu.pukahttp.util.AppUtil;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -30,7 +29,7 @@ public class AppConfig {
     }
 
     public static String getEnv() {
-        return AppUtil.isProductionEnvironment() ? "prod" : "beta";
+        return isProductionEnvironment() ? "prod" : "beta";
     }
 
 }

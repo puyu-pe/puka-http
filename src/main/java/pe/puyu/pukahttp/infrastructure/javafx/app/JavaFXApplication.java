@@ -1,6 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.javafx.app;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
@@ -19,11 +20,17 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
+            /*
+            obtener los datos en format dto
+            service.get() -> dto
+            service.validate(dto)
+            * */
             StartConfigView view = new StartConfigView();
             view.minimizeInsteadHide(false);
             view.show();
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
+            Platform.exit();
         }
 
     }
@@ -42,7 +49,7 @@ public class JavaFXApplication extends Application {
     }
 
     private void configControllerDependencies() {
-        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController("hello"));
+        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController());
         appLog.getLogger().info("build injected controller dependencies  success!!!");
     }
 
