@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -12,8 +11,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#onMouseEnteredWindow" prefHeight="555.0" prefWidth="397.0" styleClass="container" stylesheets="@../styles/global.css" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController">
-  <GridPane prefHeight="74.0" prefWidth="389.0" VBox.vgrow="ALWAYS">
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseEntered="#onMouseEnteredWindow" prefHeight="457.0" prefWidth="397.0" spacing="15.0" styleClass="container" stylesheets="@../styles/global.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController">
+  <GridPane prefHeight="305.0" prefWidth="377.0" VBox.vgrow="NEVER">
     <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -32,29 +31,25 @@
     </rowConstraints>
     <Button focusTraversable="false" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onSelectLogo" prefHeight="12.0" prefWidth="101.0" style="-fx-text-fill: black;" text="SELECCIONAR LOGO" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="4" />
     <HBox fx:id="imgViewContainer" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
-      <ImageView fx:id="imgViewLogo" cache="true" cacheHint="QUALITY" fitHeight="133.0" fitWidth="158.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS" />
+      <ImageView fx:id="imgViewLogo" cache="true" cacheHint="QUALITY" fitHeight="206.0" fitWidth="238.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS" />
     </HBox>
   </GridPane>
-  <GridPane hgap="5.0" prefHeight="0.0" prefWidth="369.0" VBox.vgrow="ALWAYS">
+  <GridPane hgap="5.0" prefHeight="36.0" prefWidth="377.0" VBox.vgrow="NEVER">
     <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="48.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="10.0" prefWidth="97.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="23.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" prefWidth="117.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="79.0" minWidth="10.0" prefWidth="71.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="107.0" minWidth="10.0" prefWidth="67.0" />
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.0" minWidth="10.0" prefWidth="85.0" />
     </columnConstraints>
     <rowConstraints>
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="10.0" />
     </rowConstraints>
       <children>
          <Label text="IP:" />
          <TextField fx:id="txtIP" GridPane.columnIndex="1" GridPane.columnSpan="2" />
          <Label text="Puerto:" GridPane.columnIndex="3" />
          <TextField fx:id="txtPort" GridPane.columnIndex="4" />
-         <Label text="Contraseña" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-         <PasswordField fx:id="txtPassword" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="1" />
       </children>
   </GridPane>
   <HBox alignment="CENTER" prefHeight="55.0" prefWidth="369.0" spacing="100.0">

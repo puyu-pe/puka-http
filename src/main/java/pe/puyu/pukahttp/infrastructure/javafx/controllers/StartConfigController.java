@@ -1,7 +1,6 @@
 package pe.puyu.pukahttp.infrastructure.javafx.controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -46,7 +45,10 @@ public class StartConfigController {
 
     @FXML
     void onCancel() {
-        getStage().close();
+        boolean shouldLeave = AlertsView.showConfirmation("Confirm Cancel", "Are you sure you want to cancel the configuration?");
+        if(shouldLeave){
+            getStage().close();
+        }
     }
 
     @FXML
@@ -71,10 +73,6 @@ public class StartConfigController {
     public HBox imgViewContainer;
     @FXML
     private TextField txtIP;
-
-    @FXML
-    private PasswordField txtPassword;
-
     @FXML
     private TextField txtPort;
 
