@@ -32,14 +32,14 @@ public abstract class View {
             });
         } else {
             _stage.setOnCloseRequest(event -> {
-                close();
+                _stage.hide();
                 event.consume();
             });
         }
     }
 
     public void close() {
-        _stage.hide();
+        _stage.close();
     }
 
     abstract protected void config(Stage stage);

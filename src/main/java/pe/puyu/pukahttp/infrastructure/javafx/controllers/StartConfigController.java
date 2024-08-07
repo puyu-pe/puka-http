@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.PrintService;
 import pe.puyu.pukahttp.domain.ServerConfigDTO;
@@ -29,6 +30,7 @@ public class StartConfigController {
         try {
             ServerConfigDTO serverConfig = new ServerConfigDTO(txtIP.getText(), txtPort.getText());
             printService.saveServerConfig(serverConfig);
+            getStage().close();
         } catch (ServerConfigException e) {
             log.getLogger().warn(e.getMessage());
             AlertsView.showWarning("Failed to save configuration", e.getMessage());
@@ -54,6 +56,10 @@ public class StartConfigController {
     @FXML
     void onMouseEnteredWindow() {
 
+    }
+
+    private Stage getStage() {
+        return (Stage) root.getScene().getWindow();
     }
 
     @FXML

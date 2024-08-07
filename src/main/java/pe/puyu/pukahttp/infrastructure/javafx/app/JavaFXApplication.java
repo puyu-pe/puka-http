@@ -9,7 +9,6 @@ import pe.puyu.pukahttp.application.services.PrintService;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
-import pe.puyu.pukahttp.infrastructure.javafx.views.StartConfigView;
 import pe.puyu.pukahttp.infrastructure.javalin.JavalinServer;
 import pe.puyu.pukahttp.infrastructure.reader.ServerPropertiesReader;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
