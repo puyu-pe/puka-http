@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintService;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
@@ -12,6 +13,8 @@ import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javalin.JavalinServer;
 import pe.puyu.pukahttp.infrastructure.reader.ServerPropertiesReader;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
+
+import java.nio.file.Path;
 
 public class JavaFXApplication extends Application {
 
@@ -55,7 +58,10 @@ public class JavaFXApplication extends Application {
     }
 
     private void configControllerDependencies() {
-        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printService));
+        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
+            Path logoFilePath = AppConfig.getLogoFilePath();
+            return new StartConfigController(printService, new BusinessLogoService(logoFilePath));
+        });
         appLog.getLogger().info("build injected controller dependencies  success!!!");
     }
 

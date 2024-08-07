@@ -3,7 +3,7 @@ package pe.puyu.pukahttp.infrastructure.javafx.views;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
-public class AlertsView {
+public class FxAlert {
 
     public static void showWarning(String headerText, String contentText) {
         Alert alert = new Alert(Alert.AlertType.WARNING);

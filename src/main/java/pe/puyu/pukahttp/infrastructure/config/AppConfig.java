@@ -27,6 +27,10 @@ public class AppConfig {
         return Path.of(getUserDataDir(), "config", configIniFileName).toString();
     }
 
+    public static Path getLogoFilePath(){
+        return Path.of(getUserDataDir(), "logo.png");
+    }
+
     public static boolean isProductionEnvironment() {
         return AppConfig.class.getResource("/PRODUCTION") != null;
     }
