@@ -29,7 +29,8 @@ module pe.puyu.pukahttp {
 	requires com.h2database;
 	requires com.dustinredmond.fxtrayicon;
     requires jcommander;
-    opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
+	requires jdk.jdi;
+	opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
 
 //	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
 //	opens pe.puyu.pukahttp.app to javafx.fxml, javafx.graphics;

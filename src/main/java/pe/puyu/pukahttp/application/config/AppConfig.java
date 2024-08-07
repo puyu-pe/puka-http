@@ -2,7 +2,6 @@ package pe.puyu.pukahttp.application.config;
 
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
-import pe.puyu.pukahttp.Constants;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -11,7 +10,7 @@ public class AppConfig {
 
     public static String getUserDataDir() {
         AppDirs appDirs = AppDirsFactory.getInstance();
-        String userDataDir = appDirs.getUserDataDir(Constants.APP_NAME, null, "puyu");
+        String userDataDir = appDirs.getUserDataDir(AppConstants.APP_NAME, null, "puyu");
         File file = new File(userDataDir);
         if (!file.exists()) {
             var ignored = file.mkdirs();
@@ -22,6 +21,11 @@ public class AppConfig {
     public static String getLogsDirectory() {
         Path logsDirectory = Path.of(getUserDataDir(), "logs");
         return logsDirectory.toString();
+    }
+
+    public static String getConfigDirectory() {
+        Path configDirectory = Path.of(getUserDataDir(), "config");
+        return configDirectory.toString();
     }
 
     public static boolean isProductionEnvironment() {
