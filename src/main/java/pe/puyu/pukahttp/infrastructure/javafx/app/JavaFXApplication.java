@@ -29,6 +29,7 @@ public class JavaFXApplication extends Application {
     @Override
     public void init() {
         configControllerDependencies();
+        Platform.setImplicitExit(true);
     }
 
     @Override
@@ -39,7 +40,6 @@ public class JavaFXApplication extends Application {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
             Platform.exit();
         }
-
     }
 
     @Override
@@ -56,7 +56,7 @@ public class JavaFXApplication extends Application {
     }
 
     private void configControllerDependencies() {
-        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController());
+        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printService));
         appLog.getLogger().info("build injected controller dependencies  success!!!");
     }
 

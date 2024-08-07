@@ -1,6 +1,8 @@
 package pe.puyu.pukahttp.application.services;
 
+import javafx.application.Platform;
 import pe.puyu.pukahttp.domain.ServerConfigException;
+import pe.puyu.pukahttp.domain.ValidationException;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 
 public class LaunchApplicationService {
@@ -12,9 +14,10 @@ public class LaunchApplicationService {
         this.viewLauncher = viewLauncher;
     }
 
-    public void startApplication() throws ServerConfigException {
+    public void startApplication() throws ServerConfigException, ValidationException {
         if (printService.existServerConfig()) {
             printService.start();
+            Platform.exit();
         } else {
             viewLauncher.launchMainView();
         }

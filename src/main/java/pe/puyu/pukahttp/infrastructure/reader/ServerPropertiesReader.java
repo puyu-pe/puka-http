@@ -26,8 +26,12 @@ public class ServerPropertiesReader implements ServerConfigReader {
 
     @Override
     public void write(ServerConfigDTO serverConfig) throws ServerConfigException {
-        Properties properties = loadProperties();
+        File file = new File(propertiesFilePath);
+        boolean ignored = file.getParentFile().mkdirs();
         try (FileOutputStream out = new FileOutputStream(propertiesFilePath)) {
+            Properties properties = loadProperties();
+            properties.put("ip", serverConfig.ip());
+            properties.put("port", serverConfig.port());
             properties.store(out, "/* properties updated */");
         }catch (IOException e){
             throw new ServerConfigException("server properties file could not be written", e);
