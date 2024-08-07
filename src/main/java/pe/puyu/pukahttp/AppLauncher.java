@@ -1,6 +1,6 @@
 package pe.puyu.pukahttp;
 
-import pe.puyu.pukahttp.application.config.AppConfig;
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.application.loggin.LogLevel;
 import pe.puyu.pukahttp.infrastructure.javafx.app.JavaFXApplication;

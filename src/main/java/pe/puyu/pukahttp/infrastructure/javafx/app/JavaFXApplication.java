@@ -4,13 +4,27 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.application.services.LaunchApplicationService;
+import pe.puyu.pukahttp.application.services.PrintService;
+import pe.puyu.pukahttp.domain.ServerConfigReader;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javafx.views.StartConfigView;
+import pe.puyu.pukahttp.infrastructure.javalin.JavalinServer;
+import pe.puyu.pukahttp.infrastructure.reader.ServerPropertiesReader;
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 
 public class JavaFXApplication extends Application {
 
     private final AppLog appLog = new AppLog(JavaFXApplication.class);
+    private final PrintService printService;
+    private final LaunchApplicationService launchApplicationService;
+
+    public JavaFXApplication() {
+        ServerConfigReader propertiesReader = new ServerPropertiesReader(AppConfig.getPropertiesFilePath("server.ini"));
+        printService = new PrintService(new JavalinServer(), propertiesReader);
+        launchApplicationService = new LaunchApplicationService(printService, new FxLauncher());
+    }
 
     @Override
     public void init() {
@@ -20,14 +34,7 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            /*
-            obtener los datos en format dto
-            service.get() -> dto
-            service.validate(dto)
-            * */
-            StartConfigView view = new StartConfigView();
-            view.minimizeInsteadHide(false);
-            view.show();
+            launchApplicationService.startApplication();
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
             Platform.exit();

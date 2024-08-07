@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.application.config;
+package pe.puyu.pukahttp.infrastructure.config;
 
 public class AppConstants {
     public static final String APP_NAME = "PukaHTTP";

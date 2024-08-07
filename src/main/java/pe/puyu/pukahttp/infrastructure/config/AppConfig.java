@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.application.config;
+package pe.puyu.pukahttp.infrastructure.config;
 
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
@@ -23,9 +23,8 @@ public class AppConfig {
         return logsDirectory.toString();
     }
 
-    public static String getConfigDirectory() {
-        Path configDirectory = Path.of(getUserDataDir(), "config");
-        return configDirectory.toString();
+    public static String getPropertiesFilePath(String configIniFileName) {
+        return Path.of(getUserDataDir(), "config", configIniFileName).toString();
     }
 
     public static boolean isProductionEnvironment() {
