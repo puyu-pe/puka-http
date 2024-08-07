@@ -30,6 +30,7 @@ public class StartConfigController {
         try {
             ServerConfigDTO serverConfig = new ServerConfigDTO(txtIP.getText(), txtPort.getText());
             printService.saveServerConfig(serverConfig);
+            printService.start();
             getStage().close();
         } catch (ServerConfigException e) {
             log.getLogger().warn(e.getMessage());
@@ -45,7 +46,7 @@ public class StartConfigController {
 
     @FXML
     void onCancel() {
-
+        getStage().close();
     }
 
     @FXML
