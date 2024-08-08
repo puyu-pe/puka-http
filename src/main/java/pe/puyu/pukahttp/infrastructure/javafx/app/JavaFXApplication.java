@@ -7,9 +7,12 @@ import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintService;
+import pe.puyu.pukahttp.application.services.tickets.TicketsService;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
+import pe.puyu.pukahttp.infrastructure.javalin.controllers.TicketsController;
+import pe.puyu.pukahttp.infrastructure.javalin.injection.JavalinDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javalin.server.JavalinPrintServer;
 import pe.puyu.pukahttp.infrastructure.reader.ServerPropertiesReader;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
@@ -57,6 +60,10 @@ public class JavaFXApplication extends Application {
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();
                 return new StartConfigController(printService, new BusinessLogoService(logoFilePath));
+            });
+            JavalinDependencyInjection.addControllerFactory(TicketsController.class, () -> {
+                TicketsService ticketsService = new TicketsService();
+                return new TicketsController(ticketsService);
             });
             appLog.getLogger().info("build injected controller dependencies  success!!!");
         } catch (Exception e) {

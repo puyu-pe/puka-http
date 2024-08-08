@@ -11,31 +11,39 @@ import pe.puyu.pukahttp.domain.ServerConfigDTO;
 
 public class JavalinPrintServer implements PrintServer {
 
-    private final Javalin app;
+    private Javalin app = null;
     private final AppLog log = new AppLog(JavalinPrintServer.class);
-
-    public JavalinPrintServer() {
-        JavalinConfig config = new JavalinConfig();
-        config.plugins.enableCors(cors -> cors.add(CorsPluginConfig::anyHost));
-        app = Javalin.create();
-    }
 
     @Override
     public void start(@NotNull ServerConfigDTO serverConfig) throws PrintServerException {
-        try {
-            Routes.config(app);
-            int port = Integer.parseInt(serverConfig.port());
-            app.start(serverConfig.ip(), port);
-            log.getLogger().info("Sever listening on {}:{}", serverConfig.ip(), port);
-        } catch (Exception e) {
-            throw new PrintServerException(e.getMessage(), e.getCause());
+        if(app == null){
+            try {
+                initializeApp();
+                int port = Integer.parseInt(serverConfig.port());
+                app.start(serverConfig.ip(), port);
+                log.getLogger().info("Sever listening on {}:{}", serverConfig.ip(), port);
+            } catch (Exception e) {
+                throw new PrintServerException(e.getMessage(), e.getCause());
+            }
         }
+
     }
 
     @Override
     public void stop() {
-
+        if(app != null){
+            app.close();
+        }
     }
 
+    private void initializeApp(){
+        app = Javalin.create(this::serverConfig);
+        Routes.config(app);
+        app.exception(Exception.class, ErrorHandling::handler);
+    }
+
+    private void serverConfig(JavalinConfig config){
+        config.plugins.enableCors(cors -> cors.add(CorsPluginConfig::anyHost));
+    }
 
 }
