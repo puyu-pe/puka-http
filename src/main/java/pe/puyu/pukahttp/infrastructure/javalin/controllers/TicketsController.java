@@ -1,18 +1,15 @@
 package pe.puyu.pukahttp.infrastructure.javalin.controllers;
 
-
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.GatewayTimeoutResponse;
-import pe.puyu.pukahttp.application.services.tickets.PrintTicketException;
+import pe.puyu.pukahttp.application.services.tickets.PrintJobException;
 import pe.puyu.pukahttp.application.services.tickets.TicketsService;
 
-
 public class TicketsController {
-    // ticket
-    // reprint
-    // print
     // report
+    // print
+    // reprint
     // delete
     private final TicketsService ticketsService;
 
@@ -20,7 +17,7 @@ public class TicketsController {
         this.ticketsService = ticketsService;
     }
 
-    public void printTicket(Context ctx) {
+    public void printTickets(Context ctx) {
         ctx.async(
             15000,
             () -> {
@@ -28,8 +25,24 @@ public class TicketsController {
             },
             () -> {
                 try {
-                    this.ticketsService.printTicket(ctx.body());
-                } catch (PrintTicketException e) {
+                    this.ticketsService.printTickets(ctx.body());
+                } catch (PrintJobException e) {
+                    throw new BadRequestResponse(e.getMessage());
+                }
+            }
+        );
+    }
+
+    public void printReport(Context ctx) {
+        ctx.async(
+            15000,
+            () -> {
+                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
+            },
+            () -> {
+                try {
+                    ticketsService.printReport(ctx.body());
+                }catch (PrintJobException e){
                     throw new BadRequestResponse(e.getMessage());
                 }
             }

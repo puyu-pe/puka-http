@@ -4,8 +4,12 @@ import pe.puyu.pukahttp.application.services.tickets.deprecated.PrintJob;
 
 public class TicketsService {
 
-    public void printTicket(String jsonArray) throws PrintTicketException {
+    public void printTickets(String jsonArray) throws PrintJobException {
         PrintJob.print(jsonArray);
+    }
+
+    public void printReport(String jsonObject) throws PrintJobException {
+        PrintJob.report(jsonObject);
     }
 
 }
