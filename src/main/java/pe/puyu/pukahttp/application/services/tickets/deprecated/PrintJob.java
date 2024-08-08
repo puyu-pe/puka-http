@@ -16,7 +16,7 @@ public class PrintJob {
             try {
                 var sweetTicketPrinter = new SweetTicketPrinter(ticket.getAsJsonObject());
                 sweetTicketPrinter.print();
-                TimeUnit.MILLISECONDS.sleep(100);
+                TimeUnit.MILLISECONDS.sleep(50);
             } catch (InterruptedException ignored) {
 
             } catch (Exception e) {
