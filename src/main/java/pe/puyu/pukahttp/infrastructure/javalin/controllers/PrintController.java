@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.infrastructure.javalin;
+package pe.puyu.pukahttp.infrastructure.javalin.controllers;
 
 
 import io.javalin.http.Context;

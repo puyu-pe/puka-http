@@ -10,7 +10,7 @@ import pe.puyu.pukahttp.application.services.PrintService;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
-import pe.puyu.pukahttp.infrastructure.javalin.JavalinServer;
+import pe.puyu.pukahttp.infrastructure.javalin.server.JavalinPrintServer;
 import pe.puyu.pukahttp.infrastructure.reader.ServerPropertiesReader;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 
@@ -23,12 +23,12 @@ public class JavaFXApplication extends Application {
 
     public JavaFXApplication() {
         ServerConfigReader propertiesReader = new ServerPropertiesReader(AppConfig.getPropertiesFilePath("server.ini"));
-        printService = new PrintService(new JavalinServer(), propertiesReader);
+        printService = new PrintService(new JavalinPrintServer(), propertiesReader);
     }
 
     @Override
     public void init() {
-        configControllerDependencies();
+        injectDependenciesIntoControllers();
         Platform.setImplicitExit(true);
     }
 
@@ -52,7 +52,7 @@ public class JavaFXApplication extends Application {
         }
     }
 
-    private void configControllerDependencies() {
+    private void injectDependenciesIntoControllers() {
         try {
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();

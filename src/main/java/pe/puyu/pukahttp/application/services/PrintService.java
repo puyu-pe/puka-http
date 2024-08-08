@@ -1,6 +1,5 @@
 package pe.puyu.pukahttp.application.services;
 
-import javafx.application.Platform;
 import pe.puyu.pukahttp.domain.*;
 
 public class PrintService {
@@ -12,7 +11,7 @@ public class PrintService {
         this.configReader = configReader;
     }
 
-    public void start() throws ServerConfigException, ValidationException {
+    public void start() throws ServerConfigException, ValidationException, PrintServerException {
         ServerConfigDTO serverConfig = getServerConfig();
         printServer.start(serverConfig);
     }
