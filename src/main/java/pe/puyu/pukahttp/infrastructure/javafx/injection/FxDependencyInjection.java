@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -32,10 +31,6 @@ public class FxDependencyInjection {
 
     public static void addControllerFactory(Class<?> controllerClass, Supplier<Object> controllerFactory) {
         controllerFactories.put(controllerClass, controllerFactory);
-    }
-
-    public static void removeControllerFactory(Class<?> controllerClass) {
-        controllerFactories.remove(controllerClass);
     }
 
     private static Object loadController(Class<?> controller) {

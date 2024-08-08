@@ -20,12 +20,10 @@ public class JavaFXApplication extends Application {
 
     private final AppLog appLog = new AppLog(JavaFXApplication.class);
     private final PrintService printService;
-    private final LaunchApplicationService launchApplicationService;
 
     public JavaFXApplication() {
         ServerConfigReader propertiesReader = new ServerPropertiesReader(AppConfig.getPropertiesFilePath("server.ini"));
         printService = new PrintService(new JavalinServer(), propertiesReader);
-        launchApplicationService = new LaunchApplicationService(printService, new FxLauncher());
     }
 
     @Override
@@ -37,6 +35,7 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
+            LaunchApplicationService launchApplicationService = new LaunchApplicationService(printService, new FxLauncher());
             launchApplicationService.startApplication();
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
@@ -53,16 +52,20 @@ public class JavaFXApplication extends Application {
         }
     }
 
-    public static void main(String[] args) {
-        launch(args);
+    private void configControllerDependencies() {
+        try {
+            FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
+                Path logoFilePath = AppConfig.getLogoFilePath();
+                return new StartConfigController(printService, new BusinessLogoService(logoFilePath));
+            });
+            appLog.getLogger().info("build injected controller dependencies  success!!!");
+        } catch (Exception e) {
+            appLog.getLogger().error("error on injected controller dependencies: {}", e.getMessage(), e);
+        }
     }
 
-    private void configControllerDependencies() {
-        FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
-            Path logoFilePath = AppConfig.getLogoFilePath();
-            return new StartConfigController(printService, new BusinessLogoService(logoFilePath));
-        });
-        appLog.getLogger().info("build injected controller dependencies  success!!!");
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }
