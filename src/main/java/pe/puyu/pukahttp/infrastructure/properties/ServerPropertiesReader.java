@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.infrastructure.reader;
+package pe.puyu.pukahttp.infrastructure.properties;
 
 import org.jetbrains.annotations.NotNull;
 import pe.puyu.pukahttp.domain.ServerConfigDTO;

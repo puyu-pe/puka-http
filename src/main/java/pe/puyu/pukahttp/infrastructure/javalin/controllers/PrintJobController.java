@@ -4,17 +4,16 @@ import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.GatewayTimeoutResponse;
 import pe.puyu.pukahttp.application.services.tickets.PrintJobException;
-import pe.puyu.pukahttp.application.services.tickets.TicketsService;
+import pe.puyu.pukahttp.application.services.tickets.PrintJobService;
 
-public class TicketsController {
-    // report
+public class PrintJobController {
     // print
     // reprint
     // delete
-    private final TicketsService ticketsService;
+    private final PrintJobService printJobService;
 
-    public TicketsController(TicketsService ticketsService) {
-        this.ticketsService = ticketsService;
+    public PrintJobController(PrintJobService printJobService) {
+        this.printJobService = printJobService;
     }
 
     public void printTickets(Context ctx) {
@@ -25,7 +24,7 @@ public class TicketsController {
             },
             () -> {
                 try {
-                    this.ticketsService.printTickets(ctx.body());
+                    this.printJobService.printTickets(ctx.body());
                 } catch (PrintJobException e) {
                     throw new BadRequestResponse(e.getMessage());
                 }
@@ -41,7 +40,7 @@ public class TicketsController {
             },
             () -> {
                 try {
-                    ticketsService.printReport(ctx.body());
+                    printJobService.printReport(ctx.body());
                 }catch (PrintJobException e){
                     throw new BadRequestResponse(e.getMessage());
                 }

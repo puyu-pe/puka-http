@@ -33,6 +33,7 @@ public class JavalinPrintServer implements PrintServer {
     public void stop() {
         if(app != null){
             app.stop();
+            app = null;
         }
     }
 

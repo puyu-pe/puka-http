@@ -10,7 +10,7 @@ import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.SweetTic
 
 import java.util.concurrent.TimeUnit;
 
-public class PrintJob {
+public class JTicketDesignPrintJob {
 
     public static void print(String jsonArray) throws PrintJobException {
         JsonArray tickets = JsonParser.parseString(jsonArray).getAsJsonArray();

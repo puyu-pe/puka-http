@@ -1,15 +1,15 @@
 package pe.puyu.pukahttp.application.services.tickets;
 
-import pe.puyu.pukahttp.application.services.tickets.deprecated.PrintJob;
+import pe.puyu.pukahttp.application.services.tickets.deprecated.JTicketDesignPrintJob;
 
-public class TicketsService {
+public class PrintJobService {
 
     public void printTickets(String jsonArray) throws PrintJobException {
-        PrintJob.print(jsonArray);
+        JTicketDesignPrintJob.print(jsonArray);
     }
 
     public void printReport(String jsonObject) throws PrintJobException {
-        PrintJob.report(jsonObject);
+        JTicketDesignPrintJob.report(jsonObject);
     }
 
 }
