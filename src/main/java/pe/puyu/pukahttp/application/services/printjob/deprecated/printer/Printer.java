@@ -1,10 +1,10 @@
-package pe.puyu.pukahttp.application.services.tickets.deprecated.printer;
+package pe.puyu.pukahttp.application.services.printjob.deprecated.printer;
 
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.interfaces.Caughtable;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.outputstream.ImmediateFileStream;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.outputstream.ImmediateSocketOutputStream;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.outputstream.SerialStream;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.outputstream.ServiceOutputStream;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.interfaces.Caughtable;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream.ImmediateFileStream;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream.ImmediateSocketOutputStream;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream.SerialStream;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream.ServiceOutputStream;
 
 import java.io.OutputStream;
 import java.lang.Thread.UncaughtExceptionHandler;

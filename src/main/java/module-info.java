@@ -30,6 +30,7 @@ module pe.puyu.pukahttp {
 	requires com.dustinredmond.fxtrayicon;
     requires jcommander;
 	requires jdk.jdi;
+	requires pe.puyu.SweetTicketDesign;
 	opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
 
 //	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;

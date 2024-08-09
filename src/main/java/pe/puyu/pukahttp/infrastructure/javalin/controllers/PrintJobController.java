@@ -3,8 +3,8 @@ package pe.puyu.pukahttp.infrastructure.javalin.controllers;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.GatewayTimeoutResponse;
-import pe.puyu.pukahttp.application.services.tickets.PrintJobException;
-import pe.puyu.pukahttp.application.services.tickets.PrintJobService;
+import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
+import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 
 public class PrintJobController {
     // print

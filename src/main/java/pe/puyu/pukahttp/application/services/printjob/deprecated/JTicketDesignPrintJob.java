@@ -1,12 +1,12 @@
-package pe.puyu.pukahttp.application.services.tickets.deprecated;
+package pe.puyu.pukahttp.application.services.printjob.deprecated;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import pe.puyu.pukahttp.application.services.tickets.PrintJobException;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.SweetTablePrinter;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.SweetTicketPrinter;
+import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.SweetTablePrinter;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.SweetTicketPrinter;
 
 import java.util.concurrent.TimeUnit;
 

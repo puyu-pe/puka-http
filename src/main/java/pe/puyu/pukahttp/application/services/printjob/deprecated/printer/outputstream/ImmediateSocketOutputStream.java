@@ -1,7 +1,7 @@
-package pe.puyu.pukahttp.application.services.tickets.deprecated.printer.outputstream;
+package pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream;
 
 import org.jetbrains.annotations.NotNull;
-import pe.puyu.pukahttp.application.services.tickets.deprecated.printer.interfaces.Cancelable;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.interfaces.Cancelable;
 
 import java.io.IOException;
 import java.io.OutputStream;

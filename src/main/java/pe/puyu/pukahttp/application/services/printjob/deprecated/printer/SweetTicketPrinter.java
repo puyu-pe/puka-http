@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.application.services.tickets.deprecated.printer;
+package pe.puyu.pukahttp.application.services.printjob.deprecated.printer;
 
 import com.google.gson.JsonObject;
 import pe.puyu.jticketdesing.core.SweetTicketDesign;
