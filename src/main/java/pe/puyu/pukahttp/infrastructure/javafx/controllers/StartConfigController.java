@@ -9,7 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
-import pe.puyu.pukahttp.application.services.PrintService;
+import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.domain.PngFileChooser;
 import pe.puyu.pukahttp.domain.ServerConfigDTO;
 import pe.puyu.pukahttp.domain.ServerConfigException;
@@ -21,12 +21,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class StartConfigController {
-    private final PrintService printService;
+    private final PrintServerService printServerService;
     private final BusinessLogoService businessLogoService;
     private final AppLog log = new AppLog(StartConfigController.class);
 
-    public StartConfigController(PrintService printService, BusinessLogoService businessLogoService) {
-        this.printService = printService;
+    public StartConfigController(PrintServerService printServerService, BusinessLogoService businessLogoService) {
+        this.printServerService = printServerService;
         this.businessLogoService = businessLogoService;
     }
 
@@ -38,8 +38,8 @@ public class StartConfigController {
     void onAccept() {
         try {
             ServerConfigDTO serverConfig = new ServerConfigDTO(txtIP.getText(), txtPort.getText());
-            printService.saveServerConfig(serverConfig);
-            printService.start();
+            printServerService.saveServerConfig(serverConfig);
+            printServerService.start();
             getStage().close();
         } catch (ServerConfigException e) {
             log.getLogger().warn(e.getMessage());

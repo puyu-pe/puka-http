@@ -2,11 +2,11 @@ package pe.puyu.pukahttp.application.services;
 
 import pe.puyu.pukahttp.domain.*;
 
-public class PrintService {
+public class PrintServerService {
     private final PrintServer printServer;
     private final ServerConfigReader configReader;
 
-    public PrintService(PrintServer printServer, ServerConfigReader configReader) {
+    public PrintServerService(PrintServer printServer, ServerConfigReader configReader) {
         this.printServer = printServer;
         this.configReader = configReader;
     }

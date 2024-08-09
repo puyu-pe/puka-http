@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public enum PrinterType {
     SYSTEM("SYSTEM"),
     SAMBA("SAMBA"),
+    SERIAL("SERIAL"),
     ETHERNET("ETHERNET");
 
     private final String value;

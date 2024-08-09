@@ -10,9 +10,6 @@ public class ImmediateFileStream extends OutputStream implements Cancelable {
 	private final String resourcePath;
 	private FileOutputStream outputStream;
 
-	/**
-	 *resourcePath ejemplo: "\\\\192.168.1.53\\jpuka"
-	 */
 	public ImmediateFileStream(String resourcePath) {
 		this.resourcePath = resourcePath;
 	}

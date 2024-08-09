@@ -6,17 +6,17 @@ import pe.puyu.pukahttp.domain.ValidationException;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 
 public class LaunchApplicationService {
-    private final PrintService printService;
+    private final PrintServerService printServerService;
     private final ViewLauncher viewLauncher;
 
-    public LaunchApplicationService(PrintService printService, ViewLauncher viewLauncher){
-        this.printService = printService;
+    public LaunchApplicationService(PrintServerService printServerService, ViewLauncher viewLauncher){
+        this.printServerService = printServerService;
         this.viewLauncher = viewLauncher;
     }
 
     public void startApplication() throws ServerConfigException, ValidationException, PrintServerException {
-        if (printService.existServerConfig()) {
-            printService.start();
+        if (printServerService.existServerConfig()) {
+            printServerService.start();
         } else {
             viewLauncher.launchMainView();
         }
