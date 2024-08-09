@@ -100,8 +100,12 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
     }
 
     @Override
-    public int countAll() {
-        return 0;
+    public long countAll() {
+        try (Stream<Path> files = Files.list(storagePath)) {
+            return files.count();
+        }catch (Exception e){
+            return 0;
+        }
     }
 
 }
