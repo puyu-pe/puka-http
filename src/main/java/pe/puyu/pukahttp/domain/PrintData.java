@@ -8,6 +8,6 @@ public record PrintData(
     @Nullable PrinterType type,
     @Nullable String port,
     @Nullable String times,
-    @NotNull String printObject
+    @NotNull String printData
 ) {
 }

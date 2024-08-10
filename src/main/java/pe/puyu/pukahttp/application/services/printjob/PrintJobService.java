@@ -1,5 +1,8 @@
 package pe.puyu.pukahttp.application.services.printjob;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import pe.puyu.SweetTicketDesign.application.builder.gson.GsonPrinterObjectBuilder;
 import pe.puyu.SweetTicketDesign.application.components.DefaultComponentsProvider;
 import pe.puyu.SweetTicketDesign.application.printer.escpos.EscPosPrinter;
@@ -54,19 +57,11 @@ public class PrintJobService {
         PrinterType type = Optional.ofNullable(data.type()).orElse(PrinterType.SYSTEM);
         int port = Integer.parseInt(Optional.ofNullable(data.port()).orElse("9100"));
         int times = Integer.parseInt(Optional.ofNullable(data.times()).orElse("1"));
-        String printObject = data.printObject();
-        // design print object
-        GsonPrinterObjectBuilder builder = new GsonPrinterObjectBuilder(printObject);
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        SweetPrinter printer = new EscPosPrinter(buffer);
-        SweetDesigner designer = new SweetDesigner(builder, printer, new DefaultComponentsProvider());
-        for (int i = 0; i < times; i++) {
-            designer.paintDesign();
-        }
+        ByteArrayOutputStream buffer = sweetDesign(data.printData(), times);
         try {
             printJob(target, port, type, buffer);
         } catch (PrintJobException e) {
-            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), printObject, LocalDateTime.now());
+            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), data.printData(), LocalDateTime.now());
             failedPrintJobsStorage.save(printJob);
             throw new PrintJobException(e.getMessage(), e);
         } catch (PrintServiceNotFoundException e) {
@@ -74,6 +69,28 @@ public class PrintJobService {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private ByteArrayOutputStream sweetDesign(String jsonElement, int times) {
+        JsonElement element = JsonParser.parseString(jsonElement);
+        JsonArray arrayData = new JsonArray();
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        SweetPrinter printer = new EscPosPrinter(buffer);
+        if (element.isJsonObject()) {
+            arrayData.add(element);
+        } else if (element.isJsonArray()) {
+            arrayData = element.getAsJsonArray();
+        }
+        for (JsonElement data : arrayData) {
+            if (data.isJsonObject()) {
+                GsonPrinterObjectBuilder builder = new GsonPrinterObjectBuilder(data.getAsJsonObject());
+                SweetDesigner designer = new SweetDesigner(builder, printer, new DefaultComponentsProvider());
+                for (int i = 0; i < times; i++) {
+                    designer.paintDesign();
+                }
+            }
+        }
+        return buffer;
     }
 
     private void printJob(String target, int port, PrinterType type, ByteArrayOutputStream buffer) throws PrintServiceNotFoundException, PrintJobException {

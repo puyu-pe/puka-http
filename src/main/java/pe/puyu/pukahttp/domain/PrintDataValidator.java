@@ -8,7 +8,7 @@ public class PrintDataValidator {
     }
 
     public void validate() throws DataValidationException {
-        if (data.printObject().isBlank()) {
+        if (data.printData().isBlank()) {
             throw new DataValidationException("Print object cannot be empty");
         }
         if (data.target().isBlank()) {

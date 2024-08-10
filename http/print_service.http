@@ -8,61 +8,118 @@ GET {{ server }}/test-connection
 ### POST print job
 // Endpoint para impresión generica
 POST {{ server }}/printer/print/?printer={{name_system}}&type=ethernet
+Content-Type: application/json
 
-{
-    "properties": {
-        "blockWidth": 48
-    },
-    "data": [
-        {
-            "styles": {
-                "$img": {
-                    "align": "center",
-                    "width": 300,
-                    "height": 150
-                }
-            },
-            "imgPath": "/home/socamaru/Descargas/logos/ananau.png"
+[
+    {
+        "properties": {
+            "blockWidth": 48
         },
-        {
-            "styles": {
-                "$qr": {
-                    "align": "center"
-                }
-            },
-            "qr": {
-                "type": "img",
-                "data": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
-            }
-        },
-        {
-            "nColumns": 3,
-            "styles": {
-                "1": {
-                    "align": "center"
-                },
-                "total": {
-                    "align": "right"
-                }
-            },
-            "rows": [
-                [
-                    "cell 1",
-                    "cell 2",
-                    "cell 3"
-                ],
-                [
-                    "123456789112345678921234567893123456789412",
-                    {
-                        "text": "second cell",
-                        "class": "total"
+        "data": [
+            {
+                "styles": {
+                    "$img": {
+                        "align": "center",
+                        "width": 300,
+                        "height": 150
                     }
-                ],
-                "secod row"
-            ]
-        }
-    ]
-}
+                },
+                "imgPath": "/home/socamaru/Descargas/logos/ananau.png"
+            },
+            {
+                "styles": {
+                    "$qr": {
+                        "align": "center"
+                    }
+                },
+                "qr": {
+                    "type": "img",
+                    "data": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
+                }
+            },
+            {
+                "nColumns": 3,
+                "styles": {
+                    "1": {
+                        "align": "center"
+                    },
+                    "total": {
+                        "align": "right"
+                    }
+                },
+                "rows": [
+                    [
+                        "cell 1",
+                        "cell 2",
+                        "cell 3"
+                    ],
+                    [
+                        "123456789112345678921234567893123456789412",
+                        {
+                            "text": "second cell",
+                            "class": "total"
+                        }
+                    ],
+                    "secod row"
+                ]
+            }
+        ]
+    },
+    {
+        "properties": {
+            "blockWidth": 48
+        },
+        "data": [
+            {
+                "styles": {
+                    "$img": {
+                        "align": "center",
+                        "width": 300,
+                        "height": 150
+                    }
+                },
+                "imgPath": "/home/socamaru/Descargas/logos/ecotur.png"
+            },
+            {
+                "styles": {
+                    "$qr": {
+                        "align": "center"
+                    }
+                },
+                "qr": {
+                    "type": "img",
+                    "data": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
+                }
+            },
+            {
+                "nColumns": 3,
+                "styles": {
+                    "1": {
+                        "align": "center"
+                    },
+                    "total": {
+                        "align": "right"
+                    }
+                },
+                "rows": [
+                    [
+                        "cell 1",
+                        "cell 2",
+                        "cell 3"
+                    ],
+                    [
+                        "123456789112345678921234567893123456789412",
+                        {
+                            "text": "second cell",
+                            "class": "total"
+                        }
+                    ],
+                    "secod row"
+                ]
+            }
+        ]
+    }
+]
 
 
 ### Post  tickets to print
