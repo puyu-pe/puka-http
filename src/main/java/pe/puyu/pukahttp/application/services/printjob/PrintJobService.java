@@ -65,6 +65,8 @@ public class PrintJobService {
 			failedPrintJobsStorage.save(printJob);
 			throw new PrintJobException(e.getMessage(), e);
 		} catch (PrintServiceNotFoundException e) {
+            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), data.printData(), LocalDateTime.now());
+            failedPrintJobsStorage.save(printJob);
 			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);

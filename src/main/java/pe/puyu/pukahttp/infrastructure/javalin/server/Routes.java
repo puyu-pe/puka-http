@@ -15,10 +15,17 @@ public class Routes {
                 path("print", () -> {
                     post(printController::print);
                 });
+                path("queue", () -> {
+                    get(printController::getQueueSize);
+                    ws("events", printController::getQueueEvents);
+                });
                 //TODO: Remove above deprecated routes in the future
                 path("ticket", () -> {
                     post(printController::printTickets);
-
+                    path("queue", () -> {
+                        get(printController::getQueueSize);
+                        ws("events", printController::getQueueEvents);
+                    });
                 });
                 path("report", () -> {
                     post(printController::printReport);

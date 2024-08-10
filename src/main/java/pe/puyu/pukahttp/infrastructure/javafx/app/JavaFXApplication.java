@@ -58,7 +58,7 @@ public class JavaFXApplication extends Application {
     }
 
     private void injectDependenciesIntoControllers() {
-        FailedPrintJobsStorage storage = new GsonFailedPrintJobStorage(AppConfig.getStoragePath());
+        GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage(AppConfig.getStoragePath());
         try {
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();
@@ -66,7 +66,7 @@ public class JavaFXApplication extends Application {
             });
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);
-                return new PrintJobController(printJobService);
+                return new PrintJobController(printJobService, storage);
             });
             appLog.getLogger().info("build injected controller dependencies  success!!!");
         } catch (Exception e) {

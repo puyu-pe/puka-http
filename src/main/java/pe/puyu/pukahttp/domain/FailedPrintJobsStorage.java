@@ -11,5 +11,4 @@ public interface FailedPrintJobsStorage {
     void deleteAll();
     void delete(PrintJob printJob);
     void deleteBefore(LocalDateTime beforeTime);
-    long countAll();
 }
