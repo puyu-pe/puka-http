@@ -11,7 +11,7 @@ public class PrintServerService {
         this.configReader = configReader;
     }
 
-    public void start() throws ServerConfigException, ValidationException, PrintServerException {
+    public void start() throws ServerConfigException, DataValidationException, PrintServerException {
         ServerConfigDTO serverConfig = getServerConfig();
         printServer.start(serverConfig);
     }
@@ -24,7 +24,7 @@ public class PrintServerService {
         return configReader.hasServerConfig();
     }
 
-    public ServerConfigDTO getServerConfig() throws ServerConfigException, ValidationException {
+    public ServerConfigDTO getServerConfig() throws ServerConfigException, DataValidationException {
         ServerConfigDTO serverConfig = configReader.read();
         ServerConfigValidator validator = new ServerConfigValidator(serverConfig);
         validator.validateIp();
@@ -32,7 +32,7 @@ public class PrintServerService {
         return serverConfig;
     }
 
-    public void saveServerConfig(ServerConfigDTO serverConfig) throws ServerConfigException, ValidationException {
+    public void saveServerConfig(ServerConfigDTO serverConfig) throws ServerConfigException, DataValidationException {
         ServerConfigValidator validator = new ServerConfigValidator(serverConfig);
         validator.validateIp();
         validator.validatePort();

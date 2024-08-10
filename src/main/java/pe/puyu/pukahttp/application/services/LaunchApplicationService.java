@@ -2,7 +2,7 @@ package pe.puyu.pukahttp.application.services;
 
 import pe.puyu.pukahttp.domain.PrintServerException;
 import pe.puyu.pukahttp.domain.ServerConfigException;
-import pe.puyu.pukahttp.domain.ValidationException;
+import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 
 public class LaunchApplicationService {
@@ -14,7 +14,7 @@ public class LaunchApplicationService {
         this.viewLauncher = viewLauncher;
     }
 
-    public void startApplication() throws ServerConfigException, ValidationException, PrintServerException {
+    public void startApplication() throws ServerConfigException, DataValidationException, PrintServerException {
         if (printServerService.existServerConfig()) {
             printServerService.start();
         } else {

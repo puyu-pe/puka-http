@@ -13,7 +13,7 @@ import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.domain.PngFileChooser;
 import pe.puyu.pukahttp.domain.ServerConfigDTO;
 import pe.puyu.pukahttp.domain.ServerConfigException;
-import pe.puyu.pukahttp.domain.ValidationException;
+import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
 
@@ -44,7 +44,7 @@ public class StartConfigController {
         } catch (ServerConfigException e) {
             log.getLogger().warn(e.getMessage());
             FxAlert.showWarning("Failed to save configuration", e.getMessage());
-        } catch (ValidationException e) {
+        } catch (DataValidationException e) {
             log.getLogger().warn(e.getMessage());
             FxAlert.showWarning("Field values is Invalid.", e.getMessage());
         } catch (Exception e) {

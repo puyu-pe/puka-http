@@ -6,8 +6,8 @@ import org.jetbrains.annotations.Nullable;
 public record PrintData(
     @NotNull String target,
     @Nullable PrinterType type,
-    @Nullable Integer port,
-    @Nullable Integer times,
+    @Nullable String port,
+    @Nullable String times,
     @NotNull String printObject
 ) {
 }

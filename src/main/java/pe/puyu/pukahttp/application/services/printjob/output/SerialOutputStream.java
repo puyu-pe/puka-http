@@ -2,6 +2,7 @@ package pe.puyu.pukahttp.application.services.printjob.output;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.jetbrains.annotations.NotNull;
+import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -15,13 +16,17 @@ public class SerialOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(int i) throws IOException {
+    public void write(int i) throws PrintJobException {
         connect();
-        comPort.getOutputStream().write(i);
+        try {
+            comPort.getOutputStream().write(i);
+        } catch (IOException e) {
+            throw new PrintJobException(e.getMessage(), e);
+        }
     }
 
     @Override
-    public void write(byte @NotNull [] b) throws IOException {
+    public void write(byte @NotNull [] b) throws PrintJobException {
         connect();
         comPort.writeBytes(b, b.length);
     }
@@ -33,11 +38,11 @@ public class SerialOutputStream extends OutputStream {
         }
     }
 
-    private void connect() throws IOException {
+    private void connect() throws PrintJobException {
         if (comPort == null) {
             comPort = SerialPort.getCommPort(portDescriptor);
             if (!comPort.openPort()) {
-                throw new IOException(String.format("Com port: %s can't write.", portDescriptor));
+                throw new PrintJobException(String.format("Com port: %s can't write.", portDescriptor));
             }
         }
     }

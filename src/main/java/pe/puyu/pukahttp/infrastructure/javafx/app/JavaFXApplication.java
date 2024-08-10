@@ -8,6 +8,7 @@ import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
+import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
@@ -16,6 +17,7 @@ import pe.puyu.pukahttp.infrastructure.javalin.injection.JavalinDependencyInject
 import pe.puyu.pukahttp.infrastructure.javalin.server.JavalinPrintServer;
 import pe.puyu.pukahttp.infrastructure.properties.ServerPropertiesReader;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
+import pe.puyu.pukahttp.infrastructure.storage.GsonFailedPrintJobStorage;
 
 import java.nio.file.Path;
 
@@ -56,13 +58,14 @@ public class JavaFXApplication extends Application {
     }
 
     private void injectDependenciesIntoControllers() {
+        FailedPrintJobsStorage storage = new GsonFailedPrintJobStorage(AppConfig.getStoragePath());
         try {
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();
                 return new StartConfigController(printServerService, new BusinessLogoService(logoFilePath));
             });
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
-                PrintJobService printJobService = new PrintJobService();
+                PrintJobService printJobService = new PrintJobService(storage);
                 return new PrintJobController(printJobService);
             });
             appLog.getLogger().info("build injected controller dependencies  success!!!");

@@ -29,9 +29,8 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
     @Override
     public void save(PrintJob printJob) {
         try {
-            String fileName = String.format("%d-%s", printJob.id(), printJob.createdAt().format(createdAtFormatter));
+            String fileName = String.format("%s-%s", printJob.createdAt().format(createdAtFormatter), printJob.id());
             String filePath = this.storagePath.resolve(fileName).toString();
-            var ignored = storagePath.getParent().toFile().mkdirs();
             try (FileWriter writer = new FileWriter(filePath)) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 writer.write(gson.toJson(printJob.data()));
@@ -49,8 +48,8 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
                 try {
                     String fileName = filePath.getFileName().toString();
                     String[] partFileName = fileName.split("-");
-                    Long id = Long.parseLong(partFileName[0]);
-                    LocalDateTime createdAt = LocalDateTime.parse(partFileName[1], createdAtFormatter);
+                    String id = partFileName[1];
+                    LocalDateTime createdAt = LocalDateTime.parse(partFileName[0], createdAtFormatter);
                     String data = new String(Files.readAllBytes(Paths.get(filePath.toString())));
                     PrintJob printJob = new PrintJob(id, data, createdAt);
                     printJobs.add(printJob);
@@ -82,11 +81,11 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
 
     @Override
     public void delete(PrintJob printJob) {
-        try{
-            String fileName = String.format("%d-%s", printJob.id(), printJob.createdAt().format(createdAtFormatter));
+        try {
+            String fileName = String.format("%s-%s", printJob.createdAt().format(createdAtFormatter), printJob.id());
             Path filePath = this.storagePath.resolve(fileName);
             Files.deleteIfExists(filePath);
-        }catch (Exception e){
+        } catch (Exception e) {
             log.getLogger().warn(e.getMessage(), e);
         }
     }
@@ -103,7 +102,7 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
     public long countAll() {
         try (Stream<Path> files = Files.list(storagePath)) {
             return files.count();
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }

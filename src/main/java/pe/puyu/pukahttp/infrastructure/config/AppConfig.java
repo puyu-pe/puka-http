@@ -27,8 +27,14 @@ public class AppConfig {
         return Path.of(getUserDataDir(), "config", configIniFileName).toString();
     }
 
-    public static Path getLogoFilePath(){
+    public static Path getLogoFilePath() {
         return Path.of(getUserDataDir(), "logo.png");
+    }
+
+    public static Path getStoragePath() {
+        Path storagePath = Path.of(getUserDataDir(), "storage");
+        var ignored = storagePath.toFile().mkdirs();
+        return storagePath;
     }
 
     public static boolean isProductionEnvironment() {

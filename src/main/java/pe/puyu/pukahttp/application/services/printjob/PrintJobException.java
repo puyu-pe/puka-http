@@ -1,6 +1,12 @@
 package pe.puyu.pukahttp.application.services.printjob;
 
-public class PrintJobException extends Exception {
+import java.io.IOException;
+
+public class PrintJobException extends IOException {
+    public PrintJobException(String message) {
+        super(message);
+    }
+
     public PrintJobException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -1,5 +1,8 @@
 package pe.puyu.pukahttp.application.services.printjob.output;
 
+import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
+import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
+
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -18,16 +21,20 @@ public class SystemPrinter {
         this.printServiceName = printServiceName;
     }
 
-    public void print(byte[] bytes) throws PrintException {
+    public void print(byte[] bytes) throws PrintServiceNotFoundException, PrintJobException {
         makePrintService(printServiceName);
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);
         DocFlavor df = INPUT_STREAM.AUTOSENSE;
         Doc doc = new SimpleDoc(is, df, null);
         DocPrintJob printJob = printService.createPrintJob();
-        printJob.print(doc, null);
+        try {
+            printJob.print(doc, null);
+        } catch (PrintException e) {
+            throw new PrintJobException(e.getMessage(), e);
+        }
     }
 
-    private void makePrintService(String printServiceName) {
+    private void makePrintService(String printServiceName) throws PrintServiceNotFoundException {
         if (printService == null) {
             PrintService[] printServices = PrinterJob.lookupPrintServices();
             for (PrintService service : printServices) {
@@ -37,7 +44,7 @@ public class SystemPrinter {
                 }
             }
             if (printService == null) {
-                throw new IllegalArgumentException(String.format("Print service name: %s was not found.", printServiceName));
+                throw new PrintServiceNotFoundException(String.format("Print service name: '%s' was not found.", printServiceName));
             }
         }
     }
