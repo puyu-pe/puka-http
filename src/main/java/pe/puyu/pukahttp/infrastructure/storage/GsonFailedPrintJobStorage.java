@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
 import pe.puyu.pukahttp.domain.QueueObservable;
+import pe.puyu.pukahttp.domain.models.PrintInfo;
 import pe.puyu.pukahttp.domain.models.PrintJob;
 
 import java.io.FileWriter;
@@ -13,29 +14,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class GsonFailedPrintJobStorage extends QueueObservable implements FailedPrintJobsStorage {
+
     private final Path storagePath;
     private final AppLog log = new AppLog(GsonFailedPrintJobStorage.class);
-    private final DateTimeFormatter createdAtFormatter = DateTimeFormatter.ofPattern("HH:mm_dd_MM");
+    private final GsonBuilder gsonBuilder;
 
     public GsonFailedPrintJobStorage(Path storagePath) {
         this.storagePath = storagePath;
+        gsonBuilder = new GsonBuilder()
+            .registerTypeAdapter(PrintJob.class, new PrintJobSerializer())
+            .setPrettyPrinting();
     }
 
     @Override
     public void save(PrintJob printJob) {
         try {
-            String fileName = makeFileNameTo(printJob);
+            String fileName = ConfigGsonStorage.makeFileNameTo(LocalDateTime.now(), printJob.id());
             Path filePath = this.storagePath.resolve(fileName);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Object dataObject = gson.fromJson(printJob.data(), Object.class);
+            Gson gson = gsonBuilder.create();
             try (FileWriter writer = new FileWriter(filePath.toString())) {
-                writer.write(gson.toJson(dataObject));
+                writer.write(gson.toJson(printJob));
             }
             notifyQueueSize();
         } catch (Exception e) {
@@ -49,12 +52,9 @@ public class GsonFailedPrintJobStorage extends QueueObservable implements Failed
             List<PrintJob> printJobs = new LinkedList<>();
             files.forEach(filePath -> {
                 try {
-                    String fileName = filePath.getFileName().toString();
-                    String[] partFileName = fileName.split("-");
-                    String id = partFileName[1];
-                    LocalDateTime createdAt = LocalDateTime.parse(partFileName[0], createdAtFormatter);
                     String data = new String(Files.readAllBytes(Paths.get(filePath.toString())));
-                    PrintJob printJob = new PrintJob(id, data, createdAt);
+                    Gson gson = gsonBuilder.create();
+                    PrintJob printJob = gson.fromJson(data, PrintJob.class);
                     printJobs.add(printJob);
                 } catch (IOException e) {
                     log.getLogger().warn(e.getMessage(), e);
@@ -86,10 +86,17 @@ public class GsonFailedPrintJobStorage extends QueueObservable implements Failed
 
     @Override
     public void delete(PrintJob printJob) {
-        try {
-            String fileName = makeFileNameTo(printJob);
-            Path filePath = this.storagePath.resolve(fileName);
-            Files.deleteIfExists(filePath);
+        try (Stream<Path> files = Files.list(this.storagePath)) {
+            List<Path> filesList = files.toList();
+            for (Path filePath : filesList) {
+                String fileName = filePath.getFileName().toString().replace(".json", "");
+                String[] split = fileName.split("-");
+                String id = split[0];
+                if (id.equals(printJob.id())) {
+                    Files.deleteIfExists(filePath);
+                    break;
+                }
+            }
             notifyQueueSize();
         } catch (Exception e) {
             log.getLogger().warn(e.getMessage(), e);
@@ -98,15 +105,20 @@ public class GsonFailedPrintJobStorage extends QueueObservable implements Failed
 
     @Override
     public void deleteBefore(LocalDateTime beforeTime) {
-        List<PrintJob> printJobs = getAllPrintJobs();
-        // This method call notifyQueueSize in this::delete
-        printJobs.stream()
-            .filter(printJob -> printJob.createdAt().isBefore(beforeTime))
-            .forEach(this::delete);
-    }
-
-    private String makeFileNameTo(PrintJob printJob) {
-        return String.format("%s-%s.json", printJob.createdAt().format(createdAtFormatter), printJob.id());
+        try (Stream<Path> files = Files.list(this.storagePath)) {
+            List<Path> filesList = files.toList();
+            for (Path filePath : filesList) {
+                String fileName = filePath.getFileName().toString().replace(".json", "");
+                String[] split = fileName.split("-");
+                String date = split[1];
+                LocalDateTime createdAt = LocalDateTime.parse(date);
+                if (createdAt.isBefore(beforeTime)) {
+                    Files.deleteIfExists(filePath);
+                }
+            }
+        } catch (Exception e) {
+            log.getLogger().warn(e.getMessage(), e);
+        }
     }
 
     @Override

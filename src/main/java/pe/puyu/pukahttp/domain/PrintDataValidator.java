@@ -1,16 +1,16 @@
 package pe.puyu.pukahttp.domain;
 
-public class PrintDataValidator {
-    private final PrintData data;
+import pe.puyu.pukahttp.domain.models.PrintInfo;
+import pe.puyu.pukahttp.domain.models.PrinterType;
 
-    public PrintDataValidator(PrintData data) {
+public class PrintDataValidator {
+    private final PrintInfo data;
+
+    public PrintDataValidator(PrintInfo data) {
         this.data = data;
     }
 
     public void validate() throws DataValidationException {
-        if (data.printData().isBlank()) {
-            throw new DataValidationException("Print object cannot be empty");
-        }
         if (data.target().isBlank()) {
             throw new DataValidationException(String.format("Printer: %s target can't be empty.", data.target()));
         }

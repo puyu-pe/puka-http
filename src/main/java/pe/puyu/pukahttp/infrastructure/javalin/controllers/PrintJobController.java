@@ -7,15 +7,14 @@ import io.javalin.websocket.WsConfig;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.domain.PrintData;
-import pe.puyu.pukahttp.domain.PrinterType;
+import pe.puyu.pukahttp.domain.models.PrintInfo;
+import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.domain.QueueObservable;
 
 import java.time.Duration;
 
 public class PrintJobController {
     private final int RESPONSE_TIMEOUT = 20000;
-    // print
     // reprint
     // delete
     private final PrintJobService printJobService;
@@ -78,7 +77,7 @@ public class PrintJobController {
                     throw new BadRequestResponse("query parameter 'printer' is required");
                 }
 
-                PrintData printData = new PrintData(target, type, port, times, printObject);
+                PrintInfo printData = new PrintInfo(target, type, port, times, printObject);
                 printJobService.print(printData);
             }
         );
@@ -113,5 +112,6 @@ public class PrintJobController {
             }
         });
     }
+
 
 }

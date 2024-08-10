@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.domain;
+package pe.puyu.pukahttp.domain.models;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

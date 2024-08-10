@@ -13,6 +13,7 @@ module pe.puyu.pukahttp {
 	requires org.hildan.fxgson;
 	opens pe.puyu.pukahttp.model to com.google.gson, org.hildan.fxgson;
 	opens pe.puyu.pukahttp.services.api to com.google.gson, org.hildan.fxgson;
+    opens pe.puyu.pukahttp.domain.models to com.google.gson;
 
 	requires net.harawata.appdirs;
 
