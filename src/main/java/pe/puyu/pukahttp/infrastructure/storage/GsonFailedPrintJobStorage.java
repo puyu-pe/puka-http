@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
     private final Path storagePath;
     private final AppLog log = new AppLog(GsonFailedPrintJobStorage.class);
-    private final DateTimeFormatter createdAtFormatter = DateTimeFormatter.ofPattern("HH:mm_dd/MM");
+    private final DateTimeFormatter createdAtFormatter = DateTimeFormatter.ofPattern("HH:mm_dd_MM");
 
     public GsonFailedPrintJobStorage(Path storagePath) {
         this.storagePath = storagePath;
@@ -29,11 +29,12 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
     @Override
     public void save(PrintJob printJob) {
         try {
-            String fileName = String.format("%s-%s", printJob.createdAt().format(createdAtFormatter), printJob.id());
-            String filePath = this.storagePath.resolve(fileName).toString();
-            try (FileWriter writer = new FileWriter(filePath)) {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                writer.write(gson.toJson(printJob.data()));
+            String fileName = makeFileNameTo(printJob);
+            Path filePath = this.storagePath.resolve(fileName);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Object dataObject = gson.fromJson(printJob.data(), Object.class);
+            try (FileWriter writer = new FileWriter(filePath.toString())) {
+                writer.write(gson.toJson(dataObject));
             }
         } catch (Exception e) {
             log.getLogger().warn(e.getMessage(), e);
@@ -82,7 +83,7 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
     @Override
     public void delete(PrintJob printJob) {
         try {
-            String fileName = String.format("%s-%s", printJob.createdAt().format(createdAtFormatter), printJob.id());
+            String fileName = makeFileNameTo(printJob);
             Path filePath = this.storagePath.resolve(fileName);
             Files.deleteIfExists(filePath);
         } catch (Exception e) {
@@ -105,6 +106,10 @@ public class GsonFailedPrintJobStorage implements FailedPrintJobsStorage {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    private String makeFileNameTo(PrintJob printJob) {
+        return String.format("%s-%s.json", printJob.createdAt().format(createdAtFormatter), printJob.id());
     }
 
 }
