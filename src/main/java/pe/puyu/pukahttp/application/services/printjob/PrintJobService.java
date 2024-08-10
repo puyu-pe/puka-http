@@ -23,96 +23,96 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class PrintJobService {
-    private final FailedPrintJobsStorage failedPrintJobsStorage;
+	private final FailedPrintJobsStorage failedPrintJobsStorage;
 
-    public PrintJobService(FailedPrintJobsStorage failedPrintJobsStorage) {
-        this.failedPrintJobsStorage = failedPrintJobsStorage;
-    }
+	public PrintJobService(FailedPrintJobsStorage failedPrintJobsStorage) {
+		this.failedPrintJobsStorage = failedPrintJobsStorage;
+	}
 
-    public void printTickets(String jsonArray) throws PrintJobException {
-        try {
-            JTicketDesignPrintJob.print(jsonArray);
-        } catch (PrintJobException e) {
-            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), jsonArray, LocalDateTime.now());
-            failedPrintJobsStorage.save(printJob);
-            throw e;
-        }
-    }
+	public void printTickets(String jsonArray) throws PrintJobException {
+		try {
+			JTicketDesignPrintJob.print(jsonArray);
+		} catch (PrintJobException e) {
+			PrintJob printJob = new PrintJob(UuidGeneratorService.random(), jsonArray, LocalDateTime.now());
+			failedPrintJobsStorage.save(printJob);
+			throw e;
+		}
+	}
 
-    public void printReport(String jsonObject) throws PrintJobException {
-        try {
-            JTicketDesignPrintJob.report(jsonObject);
-        } catch (Exception e) {
-            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), jsonObject, LocalDateTime.now());
-            failedPrintJobsStorage.save(printJob);
-        }
-    }
+	public void printReport(String jsonObject) throws PrintJobException {
+		try {
+			JTicketDesignPrintJob.report(jsonObject);
+		} catch (Exception e) {
+			PrintJob printJob = new PrintJob(UuidGeneratorService.random(), jsonObject, LocalDateTime.now());
+			failedPrintJobsStorage.save(printJob);
+		}
+	}
 
-    public void print(PrintData data) throws DataValidationException, PrintJobException, PrintServiceNotFoundException {
-        // validations
-        PrintDataValidator validator = new PrintDataValidator(data);
-        validator.validate();
-        // initialization
-        String target = data.target();
-        PrinterType type = Optional.ofNullable(data.type()).orElse(PrinterType.SYSTEM);
-        int port = Integer.parseInt(Optional.ofNullable(data.port()).orElse("9100"));
-        int times = Integer.parseInt(Optional.ofNullable(data.times()).orElse("1"));
-        ByteArrayOutputStream buffer = sweetDesign(data.printData(), times);
-        try {
-            printJob(target, port, type, buffer);
-        } catch (PrintJobException e) {
-            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), data.printData(), LocalDateTime.now());
-            failedPrintJobsStorage.save(printJob);
-            throw new PrintJobException(e.getMessage(), e);
-        } catch (PrintServiceNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
+	public void print(PrintData data) throws DataValidationException, PrintJobException, PrintServiceNotFoundException {
+		// validations
+		PrintDataValidator validator = new PrintDataValidator(data);
+		validator.validate();
+		// initialization
+		String target = data.target();
+		PrinterType type = Optional.ofNullable(data.type()).orElse(PrinterType.SYSTEM);
+		int port = Integer.parseInt(Optional.ofNullable(data.port()).orElse("9100"));
+		int times = Integer.parseInt(Optional.ofNullable(data.times()).orElse("1"));
+		ByteArrayOutputStream buffer = sweetDesign(data.printData(), times);
+		try {
+			printJob(target, port, type, buffer);
+		} catch (PrintJobException e) {
+			PrintJob printJob = new PrintJob(UuidGeneratorService.random(), data.printData(), LocalDateTime.now());
+			failedPrintJobsStorage.save(printJob);
+			throw new PrintJobException(e.getMessage(), e);
+		} catch (PrintServiceNotFoundException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
 
-    private ByteArrayOutputStream sweetDesign(String jsonElement, int times) {
-        JsonElement element = JsonParser.parseString(jsonElement);
-        JsonArray arrayData = new JsonArray();
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        SweetPrinter printer = new EscPosPrinter(buffer);
-        if (element.isJsonObject()) {
-            arrayData.add(element);
-        } else if (element.isJsonArray()) {
-            arrayData = element.getAsJsonArray();
-        }
-        for (JsonElement data : arrayData) {
-            if (data.isJsonObject()) {
-                GsonPrinterObjectBuilder builder = new GsonPrinterObjectBuilder(data.getAsJsonObject());
-                SweetDesigner designer = new SweetDesigner(builder, printer, new DefaultComponentsProvider());
-                for (int i = 0; i < times; i++) {
-                    designer.paintDesign();
-                }
-            }
-        }
-        return buffer;
-    }
+	private ByteArrayOutputStream sweetDesign(String jsonElement, int times) {
+		JsonElement element = JsonParser.parseString(jsonElement);
+		JsonArray arrayData = new JsonArray();
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+		SweetPrinter printer = new EscPosPrinter(buffer);
+		if (element.isJsonObject()) {
+			arrayData.add(element);
+		} else if (element.isJsonArray()) {
+			arrayData = element.getAsJsonArray();
+		}
+		for (JsonElement data : arrayData) {
+			if (data.isJsonObject()) {
+				GsonPrinterObjectBuilder builder = new GsonPrinterObjectBuilder(data.getAsJsonObject());
+				SweetDesigner designer = new SweetDesigner(builder, printer, new DefaultComponentsProvider());
+				for (int i = 0; i < times; i++) {
+					designer.paintDesign();
+				}
+			}
+		}
+		return buffer;
+	}
 
-    private void printJob(String target, int port, PrinterType type, ByteArrayOutputStream buffer) throws PrintServiceNotFoundException, PrintJobException {
-        try {
-            if (type.equals(PrinterType.ETHERNET)) {
-                try (EthernetOutputStream stream = new EthernetOutputStream(target, port)) {
-                    stream.write(buffer.toByteArray());
-                }
-            } else if (type.equals(PrinterType.SAMBA)) {
-                try (SambaOutputStream stream = new SambaOutputStream(target)) {
-                    stream.write(buffer.toByteArray());
-                }
-            } else if (type.equals(PrinterType.SERIAL)) {
-                try (SerialOutputStream stream = new SerialOutputStream(target)) {
-                    stream.write(buffer.toByteArray());
-                }
-            } else {
-                new SystemPrinter(target).print(buffer.toByteArray());
-            }
-        } catch (IOException e) {
-            throw new PrintJobException(String.format("Could not establish a connection to the printer with message: %s", e.getMessage()), e);
-        }
-    }
+	private void printJob(String target, int port, PrinterType type, ByteArrayOutputStream buffer) throws PrintServiceNotFoundException, PrintJobException {
+		try {
+			if (type.equals(PrinterType.ETHERNET)) {
+				try (EthernetOutputStream stream = new EthernetOutputStream(target, port)) {
+					stream.write(buffer.toByteArray());
+				}
+			} else if (type.equals(PrinterType.SAMBA)) {
+				try (SambaOutputStream stream = new SambaOutputStream(target)) {
+					stream.write(buffer.toByteArray());
+				}
+			} else if (type.equals(PrinterType.SERIAL)) {
+				try (SerialOutputStream stream = new SerialOutputStream(target)) {
+					stream.write(buffer.toByteArray());
+				}
+			} else {
+				new SystemPrinter(target).print(buffer.toByteArray());
+			}
+		} catch (IOException e) {
+			throw new PrintJobException(String.format("Could not establish a connection to the printer %s, with message: %s", target, e.getMessage()), e);
+		}
+	}
 
 }
