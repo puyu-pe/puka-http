@@ -83,13 +83,23 @@ public class PrintJobController {
         );
     }
 
+    public void reprint(Context ctx) {
+        ctx.async(
+            RESPONSE_TIMEOUT + 25000,
+            () -> {
+                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
+            },
+            printJobService::reprint
+        );
+    }
+
     public void getQueueSize(Context ctx) {
         ctx.async(
             RESPONSE_TIMEOUT,
             () -> {
                 throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
             },
-            () -> ctx.json(queueObservable.getQueueSize())
+            () -> ctx.result(String.valueOf(queueObservable.getQueueSize()))
         );
     }
 

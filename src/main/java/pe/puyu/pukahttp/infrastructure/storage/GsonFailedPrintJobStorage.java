@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
 import pe.puyu.pukahttp.domain.QueueObservable;
-import pe.puyu.pukahttp.domain.models.PrintInfo;
 import pe.puyu.pukahttp.domain.models.PrintJob;
 
 import java.io.FileWriter;
@@ -28,6 +27,7 @@ public class GsonFailedPrintJobStorage extends QueueObservable implements Failed
         this.storagePath = storagePath;
         gsonBuilder = new GsonBuilder()
             .registerTypeAdapter(PrintJob.class, new PrintJobSerializer())
+            .registerTypeAdapter(PrintJob.class, new PrintJobDeserializer())
             .setPrettyPrinting();
     }
 
@@ -91,7 +91,7 @@ public class GsonFailedPrintJobStorage extends QueueObservable implements Failed
             for (Path filePath : filesList) {
                 String fileName = filePath.getFileName().toString().replace(".json", "");
                 String[] split = fileName.split("-");
-                String id = split[0];
+                String id = split[1];
                 if (id.equals(printJob.id())) {
                     Files.deleteIfExists(filePath);
                     break;

@@ -1,9 +1,11 @@
-# Todos estos metodos son para yures offline
+### GET queue size
+// Obtiene elementos en cola
+GET {{ server }}/printer/queue
 
-### GET  connection server print
-// Verifica el estado de conexion con el servidor de impresion
-GET {{ server }}/test-connection
 
+### GET reprint print jobs
+// Reimprime elementos de la cola de impresión
+GET {{ server }}/printer/reprint
 
 ### POST print job
 // Endpoint para impresión generica
@@ -268,3 +270,7 @@ Content-Type: application/json
 		}
 	]
 }
+
+### GET  connection server print
+// Verifica el estado de conexion con el servidor de impresion
+GET {{ server }}/test-connection

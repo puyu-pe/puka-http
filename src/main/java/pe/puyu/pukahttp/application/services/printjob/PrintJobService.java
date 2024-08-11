@@ -64,10 +64,38 @@ public class PrintJobService {
         }
     }
 
-    public void reprint() {
+    public void reprint() throws PrintJobException, PrintServiceNotFoundException {
         List<PrintJob> printJobs = failedPrintJobsStorage.getAllPrintJobs();
+        PrintJobException jobException = null;
+        PrintServiceNotFoundException printServiceNotFoundException = null;
+        Exception genericException = null;
         for (PrintJob job : printJobs) {
-
+            try {
+                PrintDataValidator validator = new PrintDataValidator(job.info());
+                validator.validate();
+                String target = job.info().target();
+                PrinterType type = Optional.ofNullable(job.info().type()).orElse(PrinterType.SYSTEM);
+                int port = Integer.parseInt(Optional.ofNullable(job.info().port()).orElse("9100"));
+                int times = Integer.parseInt(Optional.ofNullable(job.info().times()).orElse("1"));
+                ByteArrayOutputStream buffer = sweetDesign(job.info().printData(), times);
+                printJob(target, port, type, buffer);
+                failedPrintJobsStorage.delete(job);
+            } catch (PrintJobException e) {
+                jobException = e;
+            } catch (PrintServiceNotFoundException e) {
+                printServiceNotFoundException = e;
+            } catch (Exception e) {
+                genericException = e;
+            }
+        }
+        if (jobException != null) {
+            throw jobException;
+        }
+        if (printServiceNotFoundException != null) {
+            throw printServiceNotFoundException;
+        }
+        if (genericException != null) {
+            throw new RuntimeException(genericException);
         }
     }
 
