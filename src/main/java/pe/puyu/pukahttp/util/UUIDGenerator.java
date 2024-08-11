@@ -6,7 +6,7 @@ public class UUIDGenerator {
 
 	public static String random() {
 		UUID uuid = UUID.randomUUID();
-		return base64Encode(uuid.getMostSignificantBits()) + base64Encode(uuid.getLeastSignificantBits());
+		return base64Encode(uuid.getMostSignificantBits()) + base64Encode(uuid.getLeastSignificantBits()).replaceAll("-", "");
 	}
 
 	private static String base64Encode(long value) {
