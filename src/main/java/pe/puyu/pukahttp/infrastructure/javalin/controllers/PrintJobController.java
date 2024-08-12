@@ -83,7 +83,7 @@ public class PrintJobController {
 
     public void reprint(Context ctx) {
         ctx.async(
-            RESPONSE_TIMEOUT * queueObservable.getQueueSize(),
+            RESPONSE_TIMEOUT * queueObservable.getQueueSize() + 5,
             () -> {
                 throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
             },
@@ -130,6 +130,16 @@ public class PrintJobController {
                 log.getLogger().trace("more details into fillInStackTrace: ", ctxError.error().fillInStackTrace());
             }
         });
+    }
+
+    public void openDrawer(Context ctx){
+        ctx.async(
+            RESPONSE_TIMEOUT,
+            () -> {
+                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
+            },
+            () -> printJobService.openDrawer(ctx.body())
+        );
     }
 
 

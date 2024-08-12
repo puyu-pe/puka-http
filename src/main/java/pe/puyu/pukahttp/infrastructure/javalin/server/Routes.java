@@ -13,16 +13,17 @@ public class Routes {
         app.routes(() -> {
             get(ctx -> ctx.result("Good job, print service online."));
             path("print", () -> {
+                post(printController::print);
                 path("queue", () -> {
-                    post(printController::print);
                     put(printController::reprint);
                     delete(printController::release);
                     get(printController::getQueueSize);
                     ws("events", printController::getQueueEvents);
                 });
             });
+            //TODO: Remove above deprecated routes in the future
             path("printer", () -> {
-                //TODO: Remove above deprecated routes in the future
+                path("open-drawer", () -> post(printController::openDrawer));
                 path("ticket", () -> {
                     path("reprint", () -> get(printController::reprint));
                     path("queue", () -> {

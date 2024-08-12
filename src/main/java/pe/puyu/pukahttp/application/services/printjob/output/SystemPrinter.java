@@ -44,7 +44,7 @@ public class SystemPrinter {
                 }
             }
             if (printService == null) {
-                throw new PrintServiceNotFoundException(String.format("Print service name: '%s' was not found.", printServiceName));
+                throw new PrintServiceNotFoundException(String.format("System Print name: '%s' was not found.", printServiceName));
             }
         }
     }

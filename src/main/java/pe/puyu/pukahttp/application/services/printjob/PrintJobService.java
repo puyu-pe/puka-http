@@ -39,6 +39,10 @@ public class PrintJobService {
         JTicketDesignPrintJob.report(jsonObject);
     }
 
+    public void openDrawer(String jsonObject) throws PrintJobException {
+        JTicketDesignPrintJob.openDrawer(jsonObject);
+    }
+
     public void print(PrintInfo info) throws DataValidationException, PrintJobException, PrintServiceNotFoundException {
         // validations
         PrintInfoValidator validator = new PrintInfoValidator(info);
@@ -99,7 +103,7 @@ public class PrintJobService {
         }
     }
 
-    public void release(){
+    public void release() {
         failedPrintJobsStorage.deleteAll();
     }
 
