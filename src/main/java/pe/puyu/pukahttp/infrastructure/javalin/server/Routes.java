@@ -11,6 +11,7 @@ public class Routes {
     public static void config(Javalin app) {
         var printController = JavalinDependencyInjection.loadController(PrintJobController.class);
         app.routes(() -> {
+            get(ctx -> ctx.result("Good job, print service online."));
             path("print", () -> {
                 path("queue", () -> {
                     post(printController::print);
@@ -33,6 +34,7 @@ public class Routes {
                 });
                 path("report", () -> post(printController::printReport));
             });
+            get("test-connection", (ctx) -> ctx.result("service online"));
         });
     }
 }
