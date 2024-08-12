@@ -14,7 +14,7 @@ public class EthernetOutputStream extends OutputStream {
     private final int timeout;
 
     public EthernetOutputStream(@NotNull String host, int port) {
-        this(host, port, 15000);
+        this(host, port, 10000);
     }
 
     public EthernetOutputStream(@NotNull String host, int port, int timeout) {

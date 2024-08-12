@@ -3,6 +3,7 @@ package pe.puyu.pukahttp.infrastructure.storage;
 import com.google.gson.*;
 import pe.puyu.pukahttp.domain.models.PrintInfo;
 import pe.puyu.pukahttp.domain.models.PrintJob;
+import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 
 import java.lang.reflect.Type;
@@ -14,7 +15,7 @@ public class PrintJobDeserializer implements JsonDeserializer<PrintJob> {
         String id = jsonObject.get("id").getAsString();
 
         JsonObject infoObject = jsonObject.getAsJsonObject("info");
-        String target = infoObject.get("target").getAsString();
+        String printerName = infoObject.get("printerName").getAsString();
         PrinterType type = infoObject.has("type") ? PrinterType.valueOf(infoObject.get("type").getAsString()) : null;
         String port = infoObject.has("port") ? infoObject.get("port").getAsString() : null;
         String times = infoObject.has("times") ? infoObject.get("times").getAsString() : null;
@@ -24,7 +25,8 @@ public class PrintJobDeserializer implements JsonDeserializer<PrintJob> {
             ? printDataElement.getAsString()
             : new Gson().toJson(printDataElement);
 
-        PrintInfo info = new PrintInfo(target, type, port, times, printData);
-        return new PrintJob(id, info);
+        PrinterInfo printerInfo = new PrinterInfo(printerName, type, port);
+        PrintInfo printInfo = new PrintInfo(printerInfo, times, printData);
+        return new PrintJob(id, printInfo);
     }
 }
