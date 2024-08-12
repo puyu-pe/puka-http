@@ -12,12 +12,12 @@ public class PrintJobSerializer implements JsonSerializer<PrintJob> {
         result.addProperty("id", src.id());
 
         JsonObject info = new JsonObject();
-        info.addProperty("target", src.info().target());
-        if (src.info().type() != null) {
-            info.addProperty("type", src.info().type().toString());
+        info.addProperty("printerName", src.info().printerInfo().printerName());
+        if (src.info().printerInfo().type() != null) {
+            info.addProperty("type", src.info().printerInfo().type().toString());
         }
-        if (src.info().port() != null) {
-            info.addProperty("port", src.info().port());
+        if (src.info().printerInfo().port() != null) {
+            info.addProperty("port", src.info().printerInfo().port());
         }
         if (src.info().times() != null) {
             info.addProperty("times", src.info().times());

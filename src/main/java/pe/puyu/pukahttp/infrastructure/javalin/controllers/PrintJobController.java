@@ -8,6 +8,7 @@ import pe.puyu.pukahttp.application.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.domain.models.PrintInfo;
+import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.domain.QueueObservable;
 
@@ -70,20 +71,19 @@ public class PrintJobController {
                 String port = ctx.queryParam("port");
                 String times = ctx.queryParam("times");
                 String printObject = ctx.body();
-
                 if (target == null) {
                     throw new BadRequestResponse("query parameter 'printer' is required");
                 }
-
-                PrintInfo printData = new PrintInfo(target, type, port, times, printObject);
-                printJobService.print(printData);
+                PrinterInfo printerInfo = new PrinterInfo(target, type, port);
+                PrintInfo printInfo = new PrintInfo(printerInfo, times, printObject);
+                printJobService.print(printInfo);
             }
         );
     }
 
     public void reprint(Context ctx) {
         ctx.async(
-            RESPONSE_TIMEOUT + 25000,
+            RESPONSE_TIMEOUT * queueObservable.getQueueSize() + 5,
             () -> {
                 throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
             },
@@ -130,6 +130,16 @@ public class PrintJobController {
                 log.getLogger().trace("more details into fillInStackTrace: ", ctxError.error().fillInStackTrace());
             }
         });
+    }
+
+    public void openDrawer(Context ctx){
+        ctx.async(
+            RESPONSE_TIMEOUT,
+            () -> {
+                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
+            },
+            () -> printJobService.openDrawer(ctx.body())
+        );
     }
 
 

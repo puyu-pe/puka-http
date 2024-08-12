@@ -1,6 +1,6 @@
 ### POST print job
 // Endpoint para impresión generica
-POST {{ server }}/print/queue/?printer={{name_system}}&type=ethernet
+POST {{ server }}/print/?printer={{name_system}}&type=ethernet
 Content-Type: application/json
 
 [
@@ -272,7 +272,8 @@ Content-Type: application/json
 		}
 	]
 }
-gg
+
+
 ### GET  connection server print
 // Verifica el estado de conexion con el servidor de impresion
 GET {{ server }}/test-connection

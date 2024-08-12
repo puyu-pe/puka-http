@@ -39,14 +39,18 @@ public class PrintJobService {
         JTicketDesignPrintJob.report(jsonObject);
     }
 
+    public void openDrawer(String jsonObject) throws PrintJobException {
+        JTicketDesignPrintJob.openDrawer(jsonObject);
+    }
+
     public void print(PrintInfo info) throws DataValidationException, PrintJobException, PrintServiceNotFoundException {
         // validations
-        PrintDataValidator validator = new PrintDataValidator(info);
+        PrintInfoValidator validator = new PrintInfoValidator(info);
         validator.validate();
         // initialization
-        String target = info.target();
-        PrinterType type = Optional.ofNullable(info.type()).orElse(PrinterType.SYSTEM);
-        int port = Integer.parseInt(Optional.ofNullable(info.port()).orElse("9100"));
+        String target = info.printerInfo().printerName();
+        PrinterType type = Optional.ofNullable(info.printerInfo().type()).orElse(PrinterType.SYSTEM);
+        int port = Integer.parseInt(Optional.ofNullable(info.printerInfo().port()).orElse("9100"));
         int times = Integer.parseInt(Optional.ofNullable(info.times()).orElse("1"));
         ByteArrayOutputStream buffer = sweetDesign(info.printData(), times);
         try {
@@ -71,11 +75,11 @@ public class PrintJobService {
         Exception genericException = null;
         for (PrintJob job : printJobs) {
             try {
-                PrintDataValidator validator = new PrintDataValidator(job.info());
+                PrintInfoValidator validator = new PrintInfoValidator(job.info());
                 validator.validate();
-                String target = job.info().target();
-                PrinterType type = Optional.ofNullable(job.info().type()).orElse(PrinterType.SYSTEM);
-                int port = Integer.parseInt(Optional.ofNullable(job.info().port()).orElse("9100"));
+                String target = job.info().printerInfo().printerName();
+                PrinterType type = Optional.ofNullable(job.info().printerInfo().type()).orElse(PrinterType.SYSTEM);
+                int port = Integer.parseInt(Optional.ofNullable(job.info().printerInfo().port()).orElse("9100"));
                 int times = Integer.parseInt(Optional.ofNullable(job.info().times()).orElse("1"));
                 ByteArrayOutputStream buffer = sweetDesign(job.info().printData(), times);
                 printJob(target, port, type, buffer);
@@ -99,7 +103,7 @@ public class PrintJobService {
         }
     }
 
-    public void release(){
+    public void release() {
         failedPrintJobsStorage.deleteAll();
     }
 

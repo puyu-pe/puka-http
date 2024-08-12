@@ -93,7 +93,7 @@
         <dependency>
             <groupId>pe.puyu</groupId>
             <artifactId>SweetTicketDesign</artifactId>
-            <version>0.1.1</version>
+            <version>0.1.2</version>
         </dependency>
     </dependencies>
 
@@ -111,7 +111,7 @@
                     <!--              <goal>copy-dependencies</goal>-->
                     <!--            </goals>-->
                     <!--            <configuration>-->
-                    <!--              <outputDirectory>${basedir}/target/libs</outputDirectory>-->
+                    <!--              <outputDirectory>${basedir}/printerName/libs</outputDirectory>-->
                     <!--              <overWriteReleases>false</overWriteReleases>-->
                     <!--              <overWriteSnapshots>false</overWriteSnapshots>-->
                     <!--              <overWriteIfNewer>true</overWriteIfNewer>-->
