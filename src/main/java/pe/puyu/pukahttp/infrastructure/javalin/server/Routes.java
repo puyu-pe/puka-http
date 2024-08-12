@@ -11,27 +11,27 @@ public class Routes {
     public static void config(Javalin app) {
         var printController = JavalinDependencyInjection.loadController(PrintJobController.class);
         app.routes(() -> {
-            path("printer", () -> {
-                path("print", () -> {
-                    post(printController::print);
-                });
+            path("print", () -> {
                 path("queue", () -> {
+                    post(printController::print);
+                    put(printController::reprint);
+                    delete(printController::release);
                     get(printController::getQueueSize);
                     ws("events", printController::getQueueEvents);
                 });
-                path("reprint", () -> get(printController::reprint));
+            });
+            path("printer", () -> {
                 //TODO: Remove above deprecated routes in the future
                 path("ticket", () -> {
                     path("reprint", () -> get(printController::reprint));
-                    post(printController::printTickets);
                     path("queue", () -> {
                         get(printController::getQueueSize);
                         ws("events", printController::getQueueEvents);
                     });
+                    post(printController::printTickets);
+                    delete(printController::release);
                 });
-                path("report", () -> {
-                    post(printController::printReport);
-                });
+                path("report", () -> post(printController::printReport));
             });
         });
     }

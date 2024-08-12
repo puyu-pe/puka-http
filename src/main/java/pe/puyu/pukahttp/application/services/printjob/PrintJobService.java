@@ -99,6 +99,10 @@ public class PrintJobService {
         }
     }
 
+    public void release(){
+        failedPrintJobsStorage.deleteAll();
+    }
+
     private ByteArrayOutputStream sweetDesign(String jsonElement, int times) {
         JsonElement element = JsonParser.parseString(jsonElement);
         JsonArray arrayData = new JsonArray();

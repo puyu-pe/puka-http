@@ -1,15 +1,6 @@
-### GET queue size
-// Obtiene elementos en cola
-GET {{ server }}/printer/queue
-
-
-### GET reprint print jobs
-// Reimprime elementos de la cola de impresión
-GET {{ server }}/printer/reprint
-
 ### POST print job
 // Endpoint para impresión generica
-POST {{ server }}/printer/print/?printer={{name_system}}&type=ethernet
+POST {{ server }}/print/queue/?printer={{name_system}}&type=ethernet
 Content-Type: application/json
 
 [
@@ -123,6 +114,17 @@ Content-Type: application/json
     }
 ]
 
+### PUT reprint jobs
+// Reimprime elementos de la cola de impresión
+PUT {{ server }}/print/queue
+
+### DELETE release print jobs
+// Libera la cola de impresión
+DELETE {{ server }}/print/queue
+
+### GET queue size
+// Obtiene elementos en cola
+GET {{ server }}/print/queue
 
 ### Post  tickets to print
 // Envia una boleta al servidor de impresion
@@ -270,7 +272,7 @@ Content-Type: application/json
 		}
 	]
 }
-
+gg
 ### GET  connection server print
 // Verifica el estado de conexion con el servidor de impresion
 GET {{ server }}/test-connection

@@ -15,8 +15,6 @@ import java.time.Duration;
 
 public class PrintJobController {
     private final int RESPONSE_TIMEOUT = 20000;
-    // reprint
-    // delete
     private final PrintJobService printJobService;
     private final QueueObservable queueObservable;
     private final AppLog log = new AppLog(PrintJobController.class);
@@ -92,6 +90,17 @@ public class PrintJobController {
             printJobService::reprint
         );
     }
+
+    public void release(Context ctx){
+        ctx.async(
+            RESPONSE_TIMEOUT,
+            () -> {
+                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
+            },
+            printJobService::release
+        );
+    }
+
 
     public void getQueueSize(Context ctx) {
         ctx.async(
