@@ -33,7 +33,10 @@ public class AppConfig {
 
     public static Path getStoragePath() {
         Path storagePath = Path.of(getUserDataDir(), "storage");
-        var ignored = storagePath.toFile().mkdirs();
+        File storage = new File(storagePath.toString());
+        if (!storage.exists()) {
+            var ignored = storage.mkdirs();
+        }
         return storagePath;
     }
 

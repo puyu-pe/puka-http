@@ -58,7 +58,7 @@ public class JavaFXApplication extends Application {
     }
 
     private void injectDependenciesIntoControllers() {
-        GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage(AppConfig.getStoragePath());
+        GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
         try {
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();
