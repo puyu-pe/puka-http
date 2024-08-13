@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
+import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -47,7 +48,10 @@ public class PrintActionsController implements Initializable {
 
     @FXML
     void onCloseService() {
-        launchApplicationService.stopApplication();
+        boolean response = FxAlert.showConfirmation("Are you sure you want to leave?", "The print service will stop !!!");
+        if (response) {
+            launchApplicationService.stopApplication();
+        }
     }
 
     @FXML
