@@ -22,7 +22,6 @@ import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 
