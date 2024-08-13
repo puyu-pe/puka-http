@@ -64,8 +64,9 @@ public class JavaFXApplication extends Application {
                 return new StartConfigController(printServerService, new BusinessLogoService(logoFilePath));
             });
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
+                Path logoFilePath = AppConfig.getLogoFilePath();
                 PrintJobService printJobService = new PrintJobService(storage);
-                return new PrintActionsController(launchApplicationService, printJobService, storage);
+                return new PrintActionsController(launchApplicationService, printJobService, storage, new BusinessLogoService(logoFilePath));
             });
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);

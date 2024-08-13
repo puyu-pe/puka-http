@@ -66,8 +66,10 @@ public class StartConfigController {
         try {
             PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
             File imageFile = pngFileChooser.show();
-            businessLogoService.save(imageFile);
-            imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+            if(imageFile != null) {
+                businessLogoService.save(imageFile);
+                imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+            }
         } catch (IOException e) {
             log.getLogger().warn(e.getMessage());
             FxAlert.showWarning("Failed on save logo", e.getMessage());
