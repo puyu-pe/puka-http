@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.domain;
 
 public interface ViewLauncher {
-    void launchMainView();
+    void launchStartConfig();
+    void launchMain();
 }

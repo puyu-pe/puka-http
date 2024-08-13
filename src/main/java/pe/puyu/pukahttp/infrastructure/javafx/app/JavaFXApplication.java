@@ -8,8 +8,8 @@ import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
+import pe.puyu.pukahttp.infrastructure.javafx.controllers.PrintActionsController;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javalin.controllers.PrintJobController;
@@ -58,12 +58,13 @@ public class JavaFXApplication extends Application {
     }
 
     private void injectDependenciesIntoControllers() {
-        GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
         try {
+            GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();
                 return new StartConfigController(printServerService, new BusinessLogoService(logoFilePath));
             });
+            FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> new PrintActionsController(printServerService));
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);
                 return new PrintJobController(printJobService, storage);
