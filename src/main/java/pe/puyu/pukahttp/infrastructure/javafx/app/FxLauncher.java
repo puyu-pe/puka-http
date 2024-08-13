@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.infrastructure.javafx.app;
 
+import javafx.application.Platform;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.javafx.views.PrintActionsView;
 import pe.puyu.pukahttp.infrastructure.javafx.views.StartConfigView;
@@ -18,6 +19,11 @@ public class FxLauncher implements ViewLauncher {
         PrintActionsView printActions = new PrintActionsView();
         printActions.minimizeInsteadHide(true);
         printActions.show();
+    }
+
+    @Override
+    public void exit() {
+        Platform.exit();
     }
 
 }

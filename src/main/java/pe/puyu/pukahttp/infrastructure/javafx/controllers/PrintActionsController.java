@@ -7,17 +7,17 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import pe.puyu.pukahttp.application.services.PrintServerService;
+import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PrintActionsController implements Initializable {
 
-    private final PrintServerService printServerService;
+    private final LaunchApplicationService launchApplicationService;
 
-    public PrintActionsController(PrintServerService printServerService){
-        this.printServerService = printServerService;
+    public PrintActionsController(LaunchApplicationService launchApplicationService) {
+        this.launchApplicationService = launchApplicationService;
     }
 
     @Override
@@ -47,8 +47,7 @@ public class PrintActionsController implements Initializable {
 
     @FXML
     void onCloseService() {
-        printServerService.stop();
-        Platform.exit();
+        launchApplicationService.stopApplication();
     }
 
     @FXML

@@ -25,10 +25,12 @@ public class JavaFXApplication extends Application {
 
     private final AppLog appLog = new AppLog(JavaFXApplication.class);
     private final PrintServerService printServerService;
+    private final LaunchApplicationService launchApplicationService;
 
     public JavaFXApplication() {
         ServerConfigReader propertiesReader = new ServerPropertiesReader(AppConfig.getPropertiesFilePath("server.ini"));
         printServerService = new PrintServerService(new JavalinPrintServer(), propertiesReader);
+        launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher());
     }
 
     @Override
@@ -40,7 +42,6 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            LaunchApplicationService launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher());
             launchApplicationService.startApplication();
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
@@ -64,7 +65,7 @@ public class JavaFXApplication extends Application {
                 Path logoFilePath = AppConfig.getLogoFilePath();
                 return new StartConfigController(printServerService, new BusinessLogoService(logoFilePath));
             });
-            FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> new PrintActionsController(printServerService));
+            FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> new PrintActionsController(launchApplicationService));
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);
                 return new PrintJobController(printJobService, storage);

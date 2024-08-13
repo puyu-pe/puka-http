@@ -9,7 +9,10 @@ public class LaunchApplicationService {
     private final PrintServerService printServerService;
     private final ViewLauncher viewLauncher;
 
-    public LaunchApplicationService(PrintServerService printServerService, ViewLauncher viewLauncher){
+    public LaunchApplicationService(
+        PrintServerService printServerService,
+        ViewLauncher viewLauncher
+    ) {
         this.printServerService = printServerService;
         this.viewLauncher = viewLauncher;
     }
@@ -21,5 +24,10 @@ public class LaunchApplicationService {
         } else {
             viewLauncher.launchStartConfig();
         }
+    }
+
+    public void stopApplication() {
+        printServerService.stop();
+        viewLauncher.exit();
     }
 }
