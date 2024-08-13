@@ -3,12 +3,11 @@ package pe.puyu.pukahttp.infrastructure.javafx.app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.domain.ServerConfigReader;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.PrintActionsController;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
@@ -28,8 +27,7 @@ public class JavaFXApplication extends Application {
     private final LaunchApplicationService launchApplicationService;
 
     public JavaFXApplication() {
-        ServerConfigReader propertiesReader = new ServerPropertiesReader(AppConfig.getPropertiesFilePath("server.ini"));
-        printServerService = new PrintServerService(new JavalinPrintServer(), propertiesReader);
+        printServerService = new PrintServerService(new JavalinPrintServer(), new ServerPropertiesReader());
         launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher());
     }
 

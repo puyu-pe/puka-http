@@ -9,12 +9,9 @@ import java.io.*;
 import java.util.Optional;
 import java.util.Properties;
 
-public class ServerPropertiesReader implements ServerConfigReader {
-    private final String propertiesFilePath;
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 
-    public ServerPropertiesReader(String propertiesFilePath) {
-        this.propertiesFilePath = propertiesFilePath;
-    }
+public class ServerPropertiesReader implements ServerConfigReader {
 
     @Override
     public @NotNull ServerConfigDTO read() throws ServerConfigException {
@@ -26,25 +23,26 @@ public class ServerPropertiesReader implements ServerConfigReader {
 
     @Override
     public void write(ServerConfigDTO serverConfig) throws ServerConfigException {
-        File file = new File(propertiesFilePath);
-        boolean ignored = file.getParentFile().mkdirs();
+        String propertiesFilePath = AppConfig.getServerPropertiesPath();
         try (FileOutputStream out = new FileOutputStream(propertiesFilePath)) {
             Properties properties = loadProperties();
             properties.put("ip", serverConfig.ip());
             properties.put("port", serverConfig.port());
             properties.store(out, "/* properties updated */");
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new ServerConfigException("server properties file could not be written", e);
         }
     }
 
     @Override
     public boolean hasServerConfig() {
+        String propertiesFilePath = AppConfig.getServerPropertiesPath();
         File file = new File(propertiesFilePath);
         return file.exists();
     }
 
     private Properties loadProperties() throws ServerConfigException {
+        String propertiesFilePath = AppConfig.getServerPropertiesPath();
         var properties = new Properties();
         try (var inputStream = new FileInputStream(propertiesFilePath)) {
             properties.load(inputStream);

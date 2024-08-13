@@ -23,8 +23,21 @@ public class AppConfig {
         return logsDirectory.toString();
     }
 
-    public static String getPropertiesFilePath(String configIniFileName) {
-        return Path.of(getUserDataDir(), "config", configIniFileName).toString();
+    public static Path getPropertiesDirectory() {
+        Path propertiesDirectory = Path.of(getUserDataDir(), "config");
+        File file = new File(propertiesDirectory.toString());
+        if (!file.exists()) {
+            var ignored = file.mkdirs();
+        }
+        return propertiesDirectory;
+    }
+
+    public static String getServerPropertiesPath() {
+        return getPropertiesDirectory().resolve("server.ini").toString();
+    }
+
+    public static String getAppPropertiesPath() {
+        return getPropertiesDirectory().resolve("app.ini").toString();
     }
 
     public static Path getLogoFilePath() {

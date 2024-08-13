@@ -1,7 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.javalin.server;
 
 import io.javalin.http.Context;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.DataValidationException;

@@ -4,7 +4,7 @@ import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.GatewayTimeoutResponse;
 import io.javalin.websocket.WsConfig;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.domain.models.PrintInfo;

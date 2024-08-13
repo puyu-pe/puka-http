@@ -3,7 +3,7 @@ package pe.puyu.pukahttp.infrastructure.storage;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
 import pe.puyu.pukahttp.domain.QueueObservable;
 import pe.puyu.pukahttp.domain.models.PrintJob;

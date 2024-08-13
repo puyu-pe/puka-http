@@ -4,7 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.jetbrains.annotations.NotNull;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.PrintServer;
