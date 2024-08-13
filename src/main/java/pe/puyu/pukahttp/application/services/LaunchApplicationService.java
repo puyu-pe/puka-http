@@ -9,7 +9,10 @@ public class LaunchApplicationService {
     private final PrintServerService printServerService;
     private final ViewLauncher viewLauncher;
 
-    public LaunchApplicationService(PrintServerService printServerService, ViewLauncher viewLauncher){
+    public LaunchApplicationService(
+        PrintServerService printServerService,
+        ViewLauncher viewLauncher
+    ) {
         this.printServerService = printServerService;
         this.viewLauncher = viewLauncher;
     }
@@ -17,8 +20,15 @@ public class LaunchApplicationService {
     public void startApplication() throws ServerConfigException, DataValidationException, PrintServerException {
         if (printServerService.existServerConfig()) {
             printServerService.start();
+            viewLauncher.launchMain();
         } else {
-            viewLauncher.launchMainView();
+            viewLauncher.launchStartConfig();
         }
+    }
+
+    public void stopApplication() {
+        printServerService.stop();
+        viewLauncher.exit();
+        System.exit(0);
     }
 }

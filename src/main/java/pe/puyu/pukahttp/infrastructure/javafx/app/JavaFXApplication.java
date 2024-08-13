@@ -3,13 +3,12 @@ package pe.puyu.pukahttp.infrastructure.javafx.app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
-import pe.puyu.pukahttp.domain.ServerConfigReader;
+import pe.puyu.pukahttp.infrastructure.javafx.controllers.PrintActionsController;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javalin.controllers.PrintJobController;
@@ -25,10 +24,11 @@ public class JavaFXApplication extends Application {
 
     private final AppLog appLog = new AppLog(JavaFXApplication.class);
     private final PrintServerService printServerService;
+    private final LaunchApplicationService launchApplicationService;
 
     public JavaFXApplication() {
-        ServerConfigReader propertiesReader = new ServerPropertiesReader(AppConfig.getPropertiesFilePath("server.ini"));
-        printServerService = new PrintServerService(new JavalinPrintServer(), propertiesReader);
+        printServerService = new PrintServerService(new JavalinPrintServer(), new ServerPropertiesReader());
+        launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher());
     }
 
     @Override
@@ -40,7 +40,6 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            LaunchApplicationService launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher());
             launchApplicationService.startApplication();
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
@@ -58,11 +57,16 @@ public class JavaFXApplication extends Application {
     }
 
     private void injectDependenciesIntoControllers() {
-        GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
         try {
+            GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
                 Path logoFilePath = AppConfig.getLogoFilePath();
                 return new StartConfigController(printServerService, new BusinessLogoService(logoFilePath));
+            });
+            FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
+                Path logoFilePath = AppConfig.getLogoFilePath();
+                PrintJobService printJobService = new PrintJobService(storage);
+                return new PrintActionsController(launchApplicationService, printJobService, storage, new BusinessLogoService(logoFilePath));
             });
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);

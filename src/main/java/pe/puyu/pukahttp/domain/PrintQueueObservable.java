@@ -4,7 +4,7 @@ package pe.puyu.pukahttp.domain;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public abstract class QueueObservable {
+public abstract class PrintQueueObservable {
 
     private final HashMap<String, Consumer<Long>> observers = new HashMap<>();
 

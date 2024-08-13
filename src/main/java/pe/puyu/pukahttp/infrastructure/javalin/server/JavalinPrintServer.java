@@ -4,7 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.jetbrains.annotations.NotNull;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.PrintServer;
@@ -19,7 +19,7 @@ public class JavalinPrintServer implements PrintServer {
 
     @Override
     public void start(@NotNull ServerConfigDTO serverConfig) throws PrintServerException {
-        if(app == null){
+        if (app == null) {
             try {
                 initializeApp();
                 int port = Integer.parseInt(serverConfig.port());
@@ -34,13 +34,14 @@ public class JavalinPrintServer implements PrintServer {
 
     @Override
     public void stop() {
-        if(app != null){
+        if (app != null) {
             app.stop();
             app = null;
+            log.getLogger().info("Print server was stopped.");
         }
     }
 
-    private void initializeApp(){
+    private void initializeApp() {
         app = Javalin.create(this::serverConfig);
         Routes.config(app);
         app.exception(Exception.class, JavalinErrorHandling::generic);
@@ -49,7 +50,7 @@ public class JavalinPrintServer implements PrintServer {
         app.exception(DataValidationException.class, JavalinErrorHandling::validationExceptionHandler);
     }
 
-    private void serverConfig(JavalinConfig config){
+    private void serverConfig(JavalinConfig config) {
         config.plugins.enableCors(cors -> cors.add(CorsPluginConfig::anyHost));
     }
 

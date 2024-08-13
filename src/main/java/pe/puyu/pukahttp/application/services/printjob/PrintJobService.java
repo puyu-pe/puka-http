@@ -21,6 +21,7 @@ import pe.puyu.pukahttp.domain.models.PrinterType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,11 +56,7 @@ public class PrintJobService {
         ByteArrayOutputStream buffer = sweetDesign(info.printData(), times);
         try {
             printJob(target, port, type, buffer);
-        } catch (PrintJobException e) {
-            PrintJob printJob = new PrintJob(UuidGeneratorService.random(), info);
-            failedPrintJobsStorage.save(printJob);
-            throw new PrintJobException(e.getMessage(), e);
-        } catch (PrintServiceNotFoundException e) {
+        } catch (PrintJobException | PrintServiceNotFoundException e) {
             PrintJob printJob = new PrintJob(UuidGeneratorService.random(), info);
             failedPrintJobsStorage.save(printJob);
             throw e;
@@ -73,6 +70,7 @@ public class PrintJobService {
         PrintJobException jobException = null;
         PrintServiceNotFoundException printServiceNotFoundException = null;
         Exception genericException = null;
+        List<PrintJob> willDeleteJobs = new LinkedList<>();
         for (PrintJob job : printJobs) {
             try {
                 PrintInfoValidator validator = new PrintInfoValidator(job.info());
@@ -83,7 +81,7 @@ public class PrintJobService {
                 int times = Integer.parseInt(Optional.ofNullable(job.info().times()).orElse("1"));
                 ByteArrayOutputStream buffer = sweetDesign(job.info().printData(), times);
                 printJob(target, port, type, buffer);
-                failedPrintJobsStorage.delete(job);
+                willDeleteJobs.add(job);
             } catch (PrintJobException e) {
                 jobException = e;
             } catch (PrintServiceNotFoundException e) {
@@ -91,6 +89,9 @@ public class PrintJobService {
             } catch (Exception e) {
                 genericException = e;
             }
+        }
+        for (PrintJob job : willDeleteJobs) {
+            failedPrintJobsStorage.delete(job);
         }
         if (jobException != null) {
             throw jobException;

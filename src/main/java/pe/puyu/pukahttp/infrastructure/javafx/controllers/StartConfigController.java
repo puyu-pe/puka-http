@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.domain.PngFileChooser;
@@ -66,8 +66,10 @@ public class StartConfigController {
         try {
             PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
             File imageFile = pngFileChooser.show();
-            businessLogoService.save(imageFile);
-            imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+            if(imageFile != null) {
+                businessLogoService.save(imageFile);
+                imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+            }
         } catch (IOException e) {
             log.getLogger().warn(e.getMessage());
             FxAlert.showWarning("Failed on save logo", e.getMessage());

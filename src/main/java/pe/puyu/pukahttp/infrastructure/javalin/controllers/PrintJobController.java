@@ -4,25 +4,25 @@ import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.GatewayTimeoutResponse;
 import io.javalin.websocket.WsConfig;
-import pe.puyu.pukahttp.application.loggin.AppLog;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.domain.models.PrintInfo;
 import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
-import pe.puyu.pukahttp.domain.QueueObservable;
+import pe.puyu.pukahttp.domain.PrintQueueObservable;
 
 import java.time.Duration;
 
 public class PrintJobController {
     private final int RESPONSE_TIMEOUT = 20000;
     private final PrintJobService printJobService;
-    private final QueueObservable queueObservable;
+    private final PrintQueueObservable printQueueObservable;
     private final AppLog log = new AppLog(PrintJobController.class);
 
-    public PrintJobController(PrintJobService printJobService, QueueObservable queueObservable) {
+    public PrintJobController(PrintJobService printJobService, PrintQueueObservable printQueueObservable) {
         this.printJobService = printJobService;
-        this.queueObservable = queueObservable;
+        this.printQueueObservable = printQueueObservable;
     }
 
     public void printTickets(Context ctx) {
@@ -83,7 +83,7 @@ public class PrintJobController {
 
     public void reprint(Context ctx) {
         ctx.async(
-            RESPONSE_TIMEOUT * queueObservable.getQueueSize() + 5,
+            RESPONSE_TIMEOUT * printQueueObservable.getQueueSize() + 5,
             () -> {
                 throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
             },
@@ -108,7 +108,7 @@ public class PrintJobController {
             () -> {
                 throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
             },
-            () -> ctx.result(String.valueOf(queueObservable.getQueueSize()))
+            () -> ctx.result(String.valueOf(printQueueObservable.getQueueSize()))
         );
     }
 
@@ -116,11 +116,11 @@ public class PrintJobController {
         ws.onConnect(ctx -> {
             ctx.session.setIdleTimeout(Duration.ofDays(1));
             String observerId = ctx.getSessionId();
-            queueObservable.addObserver(observerId, ctx::send);
+            printQueueObservable.addObserver(observerId, ctx::send);
             log.getLogger().info("Add observer {} to queue events websocket.", observerId);
             ws.onClose(closeCtx -> {
                 String idToRemove = closeCtx.getSessionId();
-                queueObservable.removeObserver(idToRemove);
+                printQueueObservable.removeObserver(idToRemove);
                 log.getLogger().info("close ws connection, then remove observer {}.", idToRemove);
             });
         });
