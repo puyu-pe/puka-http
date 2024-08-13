@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.domain.FailedPrintJobsStorage;
-import pe.puyu.pukahttp.domain.QueueObservable;
+import pe.puyu.pukahttp.domain.PrintQueueObservable;
 import pe.puyu.pukahttp.domain.models.PrintJob;
 
 import java.io.FileWriter;
@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class GsonFailedPrintJobStorage extends QueueObservable implements FailedPrintJobsStorage {
+public class GsonFailedPrintJobStorage extends PrintQueueObservable implements FailedPrintJobsStorage {
 
     private final AppLog log = new AppLog(GsonFailedPrintJobStorage.class);
     private final GsonBuilder gsonBuilder;

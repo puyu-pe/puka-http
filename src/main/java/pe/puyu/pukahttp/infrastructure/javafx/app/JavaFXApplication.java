@@ -65,7 +65,7 @@ public class JavaFXApplication extends Application {
             });
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);
-                return new PrintActionsController(launchApplicationService, printJobService);
+                return new PrintActionsController(launchApplicationService, printJobService, storage);
             });
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage);
