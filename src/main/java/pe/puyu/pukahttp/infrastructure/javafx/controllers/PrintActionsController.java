@@ -8,17 +8,27 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
+import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
+import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
+import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class PrintActionsController implements Initializable {
 
+    private final AppLog appLog = new AppLog(PrintActionsController.class);
     private final LaunchApplicationService launchApplicationService;
+    private final PrintJobService printJobService;
 
-    public PrintActionsController(LaunchApplicationService launchApplicationService) {
+    public PrintActionsController(
+        LaunchApplicationService launchApplicationService,
+        PrintJobService printJobService
+    ) {
         this.launchApplicationService = launchApplicationService;
+        this.printJobService = printJobService;
     }
 
     @Override
@@ -28,12 +38,22 @@ public class PrintActionsController implements Initializable {
 
     @FXML
     void onRelease() {
-
+        try {
+            printJobService.release();
+        } catch (Exception e) {
+            appLog.getLogger().error(e.getMessage(), e);
+        }
     }
 
     @FXML
     void onReprint() {
-
+        try {
+            printJobService.reprint();
+        } catch (PrintJobException | PrintServiceNotFoundException e) {
+            appLog.getLogger().warn(e.getMessage());
+        } catch (Exception e) {
+            appLog.getLogger().error(e.getMessage(), e);
+        }
     }
 
     @FXML

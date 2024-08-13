@@ -19,7 +19,7 @@ public class FxLauncher implements ViewLauncher {
     @Override
     public void launchMain() {
         PrintActionsView printActions = new PrintActionsView();
-        printActions.minimizeInsteadHide(ApplicationProperties.getBoolean(AppPropertyKey.TRAY_SUPPORT, false));
+        printActions.minimizeInsteadHide(!ApplicationProperties.getBoolean(AppPropertyKey.TRAY_SUPPORT, false));
         printActions.show();
     }
 

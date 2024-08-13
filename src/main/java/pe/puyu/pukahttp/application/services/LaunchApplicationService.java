@@ -29,5 +29,6 @@ public class LaunchApplicationService {
     public void stopApplication() {
         printServerService.stop();
         viewLauncher.exit();
+        System.exit(0);
     }
 }
