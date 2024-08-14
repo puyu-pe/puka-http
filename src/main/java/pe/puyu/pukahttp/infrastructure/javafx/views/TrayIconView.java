@@ -70,6 +70,7 @@ public class TrayIconView extends View {
                 .separator()
                 .menuItem(closeMenuItem)
                 .build();
+            trayIcon.setTooltip("Print Service PUYU");
             trayIcon.setOnAction(e -> super.show());
         }
     }
