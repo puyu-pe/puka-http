@@ -39,6 +39,10 @@ public abstract class View {
         }
     }
 
+    public void minimize() {
+        _stage.setIconified(true);
+    }
+
     public void close() {
         _stage.close();
     }

@@ -37,6 +37,7 @@ public class FxLauncher implements ViewLauncher {
             PrintActionsView printActions = new PrintActionsView();
             printActions.minimizeInsteadHide(true);
             printActions.show();
+            printActions.minimize();
         }
     }
 
