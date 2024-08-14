@@ -3,8 +3,8 @@ package pe.puyu.pukahttp.infrastructure.javafx.app;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import pe.puyu.pukahttp.application.notifier.AppNotifier;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
-import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
@@ -15,20 +15,18 @@ import pe.puyu.pukahttp.infrastructure.javalin.controllers.PrintJobController;
 import pe.puyu.pukahttp.infrastructure.javalin.injection.JavalinDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javalin.server.JavalinPrintServer;
 import pe.puyu.pukahttp.infrastructure.properties.ServerPropertiesReader;
-import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.storage.GsonFailedPrintJobStorage;
-
-import java.nio.file.Path;
 
 public class JavaFXApplication extends Application {
 
     private final AppLog appLog = new AppLog(JavaFXApplication.class);
+    private final AppNotifier notifier = new AppNotifier();
     private final PrintServerService printServerService;
     private final LaunchApplicationService launchApplicationService;
 
     public JavaFXApplication() {
-        printServerService = new PrintServerService(new JavalinPrintServer(), new ServerPropertiesReader());
-        launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher());
+        printServerService = new PrintServerService(new JavalinPrintServer(), new ServerPropertiesReader(), notifier);
+        launchApplicationService = new LaunchApplicationService(printServerService, new FxLauncher(notifier));
     }
 
     @Override
@@ -59,17 +57,13 @@ public class JavaFXApplication extends Application {
     private void injectDependenciesIntoControllers() {
         try {
             GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
-            FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> {
-                Path logoFilePath = AppConfig.getLogoFilePath();
-                return new StartConfigController(printServerService, new BusinessLogoService(logoFilePath));
-            });
+            FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printServerService));
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
-                Path logoFilePath = AppConfig.getLogoFilePath();
-                PrintJobService printJobService = new PrintJobService(storage);
-                return new PrintActionsController(launchApplicationService, printJobService, storage, new BusinessLogoService(logoFilePath));
+                PrintJobService printJobService = new PrintJobService(storage, notifier);
+                return new PrintActionsController(launchApplicationService, printJobService, storage);
             });
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
-                PrintJobService printJobService = new PrintJobService(storage);
+                PrintJobService printJobService = new PrintJobService(storage, notifier);
                 return new PrintJobController(printJobService, storage);
             });
             appLog.getLogger().info("build injected controller dependencies  success!!!");

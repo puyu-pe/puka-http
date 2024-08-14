@@ -8,6 +8,7 @@ import pe.puyu.SweetTicketDesign.application.components.DefaultComponentsProvide
 import pe.puyu.SweetTicketDesign.application.printer.escpos.EscPosPrinter;
 import pe.puyu.SweetTicketDesign.domain.designer.SweetDesigner;
 import pe.puyu.SweetTicketDesign.domain.printer.SweetPrinter;
+import pe.puyu.pukahttp.application.notifier.AppNotifier;
 import pe.puyu.pukahttp.application.services.UuidGeneratorService;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.JTicketDesignPrintJob;
 import pe.puyu.pukahttp.application.services.printjob.output.EthernetOutputStream;
@@ -27,9 +28,11 @@ import java.util.Optional;
 
 public class PrintJobService {
     private final FailedPrintJobsStorage failedPrintJobsStorage;
+    private final AppNotifier notifier;
 
-    public PrintJobService(FailedPrintJobsStorage failedPrintJobsStorage) {
+    public PrintJobService(FailedPrintJobsStorage failedPrintJobsStorage, AppNotifier notifier) {
         this.failedPrintJobsStorage = failedPrintJobsStorage;
+        this.notifier = notifier;
     }
 
     public void printTickets(String jsonArray) throws PrintJobException {
@@ -59,8 +62,10 @@ public class PrintJobService {
         } catch (PrintJobException | PrintServiceNotFoundException e) {
             PrintJob printJob = new PrintJob(UuidGeneratorService.random(), info);
             failedPrintJobsStorage.save(printJob);
+            notifier.error(e.getMessage());
             throw e;
         } catch (Exception e) {
+            notifier.error(e.getMessage());
             throw new RuntimeException(e.getMessage(), e);
         }
     }
@@ -83,10 +88,13 @@ public class PrintJobService {
                 printJob(target, port, type, buffer);
                 willDeleteJobs.add(job);
             } catch (PrintJobException e) {
+                notifier.error(e.getMessage());
                 jobException = e;
             } catch (PrintServiceNotFoundException e) {
+                notifier.error(e.getMessage());
                 printServiceNotFoundException = e;
             } catch (Exception e) {
+                notifier.error(e.getMessage());
                 genericException = e;
             }
         }
@@ -106,6 +114,7 @@ public class PrintJobService {
 
     public void release() {
         failedPrintJobsStorage.deleteAll();
+        notifier.info("The print queue has been released");
     }
 
     private ByteArrayOutputStream sweetDesign(String jsonElement, int times) {
