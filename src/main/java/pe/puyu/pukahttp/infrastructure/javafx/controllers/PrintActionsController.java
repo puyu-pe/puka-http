@@ -20,6 +20,7 @@ import pe.puyu.pukahttp.domain.PrintQueueObservable;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
+import pe.puyu.pukahttp.infrastructure.javafx.views.PrintTestView;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class PrintActionsController {
     private final LaunchApplicationService launchApplicationService;
     private final PrintJobService printJobService;
     private final PrintQueueObservable printQueueObservable;
+    private final PrintTestView printTestView = new PrintTestView();
 
     public PrintActionsController(
         LaunchApplicationService launchApplicationService,
@@ -97,7 +99,7 @@ public class PrintActionsController {
 
     @FXML
     void onTestPrint() {
-
+        printTestView.show();
     }
 
     @FXML

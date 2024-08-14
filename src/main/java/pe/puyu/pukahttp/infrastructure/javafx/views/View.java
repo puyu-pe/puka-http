@@ -23,6 +23,7 @@ public abstract class View {
         }
         _stage.show();
         _stage.setIconified(false);
+        _stage.requestFocus();
     }
 
     public void minimizeInsteadHide(boolean is) {
