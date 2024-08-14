@@ -17,6 +17,7 @@ import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.PngFileChooser;
 import pe.puyu.pukahttp.domain.PrintQueueObservable;
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
@@ -31,18 +32,15 @@ public class PrintActionsController {
     private final LaunchApplicationService launchApplicationService;
     private final PrintJobService printJobService;
     private final PrintQueueObservable printQueueObservable;
-    private final BusinessLogoService businessLogoService;
 
     public PrintActionsController(
         LaunchApplicationService launchApplicationService,
         PrintJobService printJobService,
-        PrintQueueObservable printQueueObservable,
-        BusinessLogoService businessLogoService
+        PrintQueueObservable printQueueObservable
     ) {
         this.launchApplicationService = launchApplicationService;
         this.printJobService = printJobService;
         this.printQueueObservable = printQueueObservable;
-        this.businessLogoService = businessLogoService;
     }
 
     public void initialize() {
@@ -116,6 +114,7 @@ public class PrintActionsController {
             PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
             File imageFile = pngFileChooser.show();
             if (imageFile != null) {
+                BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
                 businessLogoService.save(imageFile);
                 FxAlert.showConfirmation("Confirmation for update logo.", "Are you sure you want to do this?");
                 imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
@@ -132,7 +131,8 @@ public class PrintActionsController {
 
     private void recoverLogo() {
         try {
-            if(businessLogoService.existLogo()){
+            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
+            if (businessLogoService.existLogo()) {
                 imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
             }
         } catch (Exception e) {

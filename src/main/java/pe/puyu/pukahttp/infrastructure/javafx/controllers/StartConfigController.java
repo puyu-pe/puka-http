@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.infrastructure.javafx.controllers;
 
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -22,12 +23,10 @@ import java.io.IOException;
 
 public class StartConfigController {
     private final PrintServerService printServerService;
-    private final BusinessLogoService businessLogoService;
     private final AppLog log = new AppLog(StartConfigController.class);
 
-    public StartConfigController(PrintServerService printServerService, BusinessLogoService businessLogoService) {
+    public StartConfigController(PrintServerService printServerService) {
         this.printServerService = printServerService;
-        this.businessLogoService = businessLogoService;
     }
 
     public void initialize() {
@@ -66,7 +65,8 @@ public class StartConfigController {
         try {
             PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
             File imageFile = pngFileChooser.show();
-            if(imageFile != null) {
+            if (imageFile != null) {
+                BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
                 businessLogoService.save(imageFile);
                 imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
             }
@@ -79,8 +79,9 @@ public class StartConfigController {
         }
     }
 
-    private void recoverLogo(){
+    private void recoverLogo() {
         try {
+            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
             imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
         } catch (Exception e) {
             log.getLogger().warn("error on initialize image: {}", e.getMessage(), e);

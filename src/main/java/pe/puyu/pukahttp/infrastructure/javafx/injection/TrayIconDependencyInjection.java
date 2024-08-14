@@ -1,11 +1,10 @@
-
-package pe.puyu.pukahttp.infrastructure.javalin.injection;
+package pe.puyu.pukahttp.infrastructure.javafx.injection;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class JavalinDependencyInjection {
+public class TrayIconDependencyInjection {
 
     public static final Map<Class<?>, Supplier<?>> controllerFactories = new HashMap<>();
 
@@ -21,7 +20,7 @@ public class JavalinDependencyInjection {
         }
     }
 
-    public static <T> void addControllerFactory(Class<T> clazz, Supplier<T> factory) {
+    public static <T> void registerController(Class<T> clazz, Supplier<T> factory) {
         controllerFactories.put(clazz, factory);
     }
 

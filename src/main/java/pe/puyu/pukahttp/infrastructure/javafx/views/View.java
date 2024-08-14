@@ -22,6 +22,7 @@ public abstract class View {
             _stage.setScene(new Scene(root));
         }
         _stage.show();
+        _stage.setIconified(false);
     }
 
     public void minimizeInsteadHide(boolean is) {

@@ -1,23 +1,28 @@
 package pe.puyu.pukahttp.application.services;
 
+import pe.puyu.pukahttp.application.notifier.AppNotifier;
 import pe.puyu.pukahttp.domain.*;
 
 public class PrintServerService {
     private final PrintServer printServer;
     private final ServerConfigReader configReader;
+    private final AppNotifier notifier;
 
-    public PrintServerService(PrintServer printServer, ServerConfigReader configReader) {
+    public PrintServerService(PrintServer printServer, ServerConfigReader configReader, AppNotifier notifier) {
         this.printServer = printServer;
         this.configReader = configReader;
+        this.notifier = notifier;
     }
 
     public void start() throws ServerConfigException, DataValidationException, PrintServerException {
         ServerConfigDTO serverConfig = getServerConfig();
         printServer.start(serverConfig);
+        notifier.info(String.format("Server started on %s:%s", serverConfig.ip(), serverConfig.port()));
     }
 
     public void stop() {
         this.printServer.stop();
+        notifier.info("The printing service has been stopped.");
     }
 
     public boolean existServerConfig() {

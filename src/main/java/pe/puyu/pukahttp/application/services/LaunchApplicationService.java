@@ -19,8 +19,8 @@ public class LaunchApplicationService {
 
     public void startApplication() throws ServerConfigException, DataValidationException, PrintServerException {
         if (printServerService.existServerConfig()) {
-            printServerService.start();
             viewLauncher.launchMain();
+            printServerService.start();
         } else {
             viewLauncher.launchStartConfig();
         }
