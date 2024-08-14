@@ -3,8 +3,11 @@ package pe.puyu.pukahttp.infrastructure.config;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class AppConfig {
 
@@ -59,6 +62,20 @@ public class AppConfig {
 
     public static String getEnv() {
         return isProductionEnvironment() ? "prod" : "beta";
+    }
+
+    public static String getAppVersion() {
+        var isBeta = !isProductionEnvironment();
+        var suffix = isBeta ? "-beta" : "";
+        try {
+            var resourceUrl = AppConfig.class.getResource("/VERSION");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(resourceUrl).openStream()));
+            String version = reader.readLine();
+            reader.close();
+            return version + suffix;
+        } catch (Exception e) {
+            return "0.1.0" + suffix;
+        }
     }
 
 }

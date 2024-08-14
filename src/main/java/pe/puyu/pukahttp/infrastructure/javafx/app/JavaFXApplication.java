@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
+import pe.puyu.pukahttp.infrastructure.javafx.controllers.TrayIconController;
+import pe.puyu.pukahttp.infrastructure.javafx.injection.TrayIconDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
@@ -66,6 +68,7 @@ public class JavaFXApplication extends Application {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
                 return new PrintJobController(printJobService, storage);
             });
+            TrayIconDependencyInjection.registerController(TrayIconController.class, () -> new TrayIconController(launchApplicationService));
             appLog.getLogger().info("build injected controller dependencies  success!!!");
         } catch (Exception e) {
             appLog.getLogger().error("error on injected controller dependencies: {}", e.getMessage(), e);
