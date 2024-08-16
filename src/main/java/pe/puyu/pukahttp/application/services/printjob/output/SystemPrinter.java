@@ -34,6 +34,17 @@ public class SystemPrinter {
         }
     }
 
+    public static String[] getListPrintServicesNames() {
+        PrintService[] printServices = PrinterJob.lookupPrintServices();
+        String[] printServicesNames = new String[printServices.length];
+
+        for(int i = 0; i < printServices.length; ++i) {
+            printServicesNames[i] = printServices[i].getName();
+        }
+
+        return printServicesNames;
+    }
+
     private void makePrintService(String printServiceName) throws PrintServiceNotFoundException {
         if (printService == null) {
             PrintService[] printServices = PrinterJob.lookupPrintServices();

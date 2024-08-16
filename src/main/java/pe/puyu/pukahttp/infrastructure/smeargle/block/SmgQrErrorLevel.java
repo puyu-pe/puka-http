@@ -1,20 +1,21 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
-public enum SmgScale {
+public enum SmgQrErrorLevel {
+    //7%
+    L("L"),
 
-    SMOOTH("SMOOTH"),
+    //15%
+    M("M"),
 
-    DEFAULT("DEFAULT"),
+    //25%
+    Q("Q"),
 
-    FAST("FAST"),
-
-    REPLICATE("REPLICATE"),
-
-    AREA_AVERAGING("AREA_AVERAGING");
+    //30%
+    H("H");
 
     private final String value;
 
-    SmgScale(String value) {
+    SmgQrErrorLevel(String value) {
         this.value = value;
     }
 

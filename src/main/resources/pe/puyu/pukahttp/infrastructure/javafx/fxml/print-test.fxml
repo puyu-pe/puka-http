@@ -41,7 +41,7 @@
             </VBox>
             <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <Label styleClass="subtitle" text="Servicio de impresion:" />
-               <TextField fx:id="txtNameSystem" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+               <TextField fx:id="txtPrintServiceName" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
             </VBox>
             <VBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <Button fx:id="btnTest" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickBtnTest" text="TEST">
@@ -68,8 +68,8 @@
             <children>
                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1" GridPane.rowSpan="2">
                   <children>
-                     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="title" text="TEXTO:" textAlignment="CENTER" />
-                     <GridPane VBox.vgrow="ALWAYS">
+                     <CheckBox fx:id="checkBoxTextBlock" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="title" text="TEXT:" />
+                     <GridPane fx:id="textBlock" VBox.vgrow="ALWAYS">
                        <columnConstraints>
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -83,10 +83,10 @@
                        </rowConstraints>
                         <children>
                            <Label text="Font Width:" />
-                           <Spinner fx:id="spnFontWidth" GridPane.columnIndex="1" />
+                           <Spinner fx:id="spnFontWidth" initialValue="1" max="7" min="1" GridPane.columnIndex="1" />
                            <Label text="Font Height" GridPane.rowIndex="1" />
-                           <Spinner fx:id="spnFontHeight" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                           <CheckBox fx:id="CheckBoxBold" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Bold" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
+                           <Spinner fx:id="spnFontHeight" initialValue="1" max="7" min="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           <CheckBox fx:id="checkBoxBold" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Bold" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
                            <CheckBox fx:id="checkBoxBgInverted" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Support Background Inverted" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                            <Label text="Align:" GridPane.rowIndex="2" />
                            <ComboBox fx:id="cmbTextAlign" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -96,8 +96,8 @@
                </VBox>
                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.rowSpan="2">
                   <children>
-                     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="title" text="IMAGEN:" textAlignment="CENTER" />
-                     <GridPane VBox.vgrow="ALWAYS">
+                     <CheckBox fx:id="checkBoxImageBlock" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="title" text="IMAGEN:" />
+                     <GridPane fx:id="imageBlock" VBox.vgrow="ALWAYS">
                        <columnConstraints>
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -124,8 +124,8 @@
                </VBox>
                <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                   <children>
-                     <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="title" text="CODIGO QR:" />
-                     <GridPane VBox.vgrow="ALWAYS">
+                     <CheckBox fx:id="checkBoxQrBlock" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="title" text="QR:" />
+                     <GridPane fx:id="qrBlock" VBox.vgrow="ALWAYS">
                        <columnConstraints>
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -136,7 +136,6 @@
                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                        </rowConstraints>
                         <children>
                            <Label text="Type:" />
@@ -145,12 +144,10 @@
                            <Label text="Error Level:" GridPane.rowIndex="1" />
                            <Label text="Align:" GridPane.rowIndex="2" />
                            <Label text="Scale:" GridPane.rowIndex="3" />
-                           <Label text="Width:" GridPane.rowIndex="4" />
-                           <Label text="Height:" GridPane.rowIndex="5" />
+                           <Label text="size" GridPane.rowIndex="4" />
                            <ComboBox fx:id="cmbQrAlign" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            <ComboBox fx:id="cmbQrScale" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                           <TextField fx:id="txtQrWidth" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                           <TextField fx:id="txtQrHeight" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                           <TextField fx:id="txtQrSize" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         </children>
                      </GridPane>
                   </children>
@@ -161,20 +158,8 @@
                      <TextField fx:id="txtBlockWidth" />
                   </children>
                </VBox>
-               <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
-                  <children>
-                     <Label styleClass="subtitle" text="Normalize:" />
-                     <TextField fx:id="txtNormalize" />
-                  </children>
-               </VBox>
-               <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
-                  <children>
-                     <Label styleClass="subtitle" text="Tabla de Codigo de Caracteres" />
-                     <ComboBox fx:id="cmbCharCode" maxWidth="1.7976931348623157E308" prefWidth="150.0" />
-                  </children>
-               </VBox>
-               <TextArea fx:id="txtOutput" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3" />
-               <Button fx:id="btnPrint" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickBtnPrint" text="IMPRIMIR" GridPane.columnIndex="2" GridPane.rowIndex="3">
+               <TextArea fx:id="txtOutput" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+               <Button fx:id="btnPrint" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickBtnPrint" text="IMPRIMIR" GridPane.columnIndex="2">
                   <graphic>
                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
                         <image>
@@ -183,6 +168,7 @@
                      </ImageView>
                   </graphic>
                </Button>
+               <CheckBox fx:id="checkBoxNormalize" mnemonicParsing="false" text="Normalize" GridPane.columnIndex="1" />
             </children>
          </GridPane>
       </VBox>

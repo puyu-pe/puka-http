@@ -61,6 +61,7 @@ public class PrintActionsController {
     void onRelease() {
         btnRelease.setDisable(true);
         btnReprint.setDisable(true);
+        btnTestPrint.setDisable(true);
         CompletableFuture.runAsync(() -> {
             try {
                 printJobService.release();
@@ -69,6 +70,7 @@ public class PrintActionsController {
             } finally {
                 btnRelease.setDisable(false);
                 btnReprint.setDisable(false);
+                btnTestPrint.setDisable(false);
             }
         });
     }
@@ -77,6 +79,7 @@ public class PrintActionsController {
     void onReprint() {
         btnRelease.setDisable(true);
         btnReprint.setDisable(true);
+        btnTestPrint.setDisable(true);
         CompletableFuture.runAsync(() -> {
             try {
                 printJobService.reprint();
@@ -87,6 +90,7 @@ public class PrintActionsController {
             } finally {
                 btnRelease.setDisable(false);
                 btnReprint.setDisable(false);
+                btnTestPrint.setDisable(false);
             }
         });
 
@@ -99,7 +103,20 @@ public class PrintActionsController {
 
     @FXML
     void onTestPrint() {
-        printTestView.show();
+        btnRelease.setDisable(true);
+        btnReprint.setDisable(true);
+        btnTestPrint.setDisable(true);
+        Platform.runLater(() -> {
+            try {
+                printTestView.show();
+            } catch (Exception e) {
+                log.getLogger().error(e.getMessage(), e);
+            } finally {
+                btnRelease.setDisable(false);
+                btnReprint.setDisable(false);
+                btnTestPrint.setDisable(false);
+            }
+        });
     }
 
     @FXML
@@ -160,4 +177,6 @@ public class PrintActionsController {
     @FXML
     private Button btnReprint;
 
+    @FXML
+    private Button btnTestPrint;
 }

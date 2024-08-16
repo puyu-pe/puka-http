@@ -4,6 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +18,8 @@ public class FxDependencyInjection {
             FXMLLoader loader = getLoader(fxmlFileName);
             return loader.load();
         } catch (Exception e) {
+            AppLog log = new AppLog(FxDependencyInjection.class);
+            log.getLogger().error(e.getMessage(), e);
             return new VBox(new Label(String.format("Error on load %s -> %s", fxmlFileName, e.getMessage())));
         }
     }
