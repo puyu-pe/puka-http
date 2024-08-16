@@ -1,6 +1,6 @@
 package pe.puyu.pukahttp.infrastructure.javafx.controllers;
 
-import javafx.event.ActionEvent;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -10,15 +10,20 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.application.services.printjob.output.SystemPrinter;
+import pe.puyu.pukahttp.domain.DataValidationException;
+import pe.puyu.pukahttp.domain.models.PrintInfo;
+import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
-import pe.puyu.pukahttp.infrastructure.smeargle.block.SmgJustify;
-import pe.puyu.pukahttp.infrastructure.smeargle.block.SmgQrErrorLevel;
-import pe.puyu.pukahttp.infrastructure.smeargle.block.SmgQrType;
-import pe.puyu.pukahttp.infrastructure.smeargle.block.SmgScale;
+import pe.puyu.pukahttp.infrastructure.smeargle.SmgPrintObject;
+import pe.puyu.pukahttp.infrastructure.smeargle.block.*;
+import pe.puyu.pukahttp.infrastructure.smeargle.properties.SmgProperties;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.concurrent.CompletableFuture;
 
 public class PrintTestController {
 
@@ -36,7 +41,7 @@ public class PrintTestController {
         initQrType();
         initQrErrorLevel();
         initBlockEvents();
-        txtOutput.setEditable(false);
+        initTextOutput();
     }
 
     public PrintTestController(PrintJobService printJobService) {
@@ -44,22 +49,36 @@ public class PrintTestController {
     }
 
     @FXML
-    void onClickBtnPrint(ActionEvent event) {
+    void onClickBtnTest() {
+        SmgMapStyles styles = new SmgMapStyles();
+        styles.set(0, SmgStyle.span(2));
+        styles.set(1, SmgStyle.span(4));
+        SmgTextBlock block = SmgTextBlock.builder().styles(styles).build();
+        block.text("-- PUYU - PUKA --", SmgStyle.builder().bold().fill().center().size(2).build());
+        block.text("Esta es una prueba de impresión", SmgStyle.builder().fill().center().build());
+        block.line();
+        block.row("Printer name:", txtPrintServiceName.getText());
+        block.row("Port:", txtPort.getText());
+        block.row("Printer type:", cmbPrinterType.getSelectionModel().getSelectedItem());
+        block.row("Block width:", txtBlockWidth.getText());
+        block.line();
+        block.text("Gracias, que tenga  un buen día.", SmgStyle.builder().fill().center().build());
+        print(block);
+    }
+
+    @FXML
+    void onClickBtnPrint() {
+
+    }
+
+
+    @FXML
+    void onClickListViewServices() {
 
     }
 
     @FXML
-    void onClickBtnTest(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onClickListViewServices(MouseEvent event) {
-
-    }
-
-    @FXML
-    void onReloadPrintServices(ActionEvent event) {
+    void onReloadPrintServices() {
 
     }
 
@@ -138,6 +157,51 @@ public class PrintTestController {
         qrBlock.setDisable(true);
     }
 
+    private void initTextOutput() {
+        txtOutput.setEditable(false);
+        txtOutput.setWrapText(true);
+        txtOutput.setStyle("-fx-text-fill: #fc8865;-fx-font-family: 'monospace';");
+    }
+
+    private void print(SmgBlock block) {
+        btnPrint.setDisable(true);
+        btnTest.setDisable(true);
+        CompletableFuture.runAsync(() -> {
+            try {
+                int blockWidth;
+                try {
+                    blockWidth = Integer.parseInt(txtBlockWidth.getText());
+                } catch (Exception ignored) {
+                    String message = String.format("blockWidth: %s must be a positive integer.", txtBlockWidth.getText());
+                    throw new DataValidationException(message);
+                }
+                SmgProperties properties = SmgProperties.builder()
+                    .blockWidth(blockWidth)
+                    .normalize(checkBoxBgInverted.isSelected())
+                    .build();
+                String data = SmgPrintObject.properties(properties).block(block).toJsonString();
+                String printerName = txtPrintServiceName.getText();
+                PrinterType type = PrinterType.from(cmbPrinterType.getSelectionModel().getSelectedItem());
+                String port = txtPort.getText();
+                PrinterInfo printerInfo = new PrinterInfo(printerName, type, port);
+                PrintInfo printInfo = new PrintInfo(printerInfo, "1", data);
+                printJobService.print(printInfo);
+            } catch (Exception e) {
+                Platform.runLater(() -> addOutputMessage(e.getMessage()));
+            } finally {
+                Platform.runLater(() -> {
+                    btnTest.setDisable(false);
+                    btnPrint.setDisable(false);
+                });
+            }
+        });
+    }
+
+    private void addOutputMessage(String message) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        message = LocalDateTime.now().format(formatter) + " - " + message + "\n";
+        txtOutput.setText(txtOutput.getText() + message);
+    }
 
     @FXML
     private CheckBox checkBoxBold;

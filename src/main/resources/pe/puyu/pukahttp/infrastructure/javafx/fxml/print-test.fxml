@@ -158,7 +158,7 @@
                      <TextField fx:id="txtBlockWidth" />
                   </children>
                </VBox>
-               <TextArea fx:id="txtOutput" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+               <TextArea fx:id="txtOutput" prefHeight="200.0" prefWidth="200.0" styleClass="areaError" GridPane.columnSpan="3" GridPane.rowIndex="3" />
                <Button fx:id="btnPrint" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onClickBtnPrint" text="IMPRIMIR" GridPane.columnIndex="2">
                   <graphic>
                      <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">

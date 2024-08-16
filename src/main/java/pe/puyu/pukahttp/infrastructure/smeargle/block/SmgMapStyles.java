@@ -21,6 +21,10 @@ public class SmgMapStyles {
         Optional.ofNullable(style.toJson()).ifPresent((json) -> this.styles.add(className, json));
     }
 
+    public void set(int index, @NotNull SmgStyle style) {
+        Optional.ofNullable(style.toJson()).ifPresent((json) -> this.styles.add(String.valueOf(index), json));
+    }
+
     public boolean has(@NotNull String className) {
         return this.styles.has(className);
     }

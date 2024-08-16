@@ -5,12 +5,13 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
 public class SmgTextBlock implements SmgBlock {
 
     private final @NotNull JsonArray rows;
-    private final @NotNull SmgMapStyles styles;
+    private @NotNull SmgMapStyles styles;
     private final @NotNull JsonObject blockObject;
 
     private SmgTextBlock() {
@@ -53,13 +54,17 @@ public class SmgTextBlock implements SmgBlock {
         return this;
     }
 
-    public SmgTextBlock row(@NotNull SmgStyle ownStyles, Object... values) {
+    public SmgTextBlock row(@NotNull List<Object> values, @NotNull SmgStyle ownStyles) {
         String className = "$row_" + rows.size();
         styles.set(className, ownStyles);
-        return row(className, values);
+        return row(values, className);
     }
 
-    public SmgTextBlock row(@NotNull String className, Object... values) {
+    public SmgTextBlock row(@NotNull Object[] values, @NotNull SmgStyle ownStyles) {
+        return row(Arrays.stream(values).toList(), ownStyles);
+    }
+
+    public SmgTextBlock row(@NotNull List<Object> values, @NotNull String className) {
         JsonArray row = new JsonArray();
         for (Object value : values) {
             row.add(new SmgCell<>(value, className).toJson());
@@ -70,7 +75,11 @@ public class SmgTextBlock implements SmgBlock {
         return this;
     }
 
-    public SmgTextBlock row(Object... values) {
+    public SmgTextBlock row(Object[] values, @NotNull String className) {
+        return row(Arrays.stream(values).toList(), className);
+    }
+
+    public SmgTextBlock row(Object ... values) {
         JsonArray row = new JsonArray();
         for (Object value : values) {
             row.add(value.toString());
@@ -128,7 +137,7 @@ public class SmgTextBlock implements SmgBlock {
         }
 
         public Builder styles(@NotNull SmgMapStyles styles) {
-            Optional.ofNullable(styles.toJson()).ifPresent(json -> this.textBlock.blockObject.add("styles", json));
+            this.textBlock.styles = new SmgMapStyles(styles);
             return this;
         }
 

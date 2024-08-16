@@ -67,6 +67,10 @@ public class SmgStyle {
         return builder().span(span).build();
     }
 
+    public static SmgStyle fill() {
+        return builder().span(1000).build();
+    }
+
     public static SmgStyle scale(SmgScale scale) {
         return builder().scale(scale).build();
     }
@@ -167,6 +171,11 @@ public class SmgStyle {
 
         public Builder span(int span) {
             style.object.addProperty("span", Math.max(span, 0));
+            return this;
+        }
+
+        public Builder fill() {
+            style.object.addProperty("span", 1000);
             return this;
         }
 
