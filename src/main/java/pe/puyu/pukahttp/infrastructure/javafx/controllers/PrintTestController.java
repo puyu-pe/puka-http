@@ -10,16 +10,21 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.application.services.printjob.output.SystemPrinter;
 import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.domain.models.PrintInfo;
 import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
+import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
+import pe.puyu.pukahttp.infrastructure.javafx.views.FxToast;
 import pe.puyu.pukahttp.infrastructure.smeargle.SmgPrintObject;
 import pe.puyu.pukahttp.infrastructure.smeargle.block.*;
 import pe.puyu.pukahttp.infrastructure.smeargle.properties.SmgProperties;
+import pe.puyu.pukahttp.services.printingtest.PrintTestService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +33,12 @@ import java.util.concurrent.CompletableFuture;
 public class PrintTestController {
 
     private final PrintJobService printJobService;
+    private final FxToast toast;
+
+    public PrintTestController(PrintJobService printJobService) {
+        this.printJobService = printJobService;
+        this.toast = new FxToast(3);
+    }
 
     public void initialize() {
         initPrinterType();
@@ -42,11 +53,9 @@ public class PrintTestController {
         initQrErrorLevel();
         initBlockEvents();
         initTextOutput();
+        reloadPrintServices();
     }
 
-    public PrintTestController(PrintJobService printJobService) {
-        this.printJobService = printJobService;
-    }
 
     @FXML
     void onClickBtnTest() {
@@ -71,15 +80,25 @@ public class PrintTestController {
 
     }
 
-
     @FXML
-    void onClickListViewServices() {
-
+    void onClickListViewServices(MouseEvent event) {
+        if (event.getClickCount() == 1) {
+            String selectedItem = listViewServices.getSelectionModel().getSelectedItem();
+            if (selectedItem != null) {
+                MyClipboard.copy(selectedItem);
+                toast.show(getStage(), String.format("Copy \"%s\" to clipboard", selectedItem));
+                txtPrintServiceName.setText(selectedItem);
+            }
+        }
     }
 
     @FXML
     void onReloadPrintServices() {
+        reloadPrintServices();
+    }
 
+    private Stage getStage() {
+        return (Stage) root.getScene().getWindow();
     }
 
     private void initPrinterType() {
@@ -201,6 +220,11 @@ public class PrintTestController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
         message = LocalDateTime.now().format(formatter) + " - " + message + "\n";
         txtOutput.setText(txtOutput.getText() + message);
+    }
+
+    private void reloadPrintServices() {
+        listViewServices.getItems().clear();
+        listViewServices.getItems().addAll(PrintTestService.getPrintServices());
     }
 
     @FXML
