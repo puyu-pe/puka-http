@@ -42,6 +42,10 @@ public class SmgPrintObject {
         return new Builder();
     }
 
+    public static SmgPrintObject build(){
+        return builder().build();
+    }
+
     public static SmgPrintObject properties(@NotNull SmgProperties properties) {
         return builder().properties(properties).build();
     }

@@ -94,6 +94,10 @@ public class SmgTextBlock implements SmgBlock {
         return builder().nColumns(nColumns).styles(styles).build();
     }
 
+    public static SmgTextBlock build(){
+        return builder().build();
+    }
+
     @Override
     public @Nullable JsonObject toJson() {
         if (rows.isEmpty() && styles.isEmpty() && blockObject.size() == 0) {

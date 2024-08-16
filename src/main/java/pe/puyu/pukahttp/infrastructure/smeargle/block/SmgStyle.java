@@ -51,6 +51,10 @@ public class SmgStyle {
         return builder().pad(pad).build();
     }
 
+    public static SmgStyle align(@NotNull SmgJustify align){
+        return builder().align(align).build();
+    }
+
     public static SmgStyle center() {
         return builder().center().build();
     }
@@ -154,19 +158,21 @@ public class SmgStyle {
             return this;
         }
 
-        public Builder center() {
-            style.object.addProperty("align", "center");
+        public Builder align(@NotNull SmgJustify align){
+            style.object.addProperty("align", align.getValue());
             return this;
+        }
+
+        public Builder center() {
+            return align(SmgJustify.CENTER);
         }
 
         public Builder left() {
-            style.object.addProperty("align", "left");
-            return this;
+            return align(SmgJustify.LEFT);
         }
 
         public Builder right() {
-            style.object.addProperty("align", "right");
-            return this;
+            return align(SmgJustify.RIGHT);
         }
 
         public Builder span(int span) {

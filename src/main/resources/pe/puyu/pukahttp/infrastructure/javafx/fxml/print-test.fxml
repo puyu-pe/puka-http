@@ -87,7 +87,7 @@
                            <Label text="Font Height" GridPane.rowIndex="1" />
                            <Spinner fx:id="spnFontHeight" initialValue="1" max="7" min="1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            <CheckBox fx:id="checkBoxBold" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Bold" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" />
-                           <CheckBox fx:id="checkBoxBgInverted" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Support Background Inverted" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+                           <CheckBox fx:id="checkBoxBgInverted" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Invertir background text" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
                            <Label text="Align:" GridPane.rowIndex="2" />
                            <ComboBox fx:id="cmbTextAlign" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         </children>

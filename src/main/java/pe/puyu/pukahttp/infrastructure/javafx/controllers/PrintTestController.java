@@ -28,6 +28,8 @@ import pe.puyu.pukahttp.services.printingtest.PrintTestService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class PrintTestController {
@@ -46,7 +48,6 @@ public class PrintTestController {
         initPrintService();
         txtBlockWidth.setText("42");
         initAlign();
-        checkBoxBgInverted.setSelected(true);
         initScale();
         initSize();
         initQrType();
@@ -72,12 +73,18 @@ public class PrintTestController {
         block.row("Block width:", txtBlockWidth.getText());
         block.line();
         block.text("Gracias, que tenga  un buen día.", SmgStyle.builder().fill().center().build());
-        print(block);
+        List<SmgBlock> blocks = new LinkedList<>();
+        blocks.add(block);
+        print(blocks);
     }
 
     @FXML
     void onClickBtnPrint() {
-
+        List<SmgBlock> blocks = new LinkedList<>();
+        if (!textBlock.isDisable()) {
+            blocks.add(buildTextBlock());
+        }
+        print(blocks);
     }
 
     @FXML
@@ -95,6 +102,20 @@ public class PrintTestController {
     @FXML
     void onReloadPrintServices() {
         reloadPrintServices();
+    }
+
+    private SmgTextBlock buildTextBlock() {
+        SmgStyle style = SmgStyle.builder()
+            .fontWidth(spnFontWidth.getValue())
+            .fontHeight(spnFontHeight.getValue())
+            .align(SmgJustify.from(cmbTextAlign.getSelectionModel().getSelectedItem()))
+            .bgInverted(checkBoxBgInverted.isSelected())
+            .bold(checkBoxBold.isSelected())
+            .normalize(checkBoxNormalize.isSelected())
+            .pad('*')
+            .fill()
+            .build();
+        return SmgTextBlock.build().text("Prueba de impresión de texto áéíóú.", style);
     }
 
     private Stage getStage() {
@@ -182,7 +203,10 @@ public class PrintTestController {
         txtOutput.setStyle("-fx-text-fill: #fc8865;-fx-font-family: 'monospace';");
     }
 
-    private void print(SmgBlock block) {
+    private void print(List<SmgBlock> blocks) {
+        if(blocks.isEmpty()){
+            return;
+        }
         btnPrint.setDisable(true);
         btnTest.setDisable(true);
         CompletableFuture.runAsync(() -> {
@@ -198,7 +222,11 @@ public class PrintTestController {
                     .blockWidth(blockWidth)
                     .normalize(checkBoxBgInverted.isSelected())
                     .build();
-                String data = SmgPrintObject.properties(properties).block(block).toJsonString();
+                SmgPrintObject printObject = SmgPrintObject.properties(properties);
+                for (SmgBlock block : blocks) {
+                    printObject.block(block);
+                }
+                String data = printObject.toJsonString();
                 String printerName = txtPrintServiceName.getText();
                 PrinterType type = PrinterType.from(cmbPrinterType.getSelectionModel().getSelectedItem());
                 String port = txtPort.getText();

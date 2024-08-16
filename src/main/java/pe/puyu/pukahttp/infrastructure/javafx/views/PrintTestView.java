@@ -11,7 +11,6 @@ public class PrintTestView extends View {
     @Override
     protected void config(Stage stage) {
         stage.setTitle("Print Test");
-        stage.setResizable(false);
     }
 
 }

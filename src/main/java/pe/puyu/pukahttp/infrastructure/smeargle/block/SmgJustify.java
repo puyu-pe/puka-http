@@ -1,5 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum SmgJustify {
 
     CENTER("center"),
@@ -14,6 +16,15 @@ public enum SmgJustify {
 
     public String getValue() {
         return this.value;
+    }
+
+    public static @NotNull SmgJustify from(@NotNull String value) {
+        for (SmgJustify align : SmgJustify.values()) {
+            if (align.value.equalsIgnoreCase(value.trim())) {
+                return align;
+            }
+        }
+        return SmgJustify.LEFT;
     }
 
 }
