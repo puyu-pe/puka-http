@@ -1,8 +1,6 @@
 package pe.puyu.pukahttp.util;
 
-import ch.qos.logback.classic.Logger;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.input.Clipboard;
@@ -18,12 +16,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
-import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
 import pe.puyu.pukahttp.model.PosConfig;
-import pe.puyu.pukahttp.services.api.PrintServer;
-import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
-import pe.puyu.pukahttp.services.trayicon.TrayIconServiceProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -182,14 +176,6 @@ public class AppUtil {
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	}
 
-	public static void releaseExpiredTickets(String ip, int port) throws Exception {
-		var currentDate = new Date();
-		var expiredDateTime = currentDate.getTime() - Constants.TIME_EXPIRED_TICKETS_MILLISECONDS;
-		String expiredDate = AppUtil.getDateTimeFormatter().format(new Date(expiredDateTime));
-		String encodeExpiredDate = URLEncoder.encode(expiredDate, StandardCharsets.UTF_8);
-		var baseUrl = String.format("http://%s:%d/printer/ticket?date=%s", ip, port, encodeExpiredDate);
-		HttpUtil.delete(baseUrl);
-	}
 
 	public static String getConfigAppFileDir() throws Exception {
 		return createFileDirFromResourceIfNotExists(
@@ -221,37 +207,6 @@ public class AppUtil {
 		return destinationFile.getAbsolutePath();
 	}
 
-	public static void safelyShutDownApp() {
-		CompletableFuture.runAsync(() -> Platform.runLater(() -> {
-			var isOk = AppAlerts.showConfirmation(
-				"¿Seguro que deseas cerrar el servicio de impresión?",
-				"* Se dejaran de imprimir tickets."
-			);
-			if (isOk) {
-				final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ShutdownApp"));
-				try {
-					// Delegar responsablidad al servidor http para que finalice su proceso y sus dependencias
-					var posConfig = recoverPosConfigDefaultValues();
-					String baseUrl = String.format("http://%s:%d", posConfig.getIp(), posConfig.getPort());
-					var url = baseUrl + "/stop-service";
-					var response = HttpUtil.get(url);
-					if (response.getStatus().equals("success")) {
-						logger.info("status success on stop-service");
-					} else {
-						logger.error("status error on stop-service:  {}", response.getMessage());
-					}
-				} catch (Exception e) {
-					logger.error("Exception on exit safelyShutdownApp: {}", e.getMessage(), e);
-				}
-				// Liberar TrayIcon
-				TrayIconServiceProvider.unLock();
-				// Asegurar que se cierre todo
-				Platform.exit();
-				System.exit(0);
-			}
-		}));
-	}
-
 	public static Optional<URL> recoverLogoURL() throws Exception {
 		var logoPath = AppUtil.getLogoFileDir().toString();
 		File logoFile = new File(logoPath);
@@ -261,17 +216,5 @@ public class AppUtil {
 		return Optional.empty();
 	}
 
-	public static void initTrayIcon(PrintServer server) {
-		var config = new ConfigAppProperties();
-		var uniqueProcess = config.uniqueProcess();
-		if (uniqueProcess.isEmpty() || !uniqueProcess.get()) {
-			return;
-		}
-		var trayIcon = TrayIconServiceProvider.instance();
-		server.addListenerErrorNotification(trayIcon::showErrorMessage);
-		server.addListenerInfoNotification(trayIcon::showInfoMessage);
-		server.addListenerWarnNotification(trayIcon::showWarningMessage);
-		trayIcon.show();
-	}
 
 }

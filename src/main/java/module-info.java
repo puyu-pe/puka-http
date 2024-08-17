@@ -12,7 +12,6 @@ module pe.puyu.pukahttp {
 	requires com.google.gson;
 	requires org.hildan.fxgson;
 	opens pe.puyu.pukahttp.model to com.google.gson, org.hildan.fxgson;
-	opens pe.puyu.pukahttp.services.api to com.google.gson, org.hildan.fxgson;
     opens pe.puyu.pukahttp.domain.models to com.google.gson;
 
 	requires net.harawata.appdirs;
@@ -42,6 +41,5 @@ module pe.puyu.pukahttp {
 	exports pe.puyu.pukahttp.repository.model;
 	exports pe.puyu.pukahttp.util;
 	exports pe.puyu.pukahttp.model;
-	exports pe.puyu.pukahttp.services.api;
 	exports pe.puyu.pukahttp.repository;
 }
