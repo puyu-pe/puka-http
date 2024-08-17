@@ -8,7 +8,7 @@ import com.google.gson.JsonParser;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.SweetTablePrinter;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.SweetTicketPrinter;
-import pe.puyu.pukahttp.services.printer.Printer;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.Printer;
 
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;

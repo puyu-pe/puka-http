@@ -25,7 +25,6 @@ import pe.puyu.pukahttp.infrastructure.javafx.views.FxToast;
 import pe.puyu.pukahttp.infrastructure.smeargle.SmgPrintObject;
 import pe.puyu.pukahttp.infrastructure.smeargle.block.*;
 import pe.puyu.pukahttp.infrastructure.smeargle.properties.SmgProperties;
-import pe.puyu.pukahttp.services.printingtest.PrintTestService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -306,7 +305,7 @@ public class PrintTestController {
 
     private void reloadPrintServices() {
         listViewServices.getItems().clear();
-        listViewServices.getItems().addAll(PrintTestService.getPrintServices());
+        listViewServices.getItems().addAll(SystemPrinter.getListPrintServicesNames());
     }
 
     @FXML

@@ -1,11 +1,8 @@
 package pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream;
 
-import ch.qos.logback.classic.Logger;
 import com.fazecast.jSerialComm.SerialPort;
-import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.interfaces.Cancelable;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.interfaces.Caughtable;
-import pe.puyu.pukahttp.util.AppUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,7 +14,6 @@ public class SerialStream extends PipedOutputStream implements Cancelable, Caugh
 
 	private final PipedInputStream pipedInputStream;
 	private final Thread threadPrint;
-	protected final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("SerialStream"));
 
 	/*
 	 * portDescriptor example "com6"
@@ -25,7 +21,6 @@ public class SerialStream extends PipedOutputStream implements Cancelable, Caugh
 	public SerialStream(String portDescriptor) throws IOException {
 		pipedInputStream = new PipedInputStream();
 		super.connect(pipedInputStream);
-		Thread.UncaughtExceptionHandler uncaughtException = (t, e) -> logger.error("Excepcion no controlada en SambaOuputStream: {}", e.getMessage(), e);
 
 		Runnable runnablePrint = () -> {
 			try {
@@ -54,7 +49,6 @@ public class SerialStream extends PipedOutputStream implements Cancelable, Caugh
 		};
 
 		threadPrint = new Thread(runnablePrint);
-		threadPrint.setUncaughtExceptionHandler(uncaughtException);
 		threadPrint.start();
 	}
 
