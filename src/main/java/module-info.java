@@ -39,7 +39,6 @@ module pe.puyu.pukahttp {
 	opens pe.puyu.pukahttp.infrastructure.javafx.controllers to javafx.fxml, javafx.graphics;
 	opens pe.puyu.pukahttp.infrastructure.javafx.app to javafx.fxml, javafx.graphics;
 
-	exports pe.puyu.pukahttp.app;
 	exports pe.puyu.pukahttp.repository.model;
 	exports pe.puyu.pukahttp.util;
 	exports pe.puyu.pukahttp.model;

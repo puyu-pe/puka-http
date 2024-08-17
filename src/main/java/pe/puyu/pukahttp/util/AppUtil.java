@@ -20,7 +20,6 @@ import net.harawata.appdirs.AppDirs;
 import net.harawata.appdirs.AppDirsFactory;
 import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.Constants;
-import pe.puyu.pukahttp.app.properties.LogsDirectoryProperty;
 import pe.puyu.pukahttp.model.PosConfig;
 import pe.puyu.pukahttp.services.api.PrintServer;
 import pe.puyu.pukahttp.services.configuration.ConfigAppProperties;
@@ -70,10 +69,6 @@ public class AppUtil {
 	public static String getDatabaseDirectory() {
 		var folderDbPath = Path.of(getUserDataDir(), ".db", Constants.DB_VERSION);
 		return folderDbPath.toString();
-	}
-
-	public static String getLogsDirectory() {
-		return LogsDirectoryProperty.get().value();
 	}
 
 	public static String getAppVersion() {
