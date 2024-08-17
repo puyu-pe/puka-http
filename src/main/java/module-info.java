@@ -26,8 +26,12 @@ module pe.puyu.pukahttp {
     requires jcommander;
 	requires jdk.jdi;
 	requires pe.puyu.SweetTicketDesign;
+    requires javalin.openapi.plugin;
+    requires javalin.swagger.plugin;
+    requires javalin.redoc.plugin;
+    requires openapi.specification;
 
-	opens pe.puyu.pukahttp.infrastructure.javafx.controllers to javafx.fxml, javafx.graphics;
+    opens pe.puyu.pukahttp.infrastructure.javafx.controllers to javafx.fxml, javafx.graphics;
 	opens pe.puyu.pukahttp.infrastructure.javafx.app to javafx.fxml, javafx.graphics;
 
 }

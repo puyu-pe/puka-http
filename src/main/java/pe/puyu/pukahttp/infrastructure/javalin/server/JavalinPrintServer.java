@@ -2,8 +2,12 @@ package pe.puyu.pukahttp.infrastructure.javalin.server;
 
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
+import io.javalin.openapi.plugin.OpenApiPlugin;
+import io.javalin.openapi.plugin.redoc.ReDocPlugin;
+import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.jetbrains.annotations.NotNull;
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
@@ -55,8 +59,21 @@ public class JavalinPrintServer implements PrintServer {
 
     private void serverConfig(JavalinConfig config) {
         config.http.asyncTimeout = 20000;
+        config.registerPlugin(new OpenApiPlugin(pluginConfig -> {
+            pluginConfig.withDefinitionConfiguration((version, definition) -> {
+                definition.withInfo(info -> {
+                    info.title("Puka HTTP OpenAPI");
+                    info.version(AppConfig.getAppVersion());
+                    info.contact("PUYU");
+                    info.description("Api for print service");
+                    info.license("Apache 2.0", "https://www.apache.org/licenses/", "Apache-2.0");
+                });
+            });
+        }));
+        config.registerPlugin(new SwaggerPlugin());
+        config.registerPlugin(new ReDocPlugin());
         config.bundledPlugins.enableCors(cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
-        config.router.apiBuilder(Routes::config);
+        config.router.apiBuilder(Routes::group);
     }
 
 }

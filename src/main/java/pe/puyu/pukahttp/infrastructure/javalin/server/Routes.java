@@ -7,7 +7,7 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Routes {
 
-    public static void config() {
+    public static void group() {
         var printController = JavalinDependencyInjection.loadController(PrintJobController.class);
         get(ctx -> ctx.result("Good job, print service online."));
         path("print", () -> {
