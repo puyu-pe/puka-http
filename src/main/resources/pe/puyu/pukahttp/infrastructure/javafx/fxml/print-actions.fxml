@@ -101,7 +101,7 @@
                               </Button>
                            </children>
                         </HBox>
-                        <Button contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTestPrint" text="PRUEBAS DE IMPRESION" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                        <Button fx:id="btnTestPrint" contentDisplay="RIGHT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#onTestPrint" text="PRUEBAS DE IMPRESION" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                            <padding>
                               <Insets bottom="10.0" top="10.0" />
                            </padding>

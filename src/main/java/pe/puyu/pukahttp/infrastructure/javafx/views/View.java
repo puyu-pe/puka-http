@@ -23,6 +23,7 @@ public abstract class View {
         }
         _stage.show();
         _stage.setIconified(false);
+        _stage.requestFocus();
     }
 
     public void minimizeInsteadHide(boolean is) {
@@ -37,6 +38,10 @@ public abstract class View {
                 event.consume();
             });
         }
+    }
+
+    public void minimize() {
+        _stage.setIconified(true);
     }
 
     public void close() {

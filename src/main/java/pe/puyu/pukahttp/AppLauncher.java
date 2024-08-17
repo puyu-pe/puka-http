@@ -22,7 +22,7 @@ public class AppLauncher {
 
     private static void _config_app_properties_() {
         // config App Log
-        AppLog.setErrorLevel(LogLevel.fromValue(ApplicationProperties.getString(AppPropertyKey.LOG_LEVEL, LogLevel.TRACE.getValue())));
+        AppLog.setErrorLevel(LogLevel.fromValue(ApplicationProperties.getString(AppPropertyKey.LOG_LEVEL, LogLevel.INFO.getValue())));
         // config support TrayIcon
         if (!ApplicationProperties.has(AppPropertyKey.TRAY_SUPPORT)) {
             String os = System.getProperty("os.name").toLowerCase();

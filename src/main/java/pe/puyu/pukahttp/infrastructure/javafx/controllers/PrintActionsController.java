@@ -20,6 +20,7 @@ import pe.puyu.pukahttp.domain.PrintQueueObservable;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
+import pe.puyu.pukahttp.infrastructure.javafx.views.PrintTestView;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class PrintActionsController {
     private final LaunchApplicationService launchApplicationService;
     private final PrintJobService printJobService;
     private final PrintQueueObservable printQueueObservable;
+    private final PrintTestView printTestView = new PrintTestView();
 
     public PrintActionsController(
         LaunchApplicationService launchApplicationService,
@@ -59,6 +61,7 @@ public class PrintActionsController {
     void onRelease() {
         btnRelease.setDisable(true);
         btnReprint.setDisable(true);
+        btnTestPrint.setDisable(true);
         CompletableFuture.runAsync(() -> {
             try {
                 printJobService.release();
@@ -67,6 +70,7 @@ public class PrintActionsController {
             } finally {
                 btnRelease.setDisable(false);
                 btnReprint.setDisable(false);
+                btnTestPrint.setDisable(false);
             }
         });
     }
@@ -75,6 +79,7 @@ public class PrintActionsController {
     void onReprint() {
         btnRelease.setDisable(true);
         btnReprint.setDisable(true);
+        btnTestPrint.setDisable(true);
         CompletableFuture.runAsync(() -> {
             try {
                 printJobService.reprint();
@@ -85,6 +90,7 @@ public class PrintActionsController {
             } finally {
                 btnRelease.setDisable(false);
                 btnReprint.setDisable(false);
+                btnTestPrint.setDisable(false);
             }
         });
 
@@ -97,7 +103,20 @@ public class PrintActionsController {
 
     @FXML
     void onTestPrint() {
-
+        btnRelease.setDisable(true);
+        btnReprint.setDisable(true);
+        btnTestPrint.setDisable(true);
+        Platform.runLater(() -> {
+            try {
+                printTestView.show();
+            } catch (Exception e) {
+                log.getLogger().error(e.getMessage(), e);
+            } finally {
+                btnRelease.setDisable(false);
+                btnReprint.setDisable(false);
+                btnTestPrint.setDisable(false);
+            }
+        });
     }
 
     @FXML
@@ -158,4 +177,6 @@ public class PrintActionsController {
     @FXML
     private Button btnReprint;
 
+    @FXML
+    private Button btnTestPrint;
 }
