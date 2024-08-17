@@ -7,4 +7,6 @@ public interface PrintServer {
     void start(@NotNull ServerConfigDTO serverConfig) throws PrintServerException;
 
     void stop();
+
+    boolean isStarted();
 }

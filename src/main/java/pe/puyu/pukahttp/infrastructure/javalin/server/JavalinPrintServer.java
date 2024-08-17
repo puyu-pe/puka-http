@@ -41,6 +41,11 @@ public class JavalinPrintServer implements PrintServer {
         }
     }
 
+    @Override
+    public boolean isStarted() {
+        return app != null;
+    }
+
     private void initializeApp() {
         app = Javalin.create(this::serverConfig);
         Routes.config(app);
