@@ -1,10 +1,7 @@
 package pe.puyu.pukahttp.application.services.printjob.deprecated.printer.outputstream;
 
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.interfaces.Cancelable;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.interfaces.Caughtable;
-import pe.puyu.pukahttp.util.AppUtil;
 
 import javax.print.*;
 import java.awt.print.PrinterJob;
@@ -18,12 +15,8 @@ public class ServiceOutputStream extends PipedOutputStream implements Cancelable
 	protected final PipedInputStream pipedInputStream;
 	protected final Thread threadPrint;
 
-	protected final Logger logger = (Logger) LoggerFactory.getLogger(AppUtil.makeNamespaceLogs("ServiceOutputStream"));
 
 	public ServiceOutputStream(PrintService printService) throws IOException {
-
-		UncaughtExceptionHandler uncaughtException = (t, e) ->
-			logger.error("Excepcion no controlada en ServiceOutputStream: {}", e.getMessage(), e);
 
 		pipedInputStream = new PipedInputStream();
 		super.connect(pipedInputStream);
@@ -41,21 +34,11 @@ public class ServiceOutputStream extends PipedOutputStream implements Cancelable
 		};
 
 		threadPrint = new Thread(runnablePrint);
-		threadPrint.setUncaughtExceptionHandler(uncaughtException);
 		threadPrint.start();
 	}
 
 	public void setUncaughtException(UncaughtExceptionHandler uncaughtException) {
 		threadPrint.setUncaughtExceptionHandler(uncaughtException);
-	}
-
-	public static String[] getListPrintServicesNames() {
-		PrintService[] printServices = PrinterJob.lookupPrintServices();
-		String[] printServicesNames = new String[printServices.length];
-		for (int i = 0; i < printServices.length; i++) {
-			printServicesNames[i] = printServices[i].getName();
-		}
-		return printServicesNames;
 	}
 
 	public static PrintService getPrintServiceByName(String printServiceName) {
