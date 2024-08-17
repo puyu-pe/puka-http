@@ -11,7 +11,6 @@ module pe.puyu.pukahttp {
 
 	requires com.google.gson;
 	requires org.hildan.fxgson;
-	opens pe.puyu.pukahttp.model to com.google.gson, org.hildan.fxgson;
     opens pe.puyu.pukahttp.domain.models to com.google.gson;
 
 	requires net.harawata.appdirs;
@@ -32,11 +31,8 @@ module pe.puyu.pukahttp {
 	requires jdk.jdi;
 	requires pe.puyu.SweetTicketDesign;
 
-//	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
-//	opens pe.puyu.pukahttp.app to javafx.fxml, javafx.graphics;
 	opens pe.puyu.pukahttp.infrastructure.javafx.controllers to javafx.fxml, javafx.graphics;
 	opens pe.puyu.pukahttp.infrastructure.javafx.app to javafx.fxml, javafx.graphics;
 
 	exports pe.puyu.pukahttp.util;
-	exports pe.puyu.pukahttp.model;
 }
