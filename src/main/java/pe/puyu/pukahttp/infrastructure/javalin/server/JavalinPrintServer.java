@@ -13,7 +13,6 @@ import pe.puyu.pukahttp.domain.ServerConfigDTO;
 import pe.puyu.pukahttp.domain.DataValidationException;
 
 public class JavalinPrintServer implements PrintServer {
-
     private Javalin app = null;
     private final AppLog log = new AppLog(JavalinPrintServer.class);
 
@@ -48,7 +47,6 @@ public class JavalinPrintServer implements PrintServer {
 
     private void initializeApp() {
         app = Javalin.create(this::serverConfig);
-        Routes.config(app);
         app.exception(Exception.class, JavalinErrorHandling::generic);
         app.exception(PrintServiceNotFoundException.class, JavalinErrorHandling::printServiceNotFoundExceptionHandler);
         app.exception(PrintJobException.class, JavalinErrorHandling::printJobExceptionHandler);
@@ -56,7 +54,9 @@ public class JavalinPrintServer implements PrintServer {
     }
 
     private void serverConfig(JavalinConfig config) {
-        config.plugins.enableCors(cors -> cors.add(CorsPluginConfig::anyHost));
+        config.http.asyncTimeout = 20000;
+        config.bundledPlugins.enableCors(cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
+        config.router.apiBuilder(Routes::config);
     }
 
 }
