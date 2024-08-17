@@ -4,7 +4,7 @@ import com.github.anastaciocintra.escpos.EscPos.CharacterCodeTable;
 import com.github.anastaciocintra.output.PrinterOutputStream;
 import com.google.gson.JsonObject;
 import pe.puyu.pukahttp.model.TicketInfo;
-import pe.puyu.pukahttp.services.printer.Printer;
+import pe.puyu.pukahttp.application.services.printjob.deprecated.printer.Printer;
 import pe.puyu.pukahttp.util.JsonUtil;
 
 import java.util.*;
