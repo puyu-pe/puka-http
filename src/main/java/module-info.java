@@ -10,7 +10,6 @@ module pe.puyu.pukahttp {
 	requires org.slf4j;
 
 	requires com.google.gson;
-	requires org.hildan.fxgson;
     opens pe.puyu.pukahttp.domain.models to com.google.gson;
 
 	requires net.harawata.appdirs;
@@ -22,10 +21,7 @@ module pe.puyu.pukahttp {
 
 	requires io.javalin;
 	requires java.net.http;
-	requires tyrus.standalone.client;
-	requires ormlite.jdbc;
 	requires java.sql;
-	requires com.h2database;
 	requires com.dustinredmond.fxtrayicon;
     requires jcommander;
 	requires jdk.jdi;
