@@ -176,7 +176,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>libs/</classpathPrefix>
                             <mainClass>
-                                pe.puyu.pukahttp.AppLauncher
+                                pe.puyu.pukahttp.infrastructure.AppLauncher
                             </mainClass>
                         </manifest>
                     </archive>
