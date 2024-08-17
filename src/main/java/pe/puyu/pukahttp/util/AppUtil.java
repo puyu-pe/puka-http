@@ -20,11 +20,6 @@ public class AppUtil {
 		return userDataDir;
 	}
 
-	public static String getDatabaseDirectory() {
-		var folderDbPath = Path.of(getUserDataDir(), ".db", Constants.DB_VERSION);
-		return folderDbPath.toString();
-	}
-
 	public static String makeNamespaceLogs(String namespace) {
 		return Constants.PACKAGE_BASE_PATH + "." + namespace.toLowerCase();
 	}
