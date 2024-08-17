@@ -15,7 +15,6 @@ import pe.puyu.pukahttp.domain.PrintQueueObservable;
 import java.time.Duration;
 
 public class PrintJobController {
-    private final int RESPONSE_TIMEOUT = 20000;
     private final PrintJobService printJobService;
     private final PrintQueueObservable printQueueObservable;
     private final AppLog log = new AppLog(PrintJobController.class);
@@ -27,10 +26,6 @@ public class PrintJobController {
 
     public void printTickets(Context ctx) {
         ctx.async(
-            RESPONSE_TIMEOUT,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
             () -> {
                 try {
                     this.printJobService.printTickets(ctx.body());
@@ -44,10 +39,6 @@ public class PrintJobController {
 
     public void printReport(Context ctx) {
         ctx.async(
-            RESPONSE_TIMEOUT,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
             () -> {
                 try {
                     printJobService.printReport(ctx.body());
@@ -61,10 +52,6 @@ public class PrintJobController {
 
     public void print(Context ctx) {
         ctx.async(
-            RESPONSE_TIMEOUT,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
             () -> {
                 String target = ctx.queryParam("printer");
                 PrinterType type = PrinterType.from(ctx.queryParam("type"));
@@ -82,44 +69,26 @@ public class PrintJobController {
     }
 
     public void reprint(Context ctx) {
-        ctx.async(
-            RESPONSE_TIMEOUT * printQueueObservable.getQueueSize() + 5,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
-            printJobService::reprint
-        );
+        ctx.async(printJobService::reprint);
     }
 
     public void release(Context ctx){
-        ctx.async(
-            RESPONSE_TIMEOUT,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
-            printJobService::release
-        );
+        ctx.async(printJobService::release);
     }
 
 
     public void getQueueSize(Context ctx) {
-        ctx.async(
-            RESPONSE_TIMEOUT,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
-            () -> ctx.result(String.valueOf(printQueueObservable.getQueueSize()))
-        );
+        ctx.async(() -> ctx.result(String.valueOf(printQueueObservable.getQueueSize())));
     }
 
     public void getQueueEvents(WsConfig ws) {
         ws.onConnect(ctx -> {
             ctx.session.setIdleTimeout(Duration.ofDays(1));
-            String observerId = ctx.getSessionId();
+            String observerId = ctx.sessionId();
             printQueueObservable.addObserver(observerId, ctx::send);
             log.getLogger().info("Add observer {} to queue events websocket.", observerId);
             ws.onClose(closeCtx -> {
-                String idToRemove = closeCtx.getSessionId();
+                String idToRemove = closeCtx.sessionId();
                 printQueueObservable.removeObserver(idToRemove);
                 log.getLogger().info("close ws connection, then remove observer {}.", idToRemove);
             });
@@ -133,13 +102,7 @@ public class PrintJobController {
     }
 
     public void openDrawer(Context ctx){
-        ctx.async(
-            RESPONSE_TIMEOUT,
-            () -> {
-                throw new GatewayTimeoutResponse("print job exceeded 15 seconds");
-            },
-            () -> printJobService.openDrawer(ctx.body())
-        );
+        ctx.async(() -> printJobService.openDrawer(ctx.body()));
     }
 
 
