@@ -34,7 +34,7 @@ public class FxToast {
             message.setStyle("-fx-text-fill: #03f4fc; -fx-font-weight: bold; -fx-font-size: 16px");
             message.setBackground(new Background(new BackgroundFill(Color.rgb(0, 0, 0, 0.0), CornerRadii.EMPTY, Insets.EMPTY)));
             StackPane pane = new StackPane(message);
-            pane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.5); -fx-padding: 10px; -fx-background-radius: 5px;");
+            pane.setStyle("-fx-background-color: rgba(0, 0, 0, 0.98); -fx-padding: 10px; -fx-background-radius: 5px;");
             pane.setOnMouseClicked(e -> {
                 toast.hide();
                 transition.stop();

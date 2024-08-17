@@ -4,15 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
-import pe.puyu.pukahttp.infrastructure.javafx.controllers.PrintTestController;
-import pe.puyu.pukahttp.infrastructure.javafx.controllers.TrayIconController;
+import pe.puyu.pukahttp.infrastructure.javafx.controllers.*;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.TrayIconDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.infrastructure.javafx.controllers.PrintActionsController;
-import pe.puyu.pukahttp.infrastructure.javafx.controllers.StartConfigController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.FxDependencyInjection;
 import pe.puyu.pukahttp.infrastructure.javalin.controllers.PrintJobController;
 import pe.puyu.pukahttp.infrastructure.javalin.injection.JavalinDependencyInjection;
@@ -69,6 +66,7 @@ public class JavaFXApplication extends Application {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
                 return new PrintTestController(printJobService);
             });
+            FxDependencyInjection.addControllerFactory(AdminActionsController.class, () -> new AdminActionsController(printServerService));
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
                 return new PrintJobController(printJobService, storage);

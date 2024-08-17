@@ -25,6 +25,10 @@ public class PrintServerService {
         notifier.info("The printing service has been stopped.");
     }
 
+    public boolean isRunning(){
+        return this.printServer.isStarted();
+    }
+
     public boolean existServerConfig() {
         return configReader.hasServerConfig();
     }
