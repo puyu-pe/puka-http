@@ -6,15 +6,24 @@ import org.jetbrains.annotations.Nullable;
 
 public class SmgImageBlock implements SmgBlock {
     private final @NotNull JsonObject blockObject;
-    private @NotNull SmgMapStyles styles;
 
     private SmgImageBlock() {
         this.blockObject = new JsonObject();
-        this.styles = new SmgMapStyles();
     }
 
-    public static SmgImageBlock imgPath(@NotNull String path){
-        return builder().imgPath(path).build();
+    public static SmgImageBlock center(@NotNull String path){
+        SmgStyle style = SmgStyle.center();
+        return builder().imgPath(path).style(style).build();
+    }
+
+    public static SmgImageBlock right(@NotNull String path){
+        SmgStyle style = SmgStyle.right();
+        return builder().imgPath(path).style(style).build();
+    }
+
+    public static SmgImageBlock left(@NotNull String path){
+        SmgStyle style = SmgStyle.left();
+        return builder().imgPath(path).style(style).build();
     }
 
     public static Builder builder(){
@@ -27,9 +36,6 @@ public class SmgImageBlock implements SmgBlock {
 
     @Override
     public @Nullable JsonObject toJson() {
-        if(!styles.isEmpty()){
-            this.blockObject.add("styles", styles.toJson());
-        }
         if(blockObject.size() == 0){
             return null;
         }

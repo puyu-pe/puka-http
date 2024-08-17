@@ -92,6 +92,13 @@ public class PrintTestController {
                 addOutputMessage(e.getMessage());
             }
         }
+        if(!qrBlock.isDisable()){
+            try {
+                blocks.add(buildQrBlock());
+            } catch (Exception e) {
+                addOutputMessage(e.getMessage());
+            }
+        }
         print(blocks);
     }
 
@@ -142,6 +149,27 @@ public class PrintTestController {
             .height(height)
             .build();
         return SmgImageBlock.builder().imgPath(AppConfig.getLogoFilePath().toString()).style(style).build();
+    }
+
+    private SmgQrBlock buildQrBlock() throws DataValidationException {
+        int size;
+        try{
+            size = Integer.parseInt(txtQrSize.getText());
+        }catch (Exception e){
+            throw new DataValidationException("Qr size must be a positive integer.");
+        }
+        SmgStyle style = SmgStyle.builder()
+            .align(SmgJustify.from(cmbQrAlign.getSelectionModel().getSelectedItem()))
+            .scale(SmgScale.from(cmbQrScale.getSelectionModel().getSelectedItem()))
+            .width(size)
+            .build();
+        String data = "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|";
+        return SmgQrBlock.builder()
+            .data(data)
+            .type(SmgQrType.from(cmbQrType.getSelectionModel().getSelectedItem()))
+            .errorLevel(SmgQrErrorLevel.from(cmbErrorLevel.getSelectionModel().getSelectedItem()))
+            .style(style)
+            .build();
     }
 
     private Stage getStage() {
