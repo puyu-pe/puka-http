@@ -100,13 +100,16 @@ public class SmgTextBlock implements SmgBlock {
 
     @Override
     public @Nullable JsonObject toJson() {
-        if (rows.isEmpty() && styles.isEmpty() && blockObject.size() == 0) {
+        if (!rows.isEmpty() ) {
+            blockObject.add("rows", rows);
+        }
+        if(!styles.isEmpty()){
+            blockObject.add("styles", styles.toJson());
+        }
+        if(blockObject.size() == 0){
             return null;
         }
-        JsonObject block = new JsonObject();
-        block.add("rows", rows);
-        block.add("styles", styles.toJson());
-        return block;
+        return blockObject;
     }
 
     public static Builder builder() {

@@ -20,11 +20,11 @@ public class SmgPrintObject {
     }
 
     public SmgPrintObject block(@NotNull SmgBlock block) {
-        data.add(block.toJson());
+        Optional.ofNullable(block.toJson()).ifPresent(data::add);
         return this;
     }
 
-    public SmgPrintObject text(String text) {
+    public SmgPrintObject text(@NotNull String text) {
         data.add(text);
         return this;
     }

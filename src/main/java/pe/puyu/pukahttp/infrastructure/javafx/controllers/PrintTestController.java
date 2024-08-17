@@ -20,6 +20,7 @@ import pe.puyu.pukahttp.domain.models.PrintInfo;
 import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
+import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxToast;
 import pe.puyu.pukahttp.infrastructure.smeargle.SmgPrintObject;
 import pe.puyu.pukahttp.infrastructure.smeargle.block.*;
@@ -84,6 +85,13 @@ public class PrintTestController {
         if (!textBlock.isDisable()) {
             blocks.add(buildTextBlock());
         }
+        if(!imageBlock.isDisable()){
+            try {
+                blocks.add(buildImageBlock());
+            } catch (Exception e) {
+                addOutputMessage(e.getMessage());
+            }
+        }
         print(blocks);
     }
 
@@ -116,6 +124,24 @@ public class PrintTestController {
             .fill()
             .build();
         return SmgTextBlock.build().text("Prueba de impresión de texto áéíóú.", style);
+    }
+
+    private SmgImageBlock buildImageBlock() throws DataValidationException {
+        int width;
+        int height;
+        try{
+            width = Integer.parseInt(txtImageWidth.getText());
+            height = Integer.parseInt(txtImageHeight.getText());
+        }catch (Exception e){
+            throw new DataValidationException("Image height and width must be a positive integers.");
+        }
+        SmgStyle style = SmgStyle.builder()
+            .align(SmgJustify.from(cmbImageAlign.getSelectionModel().getSelectedItem()))
+            .scale(SmgScale.from(cmbImageScale.getSelectionModel().getSelectedItem()))
+            .width(width)
+            .height(height)
+            .build();
+        return SmgImageBlock.builder().imgPath(AppConfig.getLogoFilePath().toString()).style(style).build();
     }
 
     private Stage getStage() {
@@ -204,7 +230,7 @@ public class PrintTestController {
     }
 
     private void print(List<SmgBlock> blocks) {
-        if(blocks.isEmpty()){
+        if (blocks.isEmpty()) {
             return;
         }
         btnPrint.setDisable(true);

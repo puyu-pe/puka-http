@@ -1,5 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum SmgScale {
 
     SMOOTH("SMOOTH"),
@@ -18,6 +20,14 @@ public enum SmgScale {
         this.value = value;
     }
 
+    public static @NotNull SmgScale from(@NotNull String value) {
+        for (SmgScale scale : SmgScale.values()) {
+            if (scale.value.equalsIgnoreCase(value.trim())) {
+                return scale;
+            }
+        }
+        return SmgScale.SMOOTH;
+    }
     public String getValue() {
         return this.value;
     }
