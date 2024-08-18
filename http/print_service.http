@@ -1,8 +1,130 @@
-# Todos estos metodos son para yures offline
+### POST print job
+// Endpoint para impresión generica
+POST {{ server }}/print/?printer={{name_system}}&type=ethernet
+Content-Type: application/json
 
-### GET  connection server print
-// Verifica el estado de conexion con el servidor de impresion
-GET {{ server }}/test-connection
+[
+    {
+        "properties": {
+            "blockWidth": 48
+        },
+        "data": [
+            {
+                "styles": {
+                    "$img": {
+                        "align": "center",
+                        "width": 300,
+                        "height": 150
+                    }
+                },
+                "imgPath": "/home/socamaru/Descargas/logos/ananau.png"
+            },
+            {
+                "styles": {
+                    "$qr": {
+                        "align": "center"
+                    }
+                },
+                "qr": {
+                    "type": "img",
+                    "data": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
+                }
+            },
+            {
+                "nColumns": 3,
+                "styles": {
+                    "1": {
+                        "align": "center"
+                    },
+                    "total": {
+                        "align": "right"
+                    }
+                },
+                "rows": [
+                    [
+                        "cell 1",
+                        "cell 2",
+                        "cell 3"
+                    ],
+                    [
+                        "123456789112345678921234567893123456789412",
+                        {
+                            "text": "second cell",
+                            "class": "total"
+                        }
+                    ],
+                    "secod row"
+                ]
+            }
+        ]
+    },
+    {
+        "properties": {
+            "blockWidth": 48
+        },
+        "data": [
+            {
+                "styles": {
+                    "$img": {
+                        "align": "center",
+                        "width": 300,
+                        "height": 150
+                    }
+                },
+                "imgPath": "/home/socamaru/Descargas/logos/ecotur.png"
+            },
+            {
+                "styles": {
+                    "$qr": {
+                        "align": "center"
+                    }
+                },
+                "qr": {
+                    "type": "img",
+                    "data": "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|"
+                }
+            },
+            {
+                "nColumns": 3,
+                "styles": {
+                    "1": {
+                        "align": "center"
+                    },
+                    "total": {
+                        "align": "right"
+                    }
+                },
+                "rows": [
+                    [
+                        "cell 1",
+                        "cell 2",
+                        "cell 3"
+                    ],
+                    [
+                        "123456789112345678921234567893123456789412",
+                        {
+                            "text": "second cell",
+                            "class": "total"
+                        }
+                    ],
+                    "secod row"
+                ]
+            }
+        ]
+    }
+]
+
+### PUT reprint jobs
+// Reimprime elementos de la cola de impresión
+PUT {{ server }}/print/queue
+
+### DELETE release print jobs
+// Libera la cola de impresión
+DELETE {{ server }}/print/queue
+
+### GET queue size
+// Obtiene elementos en cola
+GET {{ server }}/print/queue
 
 ### Post  tickets to print
 // Envia una boleta al servidor de impresion
@@ -150,3 +272,8 @@ Content-Type: application/json
 		}
 	]
 }
+
+
+### GET  connection server print
+// Verifica el estado de conexion con el servidor de impresion
+GET {{ server }}/test-connection

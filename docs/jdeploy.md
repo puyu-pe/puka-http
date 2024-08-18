@@ -27,7 +27,7 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
    ```
 
 ### Pasos para publicar (versión beta)
-1. Importante!!, primero realizar el [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
+1. Importante!!, primero se debe [preparar una nueva versión](/README.md#preparar-una-nueva-versión-%EF%B8%8F).
 2. Login mediante linea de comandos en npm.
    ```bash
    npm login --registry=https://registry.npmjs.org/  --scope=@puyu    
@@ -52,7 +52,7 @@ mecanismo de actualización automatica. Ver mas detalles en su [documentación o
    ```
 
 ## Lanzamiento a producción.
-* Importante!, Si **previamente NO** se hizo [lanzamiento versión beta](#lanzamiento-versión-beta-o-pre-release), primero completar [flujo de trabajo para lanzar una nueva versión](/README.md#preparar-una-nueva-versión).
+* Importante!, Si **previamente NO** se hizo [lanzamiento versión beta](#lanzamiento-versión-beta-o-pre-release), primero se debe [preparar una nueva versión](/README.md#preparar-una-nueva-versión-%EF%B8%8F).
 * En la pestaña Actions del proyecto ejecutar la ["jDeploy CI with maven"](https://github.com/puyu-pe/puka-http/actions/workflows/jdeploy-manual.yml) action
   haciendo click en el boton run workflow en la tag mas reciente.
   > Importate!!!: Run workflow no tiene que ejecutarse en ninguna rama, solo en la ultima tag

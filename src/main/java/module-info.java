@@ -10,9 +10,7 @@ module pe.puyu.pukahttp {
 	requires org.slf4j;
 
 	requires com.google.gson;
-	requires org.hildan.fxgson;
-	opens pe.puyu.pukahttp.model to com.google.gson, org.hildan.fxgson;
-	opens pe.puyu.pukahttp.services.api to com.google.gson, org.hildan.fxgson;
+    opens pe.puyu.pukahttp.domain.models to com.google.gson;
 
 	requires net.harawata.appdirs;
 
@@ -23,20 +21,13 @@ module pe.puyu.pukahttp {
 
 	requires io.javalin;
 	requires java.net.http;
-	requires tyrus.standalone.client;
-	requires ormlite.jdbc;
 	requires java.sql;
-	requires com.h2database;
 	requires com.dustinredmond.fxtrayicon;
-	opens pe.puyu.pukahttp.repository.model to ormlite.jdbc;
+    requires jcommander;
+	requires jdk.jdi;
+	requires pe.puyu.SweetTicketDesign;
 
-	opens pe.puyu.pukahttp.views to javafx.fxml, javafx.graphics;
-	opens pe.puyu.pukahttp.app to javafx.fxml, javafx.graphics;
+	opens pe.puyu.pukahttp.infrastructure.javafx.controllers to javafx.fxml, javafx.graphics;
+	opens pe.puyu.pukahttp.infrastructure.javafx.app to javafx.fxml, javafx.graphics;
 
-	exports pe.puyu.pukahttp.app;
-	exports pe.puyu.pukahttp.repository.model;
-	exports pe.puyu.pukahttp.util;
-	exports pe.puyu.pukahttp.model;
-	exports pe.puyu.pukahttp.services.api;
-	exports pe.puyu.pukahttp.repository;
 }

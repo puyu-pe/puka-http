@@ -2,10 +2,10 @@
 for /f "delims=" %%x in (.env) do (set "%%x")
 
 rem ------ ENVIRONMENT --------------------------------------------------------
-rem El script depende de cuatro variables de entorno establecidas  
+rem El script depende de cuatro variables de entorno establecidas
 rem JAVA_VERSION: Definido en un archivo .env, (vea .env.example)
-rem PROJECT_VERSION: Version del proyecto, segun el pom.xml ,Definido en un archivo .env, (vea .env.example) 
-rem APP_VERSION: Version de al app, Definido en un archivo .env, (vea .env.example) 
+rem PROJECT_VERSION: Version del proyecto, segun el pom.xml ,Definido en un archivo .env, (vea .env.example)
+rem APP_VERSION: Version de al app, Definido en un archivo .env, (vea .env.example)
 rem MAIN_JAR: el jar generado por el plugin maven-dependency-plugin, Definido en un archivo .env, (vea .env.example)
 
 rem 3 de las cuatro variables tiene que estar presentes en un archivo .env. establecerlas con el siguiente script:
@@ -29,7 +29,7 @@ rem para msi se necesita tener instalado previamente WIX toolset, (https://wixto
 set INSTALLER_TYPE=%INSTALLER_TYPE%
 
 rem ------ Configuracion de directorios y archivos ----------------------------------------
-rem El script crea los directorios necesarios para la instalacion 
+rem El script crea los directorios necesarios para la instalacion
 rem copia el directorio target/libs en target/intaller/input/libs
 rem el directorio target/libs es generado por el plugin maven-dependency-plugin
 
@@ -41,7 +41,7 @@ copy target\%MAIN_JAR% target\installer\input\libs\
 
 rem ------ Modulos requeridos ---------------------------------------------------
 rem Se usa jlink para detectar todos los modulos requeridos.
-rem Esta seccion inicia con jdeps que analiza que modulos son requeridos por la aplicacion 
+rem Esta seccion inicia con jdeps que analiza que modulos son requeridos por la aplicacion
 
 echo detecting required modules
 
@@ -62,7 +62,7 @@ rem en manual_modules, para este proyecto se detectaron 3 modulos que necesita l
 rem ,jdk.crypto.ec,jdk.zipfs,jdk.charsets
 rem crypto para las conexiones http, zipfs para el sistema de ficheros y chartsets,
 rem este ultimo es requerido por la libreria JTicketDesing vea issue #48 en el repositorio del proyecto
-rem en caso que en el futuro se vea que faltan modulos se puede probar con todos los modulos 
+rem en caso que en el futuro se vea que faltan modulos se puede probar con todos los modulos
 rem se puede ver todos los modulos con el comando java --list-modules
 
 rem !! No quites la coma al inicio ','!
@@ -88,7 +88,7 @@ call "%JAVA_HOME%\bin\jlink" ^
   --strip-debug ^
   --add-modules %detected_modules%%manual_modules% ^
   --output target/java-runtime
-  
+
 
 rem ------ PACKAGING ----------------------------------------------------------
 rem Finalmente lo mas ansiado por los mortales, nuestro instalador
@@ -107,7 +107,7 @@ call "%JAVA_HOME%\bin\jpackage" ^
   --dest target/installer ^
   --input target/installer/input/libs ^
   --name %APP_NAME% ^
-  --main-class pe.puyu.pukahttp.AppLauncher ^
+  --main-class pe.puyu.pukahttp.AppLauncherOld ^
   --main-jar %MAIN_JAR% ^
   --java-options -Xmx2048m ^
   --runtime-image target/java-runtime ^
