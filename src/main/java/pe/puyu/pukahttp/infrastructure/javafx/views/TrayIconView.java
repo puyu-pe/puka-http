@@ -66,12 +66,13 @@ public class TrayIconView extends View {
             closeMenuItem.setOnAction(controller::onClose);
             enableNotificationsMenuItem.setOnAction(e -> controller.onEnabledNotifications(e, enableNotificationsMenuItem));
             trayIcon = builder
+                .applicationTitle("PukaHTTP")
                 .menuItems(aboutMenuItem, enableNotificationsMenuItem)
                 .separator()
                 .menuItem(closeMenuItem)
+                .onAction(e -> super.load())
+                .toolTip("Print Service PUYU")
                 .build();
-            trayIcon.setTooltip("Print Service PUYU");
-            trayIcon.setOnAction(e -> super.show());
         }
     }
 

@@ -14,13 +14,11 @@ Servicio de impresión para la impresion de tickets en impresoras termicas.
 
 # Indice 📖
 
-1. [Instalación y uso](#instalación-y-uso)
-2. [Para desarrolladores](#para-desarrolladores)
-    * [Estructura del proyecto](#estructura-del-proyecto)
-    * [Construir el proyecto](#construir-el-proyecto)
-    * [Lanzar nuevas versiones](#preparar-una-nueva-versión)
-
-3. [Generar instaladores](#generar-los-instaladores)
+1. [Instalación y uso](#instalación-)
+2. [Para desarrolladores](#para-desarrolladores--)
+    * [Comenzando](#comenzando-)
+    * [Despliegue](#despliegue-)
+3. [Generar instaladores](#generar-instaladores-multiplataforma-)
 
 # Instalación 🔧
 
@@ -127,7 +125,7 @@ Tener instalado [git-flow ](https://desarrollowp.com/blog/tutoriales/aprende-git
    ```
    > Warning: **No** ejecutar **git push --tags**, ya que puede entrar en conflicto con el tag jdeploy
 
-### Generar instaladores multiplataforma 🎁
+# Generar instaladores multiplataforma 🎁
 
 Existe dos formas en la que podemos generar los instaladores para windows, mac y distribuciones linux.
 Siendo la mas sencilla y recomedada JDeploy, por que automatiza de mejor forma la generación de instaladores,

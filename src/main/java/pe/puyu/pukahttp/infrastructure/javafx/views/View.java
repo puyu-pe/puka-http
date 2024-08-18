@@ -17,13 +17,17 @@ public abstract class View {
     }
 
     public void show() {
+        load();
+        _stage.show();
+        _stage.setIconified(false);
+        _stage.requestFocus();
+    }
+
+    public synchronized void load() {
         if (_stage.getScene() == null) {
             Parent root = FxDependencyInjection.load(_fxmlFileName);
             _stage.setScene(new Scene(root));
         }
-        _stage.show();
-        _stage.setIconified(false);
-        _stage.requestFocus();
     }
 
     public void minimizeInsteadHide(boolean is) {
