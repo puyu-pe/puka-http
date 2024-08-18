@@ -14,11 +14,10 @@ Servicio de impresión para la impresion de tickets en impresoras termicas.
 
 # Indice 📖
 
-1. [Instalación y uso](#instalación-y-uso)
-2. [Para desarrolladores](#para-desarrolladores)
-    * [Estructura del proyecto](#estructura-del-proyecto)
-    * [Construir el proyecto](#construir-el-proyecto)
-    * [Lanzar nuevas versiones](#preparar-una-nueva-versión)
+1. [Instalación y uso](#instalación-)
+2. [Para desarrolladores](#para-desarrolladores--)
+    * [Comenzando](#comenzando-)
+    * [Lanzar nuevas versiones](#despliegue-)
 
 3. [Generar instaladores](#generar-los-instaladores)
 
