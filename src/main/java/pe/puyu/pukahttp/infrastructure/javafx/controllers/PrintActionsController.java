@@ -135,8 +135,10 @@ public class PrintActionsController {
             if (imageFile != null) {
                 BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
                 businessLogoService.save(imageFile);
-                FxAlert.showConfirmation("Confirmation for update logo.", "Are you sure you want to do this?");
-                imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+                boolean response = FxAlert.showConfirmation("Confirmation for update logo.", "Are you sure you want to do this?");
+                if (response) {
+                    imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+                }
             }
         } catch (Exception e) {
             log.getLogger().error(e.getMessage());
@@ -159,7 +161,7 @@ public class PrintActionsController {
         }
     }
 
-    private void disableButtons(boolean disable){
+    private void disableButtons(boolean disable) {
         btnRelease.setDisable(disable);
         btnReprint.setDisable(disable);
         btnTestPrint.setDisable(disable);
