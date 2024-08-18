@@ -25,6 +25,7 @@ public class JavalinPrintServer implements PrintServer {
                 app.start(serverConfig.ip(), port);
                 log.getLogger().info("Sever listening on {}:{}", serverConfig.ip(), port);
             } catch (Exception e) {
+                log.getLogger().error(e.getMessage(), e);
                 throw new PrintServerException(e.getMessage(), e.getCause());
             }
         }

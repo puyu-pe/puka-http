@@ -1,5 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.javafx.controllers;
 
+import javafx.application.Platform;
+import pe.puyu.pukahttp.domain.*;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -11,45 +13,56 @@ import javafx.stage.Stage;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
-import pe.puyu.pukahttp.domain.PngFileChooser;
-import pe.puyu.pukahttp.domain.ServerConfigDTO;
-import pe.puyu.pukahttp.domain.ServerConfigException;
-import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.concurrent.CompletableFuture;
 
 public class StartConfigController {
     private final PrintServerService printServerService;
     private final AppLog log = new AppLog(StartConfigController.class);
+    private final ViewLauncher viewLauncher;
 
-    public StartConfigController(PrintServerService printServerService) {
+    public StartConfigController(PrintServerService printServerService, ViewLauncher viewLauncher) {
         this.printServerService = printServerService;
+        this.viewLauncher = viewLauncher;
     }
 
     public void initialize() {
         recoverLogo();
+        txtPort.setText("8347");
+        try {
+            txtIP.setText(InetAddress.getLocalHost().getHostAddress());
+        } catch (Exception ignored) {
+            txtIP.setText("127.0.0.1");
+        }
     }
 
     @FXML
     void onAccept() {
-        try {
-            ServerConfigDTO serverConfig = new ServerConfigDTO(txtIP.getText(), txtPort.getText());
-            printServerService.saveServerConfig(serverConfig);
-            printServerService.start();
-            getStage().close();
-        } catch (ServerConfigException e) {
-            log.getLogger().warn(e.getMessage());
-            FxAlert.showWarning("Failed to save configuration", e.getMessage());
-        } catch (DataValidationException e) {
-            log.getLogger().warn(e.getMessage());
-            FxAlert.showWarning("Field values is Invalid.", e.getMessage());
-        } catch (Exception e) {
-            log.getLogger().error(e.getMessage());
-            FxAlert.showError("Unknown error", e.getMessage());
-        }
+        CompletableFuture.runAsync(() -> {
+            try {
+                ServerConfigDTO serverConfig = new ServerConfigDTO(txtIP.getText(), txtPort.getText());
+                printServerService.saveServerConfig(serverConfig);
+                printServerService.start();
+                Platform.runLater(() -> {
+                    viewLauncher.launchMain();
+                    getStage().close();
+                });
+            } catch (ServerConfigException e) {
+                log.getLogger().warn(e.getMessage());
+                Platform.runLater(() -> FxAlert.showWarning("Failed to save configuration", e.getMessage()));
+            } catch (DataValidationException e) {
+                log.getLogger().warn(e.getMessage());
+                Platform.runLater(() -> FxAlert.showWarning("Field values is Invalid.", e.getMessage()));
+            } catch (Exception e) {
+                log.getLogger().error(e.getMessage());
+                Platform.runLater(() -> FxAlert.showError("Unknown error", e.getMessage()));
+            }
+        });
     }
 
     @FXML
