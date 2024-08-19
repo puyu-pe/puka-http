@@ -168,7 +168,7 @@
                      </ImageView>
                   </graphic>
                </Button>
-               <CheckBox fx:id="checkBoxNormalize" mnemonicParsing="false" text="Normalize" GridPane.columnIndex="1" />
+               <CheckBox fx:id="checkBoxNormalize" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Normalize" GridPane.columnIndex="1" />
             </children>
          </GridPane>
       </VBox>
