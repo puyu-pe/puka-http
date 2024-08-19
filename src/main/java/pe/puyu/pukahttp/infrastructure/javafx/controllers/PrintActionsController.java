@@ -52,43 +52,54 @@ public class PrintActionsController {
         this.lblVersion.setText(AppConfig.getAppVersion());
         printQueueObservable.addObserver(UuidGeneratorService.random(), (queueSize) -> {
             try {
-                Platform.runLater(() -> this.lblQueueSize.setText(queueSize.toString()));
+                Platform.runLater(() -> {
+                    btnRelease.setDisable(queueSize == 0);
+                    btnReprint.setDisable(queueSize == 0);
+                    this.lblQueueSize.setText(queueSize.toString());
+                });
             } catch (Exception e) {
                 log.getLogger().error(e.getMessage(), e);
             }
         });
         recoverLogo();
+        btnRelease.setDisable(printQueueObservable.getQueueSize() == 0);
+        btnReprint.setDisable(printQueueObservable.getQueueSize() == 0);
     }
 
     @FXML
     void onRelease() {
-        disableButtons(true);
-        CompletableFuture.runAsync(() -> {
-            try {
-                printJobService.release();
-            } catch (Exception e) {
-                log.getLogger().error(e.getMessage(), e);
-            } finally {
-                disableButtons(false);
-            }
-        });
+        boolean response = FxAlert.showConfirmation("Are you sure you want to  the tickets?", "It is an irreversible action.");
+        if (response) {
+            disableButtons(true);
+            CompletableFuture.runAsync(() -> {
+                try {
+                    printJobService.release();
+                } catch (Exception e) {
+                    log.getLogger().error(e.getMessage(), e);
+                } finally {
+                    disableButtons(false);
+                }
+            });
+        }
     }
 
     @FXML
     void onReprint() {
-        disableButtons(true);
-        CompletableFuture.runAsync(() -> {
-            try {
-                printJobService.reprint();
-            } catch (PrintJobException | PrintServiceNotFoundException e) {
-                log.getLogger().warn(e.getMessage());
-            } catch (Exception e) {
-                log.getLogger().error(e.getMessage(), e);
-            } finally {
-                disableButtons(false);
-            }
-        });
-
+        boolean response = FxAlert.showConfirmation("Are you sure you want to reprint tickets?", "");
+        if (response) {
+            disableButtons(true);
+            CompletableFuture.runAsync(() -> {
+                try {
+                    printJobService.reprint();
+                } catch (PrintJobException | PrintServiceNotFoundException e) {
+                    log.getLogger().warn(e.getMessage());
+                } catch (Exception e) {
+                    log.getLogger().error(e.getMessage(), e);
+                } finally {
+                    disableButtons(false);
+                }
+            });
+        }
     }
 
     @FXML
