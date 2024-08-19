@@ -121,8 +121,8 @@ public class GsonFailedPrintJobStorage extends PrintQueueObservable implements F
                 for (Path filePath : filesList) {
                     String fileName = filePath.getFileName().toString().replace(".json", "");
                     String[] split = fileName.split("-");
-                    String date = split[1];
-                    LocalDateTime createdAt = LocalDateTime.parse(date);
+                    String date = split[0];
+                    LocalDateTime createdAt = LocalDateTime.parse(date, ConfigGsonStorage.getDateTimeFormatter());
                     if (createdAt.isBefore(beforeTime)) {
                         Files.deleteIfExists(filePath);
                     }

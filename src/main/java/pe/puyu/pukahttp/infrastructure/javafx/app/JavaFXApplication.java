@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
+import pe.puyu.pukahttp.application.services.CleanPrintQueueService;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.*;
@@ -29,11 +30,13 @@ public class JavaFXApplication extends Application {
     private final PrintServerService printServerService;
     private final LaunchApplicationService launchApplicationService;
     private final ViewLauncher viewLauncher;
+    private final GsonFailedPrintJobStorage storage;
 
     public JavaFXApplication() {
+        storage = new GsonFailedPrintJobStorage();
         this.viewLauncher = new FxLauncher(notifier);
         printServerService = new PrintServerService(new JavalinPrintServer(), new ServerPropertiesReader(), notifier);
-        launchApplicationService = new LaunchApplicationService(printServerService, viewLauncher);
+        launchApplicationService = new LaunchApplicationService(printServerService, viewLauncher, new CleanPrintQueueService(storage));
     }
 
     @Override
@@ -63,7 +66,6 @@ public class JavaFXApplication extends Application {
 
     private void injectDependenciesIntoControllers() {
         try {
-            GsonFailedPrintJobStorage storage = new GsonFailedPrintJobStorage();
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printServerService, viewLauncher));
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
