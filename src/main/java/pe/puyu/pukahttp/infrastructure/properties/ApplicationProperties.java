@@ -6,6 +6,7 @@ import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 public class ApplicationProperties {
@@ -24,7 +25,7 @@ public class ApplicationProperties {
 
     public static boolean getBoolean(@NotNull AppPropertyKey key, boolean defaultValue) {
         try {
-            return Boolean.parseBoolean(loadProperties().getProperty(key.toString()));
+            return Optional.ofNullable(loadProperties().getProperty(key.toString())).map(Boolean::parseBoolean).orElse(defaultValue);
         } catch (Exception e) {
             return defaultValue;
         }
@@ -32,7 +33,7 @@ public class ApplicationProperties {
 
     public static String getString(@NotNull AppPropertyKey key, @NotNull String defaultValue) {
         try {
-            return loadProperties().getProperty(key.toString());
+            return Optional.ofNullable(loadProperties().getProperty(key.toString())).orElse(defaultValue);
         } catch (Exception e) {
             return defaultValue;
         }
@@ -40,7 +41,7 @@ public class ApplicationProperties {
 
     public static int getInt(@NotNull AppPropertyKey key, int defaultValue) {
         try {
-            return Integer.parseInt(loadProperties().getProperty(key.toString()));
+            return Optional.ofNullable(loadProperties().getProperty(key.toString())).map(Integer::parseInt).orElse(defaultValue);
         } catch (Exception e) {
             return defaultValue;
         }

@@ -65,6 +65,7 @@ public class TrayIconView extends View {
             aboutMenuItem.setOnAction(controller::onAbout);
             closeMenuItem.setOnAction(controller::onClose);
             enableNotificationsMenuItem.setOnAction(e -> controller.onEnabledNotifications(e, enableNotificationsMenuItem));
+            enableNotificationsMenuItem.setSelected(ApplicationProperties.getBoolean(AppPropertyKey.TRAY_NOTIFICATIONS, true));
             trayIcon = builder
                 .applicationTitle("PukaHTTP")
                 .menuItems(aboutMenuItem, enableNotificationsMenuItem)

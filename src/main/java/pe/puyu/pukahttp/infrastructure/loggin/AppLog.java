@@ -3,6 +3,8 @@ package pe.puyu.pukahttp.infrastructure.loggin;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
+import pe.puyu.pukahttp.infrastructure.properties.AppPropertyKey;
+import pe.puyu.pukahttp.infrastructure.properties.ApplicationProperties;
 
 public class AppLog {
     private final Logger _logger;
@@ -33,6 +35,7 @@ public class AppLog {
             default:
                 rootLogger.setLevel(Level.TRACE);
         }
+        ApplicationProperties.setString(AppPropertyKey.LOG_LEVEL, level.getValue());
     }
 
 }

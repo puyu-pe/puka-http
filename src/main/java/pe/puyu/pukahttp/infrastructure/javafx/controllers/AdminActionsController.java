@@ -13,7 +13,6 @@ import pe.puyu.pukahttp.application.services.PrintServerService;
 import pe.puyu.pukahttp.domain.ServerConfigDTO;
 import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
-import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxToast;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.infrastructure.loggin.LogLevel;
@@ -107,7 +106,6 @@ public class AdminActionsController {
     private void changeLogLevel(Observable observable) {
         String selectedLogLevel = cmbLevelLogs.getSelectionModel().getSelectedItem();
         AppLog.setErrorLevel(LogLevel.fromValue(selectedLogLevel));
-        ApplicationProperties.setString(AppPropertyKey.LOG_LEVEL, selectedLogLevel);
         log.getLogger().info(String.format("Log level set to %s", selectedLogLevel));
     }
 

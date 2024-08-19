@@ -18,10 +18,7 @@ import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundExcept
 import pe.puyu.pukahttp.domain.PngFileChooser;
 import pe.puyu.pukahttp.domain.PrintQueueObservable;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
-import pe.puyu.pukahttp.infrastructure.javafx.views.AdminActionsView;
-import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
-import pe.puyu.pukahttp.infrastructure.javafx.views.FxPngFileChooser;
-import pe.puyu.pukahttp.infrastructure.javafx.views.PrintTestView;
+import pe.puyu.pukahttp.infrastructure.javafx.views.*;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 
 import java.io.File;
@@ -52,71 +49,68 @@ public class PrintActionsController {
         this.lblVersion.setText(AppConfig.getAppVersion());
         printQueueObservable.addObserver(UuidGeneratorService.random(), (queueSize) -> {
             try {
-                Platform.runLater(() -> this.lblQueueSize.setText(queueSize.toString()));
+                Platform.runLater(() -> {
+                    btnRelease.setDisable(queueSize == 0);
+                    btnReprint.setDisable(queueSize == 0);
+                    this.lblQueueSize.setText(queueSize.toString());
+                });
             } catch (Exception e) {
                 log.getLogger().error(e.getMessage(), e);
             }
         });
         recoverLogo();
+        btnRelease.setDisable(printQueueObservable.getQueueSize() == 0);
+        btnReprint.setDisable(printQueueObservable.getQueueSize() == 0);
     }
 
     @FXML
     void onRelease() {
-        disableButtons(true);
-        CompletableFuture.runAsync(() -> {
-            try {
-                printJobService.release();
-            } catch (Exception e) {
-                log.getLogger().error(e.getMessage(), e);
-            } finally {
-                disableButtons(false);
-            }
-        });
+        boolean response = FxAlert.showConfirmation("Are you sure you want to  the tickets?", "It is an irreversible action.");
+        if (response) {
+            btnReprint.setDisable(true);
+            btnRelease.setDisable(true);
+            btnTestPrint.setDisable(true);
+            CompletableFuture.runAsync(() -> {
+                try {
+                    printJobService.release();
+                } catch (Exception e) {
+                    log.getLogger().error(e.getMessage(), e);
+                } finally {
+                    btnTestPrint.setDisable(false);
+                }
+            });
+        }
     }
 
     @FXML
     void onReprint() {
-        disableButtons(true);
-        CompletableFuture.runAsync(() -> {
-            try {
-                printJobService.reprint();
-            } catch (PrintJobException | PrintServiceNotFoundException e) {
-                log.getLogger().warn(e.getMessage());
-            } catch (Exception e) {
-                log.getLogger().error(e.getMessage(), e);
-            } finally {
-                disableButtons(false);
-            }
-        });
-
+        boolean response = FxAlert.showConfirmation("Are you sure you want to reprint tickets?", "");
+        if (response) {
+            btnReprint.setDisable(true);
+            btnRelease.setDisable(true);
+            btnTestPrint.setDisable(true);
+            CompletableFuture.runAsync(() -> {
+                try {
+                    printJobService.reprint();
+                } catch (PrintJobException | PrintServiceNotFoundException e) {
+                    log.getLogger().warn(e.getMessage());
+                } catch (Exception e) {
+                    log.getLogger().error(e.getMessage(), e);
+                } finally {
+                    btnTestPrint.setDisable(false);
+                }
+            });
+        }
     }
 
     @FXML
     void onClickLabelVersion() {
-        disableButtons(true);
-        Platform.runLater(() -> {
-            try {
-                adminActionsView.show();
-            } catch (Exception e) {
-                log.getLogger().error(e.getMessage(), e);
-            } finally {
-                disableButtons(false);
-            }
-        });
+        showView(adminActionsView);
     }
 
     @FXML
     void onTestPrint() {
-        disableButtons(true);
-        Platform.runLater(() -> {
-            try {
-                printTestView.show();
-            } catch (Exception e) {
-                log.getLogger().error(e.getMessage(), e);
-            } finally {
-                disableButtons(false);
-            }
-        });
+        showView(printTestView);
     }
 
     @FXML
@@ -146,6 +140,25 @@ public class PrintActionsController {
         }
     }
 
+    private void showView(View view){
+        boolean isDisableRelease = btnRelease.isDisable();
+        boolean isDisableReprint = btnReprint.isDisable();
+        btnReprint.setDisable(true);
+        btnRelease.setDisable(true);
+        btnTestPrint.setDisable(true);
+        Platform.runLater(() -> {
+            try {
+                view.show();
+            } catch (Exception e) {
+                log.getLogger().error(e.getMessage(), e);
+            } finally {
+                btnReprint.setDisable(isDisableReprint);
+                btnRelease.setDisable(isDisableRelease);
+                btnTestPrint.setDisable(false);
+            }
+        });
+    }
+
     private Stage getStage() {
         return (Stage) root.getScene().getWindow();
     }
@@ -159,12 +172,6 @@ public class PrintActionsController {
         } catch (Exception e) {
             log.getLogger().warn("error on initialize image: {}", e.getMessage(), e);
         }
-    }
-
-    private void disableButtons(boolean disable) {
-        btnRelease.setDisable(disable);
-        btnReprint.setDisable(disable);
-        btnTestPrint.setDisable(disable);
     }
 
     @FXML
