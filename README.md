@@ -121,7 +121,7 @@ Tener instalado [git-flow ](https://desarrollowp.com/blog/tutoriales/aprende-git
    ```
 5. Hacer push -all y a la ultima etiqueta generada
    ```bash
-   git push --all & git push origin $(cat VERSION)
+   git push --all && git push origin $(cat VERSION)
    ```
    > Warning: **No** ejecutar **git push --tags**, ya que puede entrar en conflicto con el tag jdeploy
 
