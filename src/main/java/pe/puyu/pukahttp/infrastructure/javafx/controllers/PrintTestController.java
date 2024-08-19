@@ -26,10 +26,13 @@ import pe.puyu.pukahttp.infrastructure.smeargle.SmgPrintObject;
 import pe.puyu.pukahttp.infrastructure.smeargle.block.*;
 import pe.puyu.pukahttp.infrastructure.smeargle.properties.SmgProperties;
 
+import java.io.File;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class PrintTestController {
@@ -84,14 +87,14 @@ public class PrintTestController {
         if (!textBlock.isDisable()) {
             blocks.add(buildTextBlock());
         }
-        if(!imageBlock.isDisable()){
+        if (!imageBlock.isDisable()) {
             try {
                 blocks.add(buildImageBlock());
             } catch (Exception e) {
                 addOutputMessage(e.getMessage());
             }
         }
-        if(!qrBlock.isDisable()){
+        if (!qrBlock.isDisable()) {
             try {
                 blocks.add(buildQrBlock());
             } catch (Exception e) {
@@ -135,10 +138,10 @@ public class PrintTestController {
     private SmgImageBlock buildImageBlock() throws DataValidationException {
         int width;
         int height;
-        try{
+        try {
             width = Integer.parseInt(txtImageWidth.getText());
             height = Integer.parseInt(txtImageHeight.getText());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DataValidationException("Image height and width must be a positive integers.");
         }
         SmgStyle style = SmgStyle.builder()
@@ -147,14 +150,20 @@ public class PrintTestController {
             .width(width)
             .height(height)
             .build();
-        return SmgImageBlock.builder().imgPath(AppConfig.getLogoFilePath().toString()).style(style).build();
+
+        String imagePath = AppConfig.getLogoFilePath().toString();
+        File file = new File(imagePath);
+        if (!file.exists()) {
+            imagePath = Optional.ofNullable(getClass().getResource("/pe/puyu/pukahttp/assets/icon.png")).map(URL::getPath).orElse("");
+        }
+        return SmgImageBlock.builder().imgPath(imagePath).style(style).build();
     }
 
     private SmgQrBlock buildQrBlock() throws DataValidationException {
         int size;
-        try{
+        try {
             size = Integer.parseInt(txtQrSize.getText());
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DataValidationException("Qr size must be a positive integer.");
         }
         SmgStyle style = SmgStyle.builder()
