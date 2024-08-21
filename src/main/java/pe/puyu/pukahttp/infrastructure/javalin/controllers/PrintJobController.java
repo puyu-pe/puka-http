@@ -64,6 +64,7 @@ public class PrintJobController {
                 Integer times = timesParam != null ? Integer.parseInt(timesParam) : 1;
                 PrinterInfo printerInfo = new PrinterInfo(printerName, printerType);
                 PrintDocument document = new PrintDocument(printerInfo, ctx.body(), times);
+                printJobService.print(document);
             }
         );
     }

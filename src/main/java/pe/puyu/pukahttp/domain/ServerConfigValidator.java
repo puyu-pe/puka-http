@@ -6,10 +6,23 @@ import java.util.regex.Pattern;
 
 public class ServerConfigValidator {
 
-    private final ServerConfigDTO serverConfig;
+    private final Serverconfig serverConfig;
 
-    public ServerConfigValidator(@NotNull ServerConfigDTO serverConfig) {
+    public ServerConfigValidator(@NotNull Serverconfig serverConfig) {
         this.serverConfig = serverConfig;
+    }
+
+    public ServerConfigValidator(String service) {
+        String ip = service;
+        String port = "9100";
+        if (service.contains(":")) {
+            String[] split = service.split(":");
+            if(split.length > 1) {
+                ip = split[0];
+                port = split[1];
+            }
+        }
+        this.serverConfig = new Serverconfig(ip, port);
     }
 
     public void validateIp() throws DataValidationException {

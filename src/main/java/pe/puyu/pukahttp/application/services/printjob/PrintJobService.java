@@ -16,7 +16,7 @@ import pe.puyu.pukahttp.application.services.printjob.output.SambaOutputStream;
 import pe.puyu.pukahttp.application.services.printjob.output.SerialOutputStream;
 import pe.puyu.pukahttp.application.services.printjob.output.SystemPrinter;
 import pe.puyu.pukahttp.domain.*;
-import pe.puyu.pukahttp.domain.models.PrintInfo;
+import pe.puyu.pukahttp.domain.models.PrintDocument;
 import pe.puyu.pukahttp.domain.models.PrintJob;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 
@@ -47,16 +47,12 @@ public class PrintJobService {
         JTicketDesignPrintJob.openDrawer(jsonObject);
     }
 
-    public void print(PrintInfo info) throws DataValidationException, PrintJobException, PrintServiceNotFoundException {
+    public void print(PrintDocument document) throws DataValidationException, PrintJobException, PrintServiceNotFoundException {
         // validations
-        PrintInfoValidator validator = new PrintInfoValidator(info);
+        PrintDocumentValidator validator = new PrintDocumentValidator(document);
         validator.validate();
         // initialization
-        String target = info.printerInfoOld().printerName();
-        PrinterType type = Optional.ofNullable(info.printerInfoOld().type()).orElse(PrinterType.SYSTEM);
-        int port = Integer.parseInt(Optional.ofNullable(info.printerInfoOld().port()).orElse("9100"));
-        int times = Integer.parseInt(Optional.ofNullable(info.times()).orElse("1"));
-        ByteArrayOutputStream buffer = sweetDesign(info.printData(), times);
+/*        ByteArrayOutputStream buffer = sweetDesign(info.printData(), times);
         try {
             printJob(target, port, type, buffer);
         } catch (PrintJobException | PrintServiceNotFoundException e) {
@@ -67,18 +63,18 @@ public class PrintJobService {
         } catch (Exception e) {
             notifier.error(e.getMessage());
             throw new RuntimeException(e.getMessage(), e);
-        }
+        }*/
     }
 
     public void reprint() throws PrintJobException, PrintServiceNotFoundException {
-        List<PrintJob> printJobs = failedPrintJobsStorage.getAllPrintJobs();
+/*        List<PrintJob> printJobs = failedPrintJobsStorage.getAllPrintJobs();
         PrintJobException jobException = null;
         PrintServiceNotFoundException printServiceNotFoundException = null;
         Exception genericException = null;
         List<PrintJob> willDeleteJobs = new LinkedList<>();
         for (PrintJob job : printJobs) {
             try {
-                PrintInfoValidator validator = new PrintInfoValidator(job.info());
+                PrintDocumentValidator validator = new PrintDocumentValidator(job.info());
                 validator.validate();
                 String target = job.info().printerInfoOld().printerName();
                 PrinterType type = Optional.ofNullable(job.info().printerInfoOld().type()).orElse(PrinterType.SYSTEM);
@@ -109,7 +105,7 @@ public class PrintJobService {
         }
         if (genericException != null) {
             throw new RuntimeException(genericException);
-        }
+        }*/
     }
 
     public void release() {
@@ -139,6 +135,7 @@ public class PrintJobService {
         return buffer;
     }
 
+/*
     private void printJob(String target, int port, PrinterType type, ByteArrayOutputStream buffer) throws PrintServiceNotFoundException, PrintJobException {
         try {
             if (type.equals(PrinterType.ETHERNET)) {
@@ -160,5 +157,6 @@ public class PrintJobService {
             throw new PrintJobException(String.format("Could not establish a connection to the printer %s, with message: %s", target, e.getMessage()), e);
         }
     }
+*/
 
 }

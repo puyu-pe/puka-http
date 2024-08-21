@@ -266,7 +266,7 @@ public class PrintTestController {
     }
 
     private void print(List<SmgBlock> blocks) {
-        if (blocks.isEmpty()) {
+/*        if (blocks.isEmpty()) {
             return;
         }
         btnPrint.setDisable(true);
@@ -303,7 +303,7 @@ public class PrintTestController {
                     btnPrint.setDisable(false);
                 });
             }
-        });
+        });*/
     }
 
     private void addOutputMessage(String message) {

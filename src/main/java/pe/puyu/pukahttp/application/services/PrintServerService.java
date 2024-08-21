@@ -15,7 +15,7 @@ public class PrintServerService {
     }
 
     public void start() throws ServerConfigException, DataValidationException, PrintServerException {
-        ServerConfigDTO serverConfig = getServerConfig();
+        Serverconfig serverConfig = getServerConfig();
         printServer.start(serverConfig);
         notifier.info(String.format("Server started on %s:%s", serverConfig.ip(), serverConfig.port()));
     }
@@ -33,15 +33,15 @@ public class PrintServerService {
         return configReader.hasServerConfig();
     }
 
-    public ServerConfigDTO getServerConfig() throws ServerConfigException, DataValidationException {
-        ServerConfigDTO serverConfig = configReader.read();
+    public Serverconfig getServerConfig() throws ServerConfigException, DataValidationException {
+        Serverconfig serverConfig = configReader.read();
         ServerConfigValidator validator = new ServerConfigValidator(serverConfig);
         validator.validateIp();
         validator.validatePort();
         return serverConfig;
     }
 
-    public void saveServerConfig(ServerConfigDTO serverConfig) throws ServerConfigException, DataValidationException {
+    public void saveServerConfig(Serverconfig serverConfig) throws ServerConfigException, DataValidationException {
         ServerConfigValidator validator = new ServerConfigValidator(serverConfig);
         validator.validateIp();
         validator.validatePort();

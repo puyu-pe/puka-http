@@ -45,7 +45,7 @@ public class StartConfigController {
     void onAccept() {
         CompletableFuture.runAsync(() -> {
             try {
-                ServerConfigDTO serverConfig = new ServerConfigDTO(txtIP.getText(), txtPort.getText());
+                Serverconfig serverConfig = new Serverconfig(txtIP.getText(), txtPort.getText());
                 printServerService.saveServerConfig(serverConfig);
                 printServerService.start();
                 Platform.runLater(() -> {

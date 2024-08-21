@@ -10,7 +10,7 @@ import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.PrintServer;
 import pe.puyu.pukahttp.domain.PrintServerException;
-import pe.puyu.pukahttp.domain.ServerConfigDTO;
+import pe.puyu.pukahttp.domain.Serverconfig;
 import pe.puyu.pukahttp.domain.DataValidationException;
 
 public class JavalinPrintServer implements PrintServer {
@@ -18,7 +18,7 @@ public class JavalinPrintServer implements PrintServer {
     private final AppLog log = new AppLog(JavalinPrintServer.class);
 
     @Override
-    public void start(@NotNull ServerConfigDTO serverConfig) throws PrintServerException {
+    public void start(@NotNull Serverconfig serverConfig) throws PrintServerException {
         if (app == null) {
             try {
                 initializeApp();
