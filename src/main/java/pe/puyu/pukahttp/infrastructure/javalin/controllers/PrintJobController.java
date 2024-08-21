@@ -1,18 +1,20 @@
 package pe.puyu.pukahttp.infrastructure.javalin.controllers;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.websocket.WsConfig;
+import pe.puyu.pukahttp.domain.models.*;
 import pe.puyu.pukahttp.infrastructure.javalin.models.DeprecateResponse;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.domain.models.PrintInfo;
-import pe.puyu.pukahttp.domain.models.PrinterInfo;
-import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.domain.PrintQueueObservable;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class PrintJobController {
     private final PrintJobService printJobService;
@@ -55,17 +57,13 @@ public class PrintJobController {
     public void print(Context ctx) {
         ctx.async(
             () -> {
-                String target = ctx.queryParam("printer");
-                PrinterType type = PrinterType.from(ctx.queryParam("type"));
-                String port = ctx.queryParam("port");
-                String times = ctx.queryParam("times");
-                String printObject = ctx.body();
-                if (target == null) {
-                    throw new BadRequestResponse("query parameter 'printer' is required");
-                }
-                PrinterInfo printerInfo = new PrinterInfo(target, type, port);
-                PrintInfo printInfo = new PrintInfo(printerInfo, times, printObject);
-                printJobService.print(printInfo);
+                validateDataPrint(ctx);
+                String printerName = Optional.ofNullable(ctx.queryParam("printer")).orElse("");
+                PrinterType printerType = PrinterType.from(ctx.queryParam("type"));
+                String timesParam = ctx.queryParam("times");
+                Integer times = timesParam != null ? Integer.parseInt(timesParam) : 1;
+                PrinterInfo printerInfo = new PrinterInfo(printerName, printerType);
+                PrintDocument document = new PrintDocument(printerInfo, ctx.body(), times);
             }
         );
     }
@@ -110,5 +108,41 @@ public class PrintJobController {
         });
     }
 
+    public void validateDataPrint(Context ctx) {
+        if (ctx.queryParam("printer") == null) {
+            throw new BadRequestResponse("'printer' parameter is required");
+        }
+        if (ctx.queryParam("type") != null) {
+            String type = ctx.queryParam("type");
+            if (!PrinterType.isValid(type)) {
+                throw new BadRequestResponse(
+                    String.format(
+                        "'type' parameter must be: %s, current: %s",
+                        Arrays.toString(PrinterType.values()),
+                        type
+                    )
+                );
+            }
+        }
+        String times = ctx.queryParam("times");
+        if (times != null) {
+            try {
+                Integer.parseInt(times);
+            } catch (Exception ignored) {
+                throw new BadRequestResponse("'times' parameter must be integer. current: " + times);
+            }
+        }
+        if (ctx.body().trim().isEmpty()) {
+            throw new BadRequestResponse("body mustn't be empty");
+        }
+        try {
+            JsonElement body = JsonParser.parseString(ctx.body());
+            if (!body.isJsonObject()) {
+                throw new BadRequestResponse("body json must be a JSON object");
+            }
+        } catch (Exception e) {
+            throw new BadRequestResponse("body json syntax is incorrect");
+        }
+    }
 
 }

@@ -17,7 +17,7 @@ import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.application.services.printjob.output.SystemPrinter;
 import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.domain.models.PrintInfo;
-import pe.puyu.pukahttp.domain.models.PrinterInfo;
+import pe.puyu.pukahttp.domain.models.PrinterInfoOld;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
@@ -292,8 +292,8 @@ public class PrintTestController {
                 String printerName = txtPrintServiceName.getText();
                 PrinterType type = PrinterType.from(cmbPrinterType.getSelectionModel().getSelectedItem());
                 String port = txtPort.getText();
-                PrinterInfo printerInfo = new PrinterInfo(printerName, type, port);
-                PrintInfo printInfo = new PrintInfo(printerInfo, "1", data);
+                PrinterInfoOld printerInfoOld = new PrinterInfoOld(printerName, type, port);
+                PrintInfo printInfo = new PrintInfo(printerInfoOld, "1", data);
                 printJobService.print(printInfo);
             } catch (Exception e) {
                 Platform.runLater(() -> addOutputMessage(e.getMessage()));

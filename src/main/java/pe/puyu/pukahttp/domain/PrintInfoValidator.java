@@ -10,7 +10,7 @@ public class PrintInfoValidator {
     }
 
     public void validate() throws DataValidationException {
-        PrinterInfoValidator printerInfoValidator = new PrinterInfoValidator(data.printerInfo());
+        PrinterInfoValidator printerInfoValidator = new PrinterInfoValidator(data.printerInfoOld());
         printerInfoValidator.validate();
         if (data.times() != null) {
             int times;

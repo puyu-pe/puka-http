@@ -52,9 +52,9 @@ public class PrintJobService {
         PrintInfoValidator validator = new PrintInfoValidator(info);
         validator.validate();
         // initialization
-        String target = info.printerInfo().printerName();
-        PrinterType type = Optional.ofNullable(info.printerInfo().type()).orElse(PrinterType.SYSTEM);
-        int port = Integer.parseInt(Optional.ofNullable(info.printerInfo().port()).orElse("9100"));
+        String target = info.printerInfoOld().printerName();
+        PrinterType type = Optional.ofNullable(info.printerInfoOld().type()).orElse(PrinterType.SYSTEM);
+        int port = Integer.parseInt(Optional.ofNullable(info.printerInfoOld().port()).orElse("9100"));
         int times = Integer.parseInt(Optional.ofNullable(info.times()).orElse("1"));
         ByteArrayOutputStream buffer = sweetDesign(info.printData(), times);
         try {
@@ -80,9 +80,9 @@ public class PrintJobService {
             try {
                 PrintInfoValidator validator = new PrintInfoValidator(job.info());
                 validator.validate();
-                String target = job.info().printerInfo().printerName();
-                PrinterType type = Optional.ofNullable(job.info().printerInfo().type()).orElse(PrinterType.SYSTEM);
-                int port = Integer.parseInt(Optional.ofNullable(job.info().printerInfo().port()).orElse("9100"));
+                String target = job.info().printerInfoOld().printerName();
+                PrinterType type = Optional.ofNullable(job.info().printerInfoOld().type()).orElse(PrinterType.SYSTEM);
+                int port = Integer.parseInt(Optional.ofNullable(job.info().printerInfoOld().port()).orElse("9100"));
                 int times = Integer.parseInt(Optional.ofNullable(job.info().times()).orElse("1"));
                 ByteArrayOutputStream buffer = sweetDesign(job.info().printData(), times);
                 printJob(target, port, type, buffer);

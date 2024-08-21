@@ -10,6 +10,8 @@ public class JavalinErrorHandling {
 
     public static void generic(Exception e, Context ctx) {
         ctx.status(500);
+        AppLog log = new AppLog(JavalinErrorHandling.class);
+        log.getLogger().error("Unknown exception", e);
         ctx.json(String.format("Unknown exception: %s", e.getMessage()));
     }
 
@@ -27,9 +29,8 @@ public class JavalinErrorHandling {
         ctx.json(e.getMessage());
     }
 
-    public static void validationExceptionHandler(DataValidationException e, Context ctx) {
+    public static void dataValidationException(DataValidationException e, Context ctx) {
         ctx.status(400);
         ctx.json(e.getMessage());
     }
-
 }

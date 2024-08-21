@@ -52,7 +52,7 @@ public class JavalinPrintServer implements PrintServer {
         app.exception(Exception.class, JavalinErrorHandling::generic);
         app.exception(PrintServiceNotFoundException.class, JavalinErrorHandling::printServiceNotFoundExceptionHandler);
         app.exception(PrintJobException.class, JavalinErrorHandling::printJobExceptionHandler);
-        app.exception(DataValidationException.class, JavalinErrorHandling::validationExceptionHandler);
+        app.exception(DataValidationException.class, JavalinErrorHandling::dataValidationException);
     }
 
     private void serverConfig(JavalinConfig config) {

@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.infrastructure.javalin.server;
 
+import io.javalin.Javalin;
 import pe.puyu.pukahttp.infrastructure.javalin.controllers.PrintJobController;
 import pe.puyu.pukahttp.infrastructure.javalin.injection.JavalinDependencyInjection;
 

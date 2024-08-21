@@ -1,25 +1,25 @@
 package pe.puyu.pukahttp.domain;
 
-import pe.puyu.pukahttp.domain.models.PrinterInfo;
+import pe.puyu.pukahttp.domain.models.PrinterInfoOld;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 
 public class PrinterInfoValidator {
 
-    private final PrinterInfo printerInfo;
+    private final PrinterInfoOld printerInfoOld;
 
-    public PrinterInfoValidator(PrinterInfo printerInfo) {
-        this.printerInfo = printerInfo;
+    public PrinterInfoValidator(PrinterInfoOld printerInfoOld) {
+        this.printerInfoOld = printerInfoOld;
     }
 
     public void validate() throws DataValidationException{
-        if (printerInfo.printerName().isBlank()) {
-            throw new DataValidationException(String.format("Printer: %s printerName can't be empty.", printerInfo.printerName()));
+        if (printerInfoOld.printerName().isBlank()) {
+            throw new DataValidationException(String.format("Printer: %s printerName can't be empty.", printerInfoOld.printerName()));
         }
-        if (printerInfo.type() != null && printerInfo.type().equals(PrinterType.ETHERNET)) {
-            ServerConfigDTO serverConfig = new ServerConfigDTO(printerInfo.printerName(), String.valueOf(printerInfo.port()));
+        if (printerInfoOld.type() != null && printerInfoOld.type().equals(PrinterType.ETHERNET)) {
+            ServerConfigDTO serverConfig = new ServerConfigDTO(printerInfoOld.printerName(), String.valueOf(printerInfoOld.port()));
             ServerConfigValidator serverConfigValidator = new ServerConfigValidator(serverConfig);
             serverConfigValidator.validateIp();
-            if (printerInfo.port() != null) {
+            if (printerInfoOld.port() != null) {
                 serverConfigValidator.validatePort();
             }
         }
