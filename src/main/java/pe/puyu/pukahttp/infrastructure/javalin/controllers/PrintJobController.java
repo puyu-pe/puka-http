@@ -43,6 +43,7 @@ public class PrintJobController {
             () -> {
                 try {
                     printJobService.printReport(ctx.body());
+                    ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
                 } catch (PrintJobException e) {
                     log.getLogger().error(e.getMessage(), e);
                     throw new BadRequestResponse(e.getMessage());
@@ -73,7 +74,7 @@ public class PrintJobController {
         ctx.async(printJobService::reprint);
     }
 
-    public void release(Context ctx){
+    public void release(Context ctx) {
         ctx.async(printJobService::release);
     }
 
@@ -102,8 +103,11 @@ public class PrintJobController {
         });
     }
 
-    public void openDrawer(Context ctx){
-        ctx.async(() -> printJobService.openDrawer(ctx.body()));
+    public void openDrawer(Context ctx) {
+        ctx.async(() -> {
+            printJobService.openDrawer(ctx.body());
+            ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
+        });
     }
 
 
