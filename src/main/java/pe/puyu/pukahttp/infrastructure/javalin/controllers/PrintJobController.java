@@ -2,8 +2,8 @@ package pe.puyu.pukahttp.infrastructure.javalin.controllers;
 
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
-import io.javalin.http.GatewayTimeoutResponse;
 import io.javalin.websocket.WsConfig;
+import pe.puyu.pukahttp.infrastructure.javalin.models.DeprecateResponse;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
@@ -29,6 +29,7 @@ public class PrintJobController {
             () -> {
                 try {
                     this.printJobService.printTickets(ctx.body());
+                    ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
                 } catch (PrintJobException e) {
                     log.getLogger().error(e.getMessage(), e);
                     throw new BadRequestResponse(e.getMessage());
@@ -42,6 +43,7 @@ public class PrintJobController {
             () -> {
                 try {
                     printJobService.printReport(ctx.body());
+                    ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
                 } catch (PrintJobException e) {
                     log.getLogger().error(e.getMessage(), e);
                     throw new BadRequestResponse(e.getMessage());
@@ -72,7 +74,7 @@ public class PrintJobController {
         ctx.async(printJobService::reprint);
     }
 
-    public void release(Context ctx){
+    public void release(Context ctx) {
         ctx.async(printJobService::release);
     }
 
@@ -101,8 +103,11 @@ public class PrintJobController {
         });
     }
 
-    public void openDrawer(Context ctx){
-        ctx.async(() -> printJobService.openDrawer(ctx.body()));
+    public void openDrawer(Context ctx) {
+        ctx.async(() -> {
+            printJobService.openDrawer(ctx.body());
+            ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
+        });
     }
 
 

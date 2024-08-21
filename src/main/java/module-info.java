@@ -11,6 +11,7 @@ module pe.puyu.pukahttp {
 
 	requires com.google.gson;
     opens pe.puyu.pukahttp.domain.models to com.google.gson;
+    opens pe.puyu.pukahttp.infrastructure.javalin.models to com.google.gson;
 
 	requires net.harawata.appdirs;
 

@@ -4,6 +4,7 @@ import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.jetbrains.annotations.NotNull;
+import pe.puyu.pukahttp.infrastructure.javalin.config.GsonMapper;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
@@ -57,6 +58,7 @@ public class JavalinPrintServer implements PrintServer {
     private void serverConfig(JavalinConfig config) {
         config.http.asyncTimeout = 20000;
         config.bundledPlugins.enableCors(cors -> cors.addRule(CorsPluginConfig.CorsRule::anyHost));
+        config.jsonMapper(new GsonMapper());
         config.router.apiBuilder(Routes::config);
     }
 
