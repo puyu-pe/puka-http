@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
 
 public class ServerConfigValidator {
 
-    private final Serverconfig serverConfig;
+    private final ServerConfig serverConfig;
 
-    public ServerConfigValidator(@NotNull Serverconfig serverConfig) {
+    public ServerConfigValidator(@NotNull ServerConfig serverConfig) {
         this.serverConfig = serverConfig;
     }
 
@@ -22,7 +22,7 @@ public class ServerConfigValidator {
                 port = split[1];
             }
         }
-        this.serverConfig = new Serverconfig(ip, port);
+        this.serverConfig = new ServerConfig(ip, port);
     }
 
     public void validateIp() throws DataValidationException {

@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.services.PrintServerService;
-import pe.puyu.pukahttp.domain.Serverconfig;
+import pe.puyu.pukahttp.domain.ServerConfig;
 import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxToast;
@@ -36,7 +36,7 @@ public class AdminActionsController {
     public void initialize() {
         try {
             initCmbLevelLogs();
-            Serverconfig serverConfig = printServerService.getServerConfig();
+            ServerConfig serverConfig = printServerService.getServerConfig();
             txtIp.setText(serverConfig.ip());
             txtPort.setText(serverConfig.port());
             txtIp.setDisable(printServerService.isRunning());
@@ -64,7 +64,7 @@ public class AdminActionsController {
     }
 
     public void onStart() {
-        Serverconfig serverConfig = new Serverconfig(txtIp.getText(), txtPort.getText());
+        ServerConfig serverConfig = new ServerConfig(txtIp.getText(), txtPort.getText());
         try {
             printServerService.saveServerConfig(serverConfig);
         } catch (Exception e) {

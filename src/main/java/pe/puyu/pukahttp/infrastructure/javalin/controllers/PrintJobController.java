@@ -1,12 +1,14 @@
 package pe.puyu.pukahttp.infrastructure.javalin.controllers;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.websocket.WsConfig;
+import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
+import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.domain.models.*;
 import pe.puyu.pukahttp.infrastructure.javalin.models.DeprecateResponse;
+import pe.puyu.pukahttp.infrastructure.javalin.models.PrintJobError;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
@@ -14,7 +16,8 @@ import pe.puyu.pukahttp.domain.PrintQueueObservable;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
+import java.util.LinkedList;
+import java.util.List;
 
 public class PrintJobController {
     private final PrintJobService printJobService;
@@ -57,14 +60,59 @@ public class PrintJobController {
     public void print(Context ctx) {
         ctx.async(
             () -> {
-                validateDataPrint(ctx);
-                String printerName = Optional.ofNullable(ctx.queryParam("printer")).orElse("");
-                PrinterType printerType = PrinterType.from(ctx.queryParam("type"));
-                String timesParam = ctx.queryParam("times");
-                Integer times = timesParam != null ? Integer.parseInt(timesParam) : 1;
-                PrinterInfo printerInfo = new PrinterInfo(printerName, printerType);
-                PrintDocument document = new PrintDocument(printerInfo, ctx.body(), times);
-                printJobService.print(document);
+                JsonElement body;
+                try {
+                    body = JsonParser.parseString(ctx.body());
+                } catch (JsonSyntaxException e) {
+                    throw new BadRequestResponse("Body json syntax error.");
+                }
+                JsonArray printJobs = new JsonArray();
+                if (body.isJsonObject()) {
+                    printJobs.add(body.getAsJsonObject());
+                } else if (body.isJsonArray()) {
+                    printJobs = body.getAsJsonArray();
+                } else {
+                    throw new BadRequestResponse("body must be a json object or json array.");
+                }
+                String printJobName = "unnamed";
+                List<PrintJobError> errors = new LinkedList<>();
+                for (JsonElement printJob : printJobs) {
+                    try {
+                        if (printJob.isJsonObject()) {
+                            JsonObject printJobData = printJob.getAsJsonObject();
+                            if (printJobData.has("name") && printJobData.get("name").isJsonPrimitive()) {
+                                printJobName = printJobData.get("name").getAsString();
+                            }
+                            validateDataPrint(printJobData);
+                            JsonObject printer = printJobData.getAsJsonObject("printer");
+                            int times = 1;
+                            PrinterType printerType = PrinterType.SYSTEM;
+                            String printerName = printer.get("name").getAsString();
+                            if (printJobData.has("times")) {
+                                times = printJobData.get("times").getAsInt();
+                            }
+                            if (printer.has("type")) {
+                                printerType = PrinterType.from(printer.get("type").getAsString());
+                            }
+                            printJobData.remove("printer");
+                            printJobData.remove("times");
+                            printJobData.remove("name");
+                            PrinterInfo printerInfo = new PrinterInfo(printerName, printerType);
+                            PrintDocument document = new PrintDocument(printerInfo, printJobData.toString(), times);
+                            printJobService.print(document);
+                        }
+                    } catch (DataValidationException e) {
+                        errors.add(PrintJobError.fromException(printJobName, e, "The document was ignored."));
+                    } catch (PrintJobException | PrintServiceNotFoundException e) {
+                        errors.add(PrintJobError.fromException(printJobName,e , "The document was saved." ));
+                    } catch (Exception e) {
+                        errors.add(PrintJobError.fromException(printJobName, e, "Unknown error on print, the document was ignored."));
+                    }
+                }
+                ctx.status(200);
+                if (!errors.isEmpty()) {
+                    ctx.status(206).json(errors);
+                }
             }
         );
     }
@@ -109,40 +157,43 @@ public class PrintJobController {
         });
     }
 
-    public void validateDataPrint(Context ctx) {
-        if (ctx.queryParam("printer") == null) {
-            throw new BadRequestResponse("'printer' parameter is required");
+    private void validateDataPrint(JsonObject printObject) throws DataValidationException {
+        if (!printObject.has("printer") || !printObject.get("printer").isJsonObject()) {
+            throw new DataValidationException("'printer' parameter is required like json object");
         }
-        if (ctx.queryParam("type") != null) {
-            String type = ctx.queryParam("type");
-            if (!PrinterType.isValid(type)) {
-                throw new BadRequestResponse(
-                    String.format(
-                        "'type' parameter must be: %s, current: %s",
-                        Arrays.toString(PrinterType.values()),
-                        type
-                    )
-                );
+        JsonObject printer = printObject.getAsJsonObject("printer");
+        if (!printer.has("name") || !printer.get("name").isJsonPrimitive()) {
+            throw new DataValidationException("'printer.name' parameter is required like string");
+        }
+        if (printer.has("type")) {
+            JsonElement typeElement = printer.get("type");
+            if (typeElement.isJsonPrimitive()) {
+                String type = typeElement.getAsString();
+                if (!PrinterType.isValid(type)) {
+                    throw new DataValidationException(
+                        String.format(
+                            "'type' parameter must be: %s, current: %s",
+                            Arrays.toString(PrinterType.values()),
+                            type
+                        )
+                    );
+                }
+            } else {
+                throw new DataValidationException("type parameter must be a primitive type");
             }
         }
-        String times = ctx.queryParam("times");
-        if (times != null) {
-            try {
-                Integer.parseInt(times);
-            } catch (Exception ignored) {
-                throw new BadRequestResponse("'times' parameter must be integer. current: " + times);
+        if (printObject.has("times")) {
+            JsonElement timesElement = printObject.get("times");
+            if (timesElement.isJsonPrimitive()) {
+                String times = timesElement.getAsString();
+                try {
+                    Integer.parseInt(times);
+                } catch (Exception ignored) {
+                    throw new DataValidationException("'times' parameter must be integer. current: " + times);
+                }
+            } else {
+                throw new DataValidationException("'times' parameter must be a primitive type");
             }
-        }
-        if (ctx.body().trim().isEmpty()) {
-            throw new BadRequestResponse("body mustn't be empty");
-        }
-        try {
-            JsonElement body = JsonParser.parseString(ctx.body());
-            if (!body.isJsonObject()) {
-                throw new BadRequestResponse("body json must be a JSON object");
-            }
-        } catch (Exception e) {
-            throw new BadRequestResponse("body json syntax is incorrect");
         }
     }
 

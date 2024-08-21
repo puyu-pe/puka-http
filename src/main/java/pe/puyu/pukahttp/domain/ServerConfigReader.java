@@ -4,9 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 public interface ServerConfigReader {
     @NotNull
-    Serverconfig read() throws ServerConfigException;
+    ServerConfig read() throws ServerConfigException;
 
-    void write(Serverconfig serverConfig) throws ServerConfigException;
+    void write(ServerConfig serverConfig) throws ServerConfigException;
 
     boolean hasServerConfig();
 }

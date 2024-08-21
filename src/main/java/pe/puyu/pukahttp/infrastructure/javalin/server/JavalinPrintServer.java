@@ -6,11 +6,9 @@ import io.javalin.plugin.bundled.CorsPluginConfig;
 import org.jetbrains.annotations.NotNull;
 import pe.puyu.pukahttp.infrastructure.javalin.config.GsonMapper;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
-import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
-import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.PrintServer;
 import pe.puyu.pukahttp.domain.PrintServerException;
-import pe.puyu.pukahttp.domain.Serverconfig;
+import pe.puyu.pukahttp.domain.ServerConfig;
 import pe.puyu.pukahttp.domain.DataValidationException;
 
 public class JavalinPrintServer implements PrintServer {
@@ -18,7 +16,7 @@ public class JavalinPrintServer implements PrintServer {
     private final AppLog log = new AppLog(JavalinPrintServer.class);
 
     @Override
-    public void start(@NotNull Serverconfig serverConfig) throws PrintServerException {
+    public void start(@NotNull ServerConfig serverConfig) throws PrintServerException {
         if (app == null) {
             try {
                 initializeApp();
@@ -50,8 +48,6 @@ public class JavalinPrintServer implements PrintServer {
     private void initializeApp() {
         app = Javalin.create(this::serverConfig);
         app.exception(Exception.class, JavalinErrorHandling::generic);
-        app.exception(PrintServiceNotFoundException.class, JavalinErrorHandling::printServiceNotFoundExceptionHandler);
-        app.exception(PrintJobException.class, JavalinErrorHandling::printJobExceptionHandler);
         app.exception(DataValidationException.class, JavalinErrorHandling::dataValidationException);
     }
 

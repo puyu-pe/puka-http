@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public interface PrintServer {
 
-    void start(@NotNull Serverconfig serverConfig) throws PrintServerException;
+    void start(@NotNull ServerConfig serverConfig) throws PrintServerException;
 
     void stop();
 

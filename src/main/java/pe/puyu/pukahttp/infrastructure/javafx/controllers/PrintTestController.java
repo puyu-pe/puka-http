@@ -13,11 +13,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
+import pe.puyu.pukahttp.application.services.printjob.designer.SweetTicketDesigner;
+import pe.puyu.pukahttp.application.services.printjob.output.MyPrinter;
 import pe.puyu.pukahttp.application.services.printjob.output.SystemPrinter;
 import pe.puyu.pukahttp.domain.DataValidationException;
-import pe.puyu.pukahttp.domain.models.PrintInfo;
-import pe.puyu.pukahttp.domain.models.PrinterInfoOld;
+import pe.puyu.pukahttp.domain.models.PrintDocument;
+import pe.puyu.pukahttp.domain.models.PrinterInfo;
 import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
@@ -37,11 +38,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class PrintTestController {
 
-    private final PrintJobService printJobService;
     private final FxToast toast;
 
-    public PrintTestController(PrintJobService printJobService) {
-        this.printJobService = printJobService;
+    public PrintTestController() {
         this.toast = new FxToast(3);
     }
 
@@ -266,7 +265,7 @@ public class PrintTestController {
     }
 
     private void print(List<SmgBlock> blocks) {
-/*        if (blocks.isEmpty()) {
+        if (blocks.isEmpty()) {
             return;
         }
         btnPrint.setDisable(true);
@@ -292,9 +291,14 @@ public class PrintTestController {
                 String printerName = txtPrintServiceName.getText();
                 PrinterType type = PrinterType.from(cmbPrinterType.getSelectionModel().getSelectedItem());
                 String port = txtPort.getText();
-                PrinterInfoOld printerInfoOld = new PrinterInfoOld(printerName, type, port);
-                PrintInfo printInfo = new PrintInfo(printerInfoOld, "1", data);
-                printJobService.print(printInfo);
+                String service = printerName;
+                if (type.equals(PrinterType.ETHERNET)) {
+                    service = printerName + ":" + port;
+                }
+                PrinterInfo printerInfo = new PrinterInfo(service, type);
+                PrintDocument document = new PrintDocument(printerInfo,  data, 1);
+                MyPrinter printer = MyPrinter.from(printerInfo);
+                printer.print(SweetTicketDesigner.design(document.jsonData(), document.times()));
             } catch (Exception e) {
                 Platform.runLater(() -> addOutputMessage(e.getMessage()));
             } finally {
@@ -303,7 +307,7 @@ public class PrintTestController {
                     btnPrint.setDisable(false);
                 });
             }
-        });*/
+        });
     }
 
     private void addOutputMessage(String message) {

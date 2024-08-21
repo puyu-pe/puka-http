@@ -1,7 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.properties;
 
 import org.jetbrains.annotations.NotNull;
-import pe.puyu.pukahttp.domain.Serverconfig;
+import pe.puyu.pukahttp.domain.ServerConfig;
 import pe.puyu.pukahttp.domain.ServerConfigException;
 import pe.puyu.pukahttp.domain.ServerConfigReader;
 
@@ -14,15 +14,15 @@ import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 public class ServerPropertiesReader implements ServerConfigReader {
 
     @Override
-    public @NotNull Serverconfig read() throws ServerConfigException {
+    public @NotNull ServerConfig read() throws ServerConfigException {
         Properties properties = loadProperties();
         String ip = Optional.ofNullable(properties.getProperty("ip")).orElse("");
         String port = Optional.ofNullable(properties.getProperty("port")).orElse("");
-        return new Serverconfig(ip, port);
+        return new ServerConfig(ip, port);
     }
 
     @Override
-    public void write(Serverconfig serverConfig) throws ServerConfigException {
+    public void write(ServerConfig serverConfig) throws ServerConfigException {
         String propertiesFilePath = AppConfig.getServerPropertiesPath();
         try (FileOutputStream out = new FileOutputStream(propertiesFilePath)) {
             Properties properties = loadProperties();

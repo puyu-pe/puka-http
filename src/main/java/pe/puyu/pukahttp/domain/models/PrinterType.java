@@ -15,6 +15,10 @@ public enum PrinterType {
         this.value = value;
     }
 
+    public String getValue(){
+        return this.value;
+    }
+
     public static boolean isValid(@Nullable String value){
         if(value == null) return false;
         for (PrinterType type : PrinterType.values()) {
