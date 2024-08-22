@@ -15,6 +15,7 @@ import pe.puyu.pukahttp.application.services.UuidGeneratorService;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
 import pe.puyu.pukahttp.domain.PngFileChooser;
 import pe.puyu.pukahttp.domain.PrintQueueObservable;
+import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.*;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
@@ -31,6 +32,7 @@ public class PrintActionsController {
     private final PrintQueueObservable printQueueObservable;
     private final PrintTestView printTestView = new PrintTestView();
     private final AdminActionsView adminActionsView = new AdminActionsView();
+    private final FxToast toast;
 
     public PrintActionsController(
         LaunchApplicationService launchApplicationService,
@@ -40,6 +42,7 @@ public class PrintActionsController {
         this.launchApplicationService = launchApplicationService;
         this.printJobService = printJobService;
         this.printQueueObservable = printQueueObservable;
+        this.toast = new FxToast(3);
     }
 
     public void initialize() {
@@ -118,17 +121,24 @@ public class PrintActionsController {
     }
 
     @FXML
-    public void onClickImageView(MouseEvent ignored) {
+    public void onClickImageView(MouseEvent mouseEvent) {
         try {
-            PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
-            File imageFile = pngFileChooser.show();
-            if (imageFile != null) {
-                BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
-                businessLogoService.save(imageFile);
-                boolean response = FxAlert.showConfirmation("Confirmation for update logo.", "Are you sure you want to do this?");
-                if (response) {
-                    imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
+            int clickCount = mouseEvent.getClickCount();
+            if(clickCount == 2){
+                PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
+                File imageFile = pngFileChooser.show();
+                if (imageFile != null) {
+                    boolean response = FxAlert.showConfirmation("Confirmation for update logo.", "Are you sure you want to do this?");
+                    if (response) {
+                        businessLogoService.save(imageFile);
+                        imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+                    }
                 }
+            }else if(clickCount == 1){
+                String logoPath = AppConfig.getLogoFilePath().toString();
+                MyClipboard.copy(logoPath);
+                toast.show(getStage(), "Copy 'logo local path' to clipboard");
             }
         } catch (Exception e) {
             log.getLogger().error(e.getMessage());
