@@ -51,7 +51,6 @@ public class FxLauncher implements ViewLauncher {
     public void exit() {
         AppInstance.unlock();
         Platform.exit();
-        //trayIcon.close
     }
 
 }

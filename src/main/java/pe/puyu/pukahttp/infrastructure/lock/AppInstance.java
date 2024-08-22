@@ -9,16 +9,16 @@ import java.nio.file.Path;
 
 public class AppInstance {
     private static FileLock lock;
+    private static final boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
 
     public static void requestLock() {
-        String osName = System.getProperty("os.name").toLowerCase();
-        if (!osName.contains("mac")) { // mac have lock native
+        if (!isMac) { // mac have native lock
             try {
                 String tempDir = System.getProperty("java.io.tmpdir");
                 File file = new File(Path.of(tempDir, "pukahttp.lock").toString());
                 RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
                 lock = randomAccessFile.getChannel().tryLock();
-                if(lock == null){
+                if (lock == null) {
                     randomAccessFile.close();
                 }
                 Runtime.getRuntime().addShutdownHook(new Thread(AppInstance::unlock));
@@ -31,10 +31,14 @@ public class AppInstance {
     }
 
     public static boolean gotLock() {
+        if (isMac)
+            return true;
         return lock != null;
     }
 
     public static void unlock() {
+        if (isMac)
+            return;
         if (gotLock()) {
             try {
                 lock.release();
