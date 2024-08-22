@@ -6,6 +6,8 @@ import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.javafx.views.PrintActionsView;
 import pe.puyu.pukahttp.infrastructure.javafx.views.StartConfigView;
 import pe.puyu.pukahttp.infrastructure.javafx.views.TrayIconView;
+import pe.puyu.pukahttp.infrastructure.lock.AppInstance;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.infrastructure.properties.AppPropertyKey;
 import pe.puyu.pukahttp.infrastructure.properties.ApplicationProperties;
 
@@ -34,6 +36,10 @@ public class FxLauncher implements ViewLauncher {
             notifier.addErrorSubscriber(trayIconView::error);
             trayIconView.show();
         } else {
+            AppLog log = new AppLog(PrintActionsView.class);
+            notifier.addInfoSubscriber(log.getLogger()::info);
+            notifier.addWarnSubscriber(log.getLogger()::warn);
+            notifier.addErrorSubscriber(log.getLogger()::error);
             PrintActionsView printActions = new PrintActionsView();
             printActions.minimizeInsteadHide(true);
             printActions.show();
@@ -43,6 +49,7 @@ public class FxLauncher implements ViewLauncher {
 
     @Override
     public void exit() {
+        AppInstance.unlock();
         Platform.exit();
         //trayIcon.close
     }

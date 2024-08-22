@@ -6,6 +6,7 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.TrayIconController;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.TrayIconDependencyInjection;
+import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.infrastructure.properties.AppPropertyKey;
 import pe.puyu.pukahttp.infrastructure.properties.ApplicationProperties;
 
@@ -15,6 +16,7 @@ public class TrayIconView extends View {
 
     private FXTrayIcon.Builder builder;
     private FXTrayIcon trayIcon = null;
+    private final AppLog log = new AppLog(TrayIconView.class);
 
     private final CheckMenuItem enableNotificationsMenuItem = new CheckMenuItem("Notifications");
     private final MenuItem aboutMenuItem = new MenuItem("About");
@@ -40,18 +42,21 @@ public class TrayIconView extends View {
     public void info(String message) {
         if (isNotificationsEnabled() && this.trayIcon != null) {
             this.trayIcon.showInfoMessage("INFO NOTIFICATION", message);
+            log.getLogger().trace("INFO NOTIFICATION {}", message);
         }
     }
 
     public void error(String message) {
         if (isNotificationsEnabled() && this.trayIcon != null) {
             this.trayIcon.showErrorMessage("ERROR NOTIFICATION", message);
+            log.getLogger().trace("ERROR NOTIFICATION {}", message);
         }
     }
 
     public void warn(String message) {
         if (isNotificationsEnabled() && this.trayIcon != null) {
             this.trayIcon.showWarningMessage("WARNING NOTIFICATION", message);
+            log.getLogger().trace("WARNING NOTIFICATION {}", message);
         }
     }
 
