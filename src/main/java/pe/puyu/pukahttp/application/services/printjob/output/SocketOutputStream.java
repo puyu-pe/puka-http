@@ -8,16 +8,16 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
-public class EthernetOutputStream extends OutputStream {
+public class SocketOutputStream extends OutputStream {
     private final InetSocketAddress address;
     private final Socket socket;
     private final int timeout;
 
-    public EthernetOutputStream(@NotNull String host, int port) {
+    public SocketOutputStream(@NotNull String host, int port) {
         this(host, port, 15000);
     }
 
-    public EthernetOutputStream(@NotNull String host, int port, int timeout) {
+    public SocketOutputStream(@NotNull String host, int port, int timeout) {
         address = new InetSocketAddress(host, port);
         socket = new Socket();
         this.timeout = timeout;

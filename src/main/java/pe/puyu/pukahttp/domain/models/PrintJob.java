@@ -5,6 +5,6 @@ import org.jetbrains.annotations.NotNull;
 
 public record PrintJob(
     @NotNull String id,
-    @NotNull PrintInfo info
+    @NotNull PrintDocument document
 ) {
 }

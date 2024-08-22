@@ -1,6 +1,5 @@
 package pe.puyu.pukahttp.infrastructure.storage;
 
-import pe.puyu.pukahttp.domain.models.PrintJob;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 class ConfigGsonStorage {
 
     public static DateTimeFormatter getDateTimeFormatter() {
-        return DateTimeFormatter.ofPattern("HH:mm_dd_MM");
+        return DateTimeFormatter.ofPattern("HH:mm_dd|MM|yyyy");
     }
 
     public static String makeFileNameTo(LocalDateTime date, String id) {
