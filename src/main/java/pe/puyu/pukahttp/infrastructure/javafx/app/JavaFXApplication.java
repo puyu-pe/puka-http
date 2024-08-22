@@ -63,8 +63,6 @@ public class JavaFXApplication extends Application {
             appLog.getLogger().info("stop application success");
         } catch (Exception stopException) {
             appLog.getLogger().error("stop application failed: {}", stopException.getMessage(), stopException);
-        }finally {
-            AppInstance.unlock();
         }
     }
 
