@@ -19,8 +19,8 @@ public class LaunchApplicationService {
 
     public void startApplication() throws ServerConfigException, DataValidationException, PrintServerException {
         if (printServerService.existServerConfig()) {
-            //Primero se lanza la vista (launchMain) por que se necesita inicializar el Notifier(TrayIcon)
             cleanPrintQueueService.cleanPrintQueue();
+            //Primero se lanza la vista (launchMain) por que se necesita inicializar el Notifier(TrayIcon)
             viewLauncher.launchMain();
             printServerService.start();
         } else {

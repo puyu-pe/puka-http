@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.application.services.printjob.output;
 
+import org.jetbrains.annotations.NotNull;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 
@@ -12,18 +13,19 @@ import javax.print.SimpleDoc;
 import javax.print.DocFlavor.INPUT_STREAM;
 import java.awt.print.PrinterJob;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
-public class SystemPrinter {
-    private final String printServiceName;
+public class SystemPrinter extends MyPrinter{
     private PrintService printService = null;
 
     public SystemPrinter(String printServiceName) {
-        this.printServiceName = printServiceName;
+        super(printServiceName);
     }
 
-    public void print(byte[] bytes) throws PrintServiceNotFoundException, PrintJobException {
-        makePrintService(printServiceName);
-        ByteArrayInputStream is = new ByteArrayInputStream(bytes);
+    @Override
+    public void print(@NotNull ByteArrayOutputStream buffer) throws PrintServiceNotFoundException, PrintJobException {
+        makePrintService(service);
+        ByteArrayInputStream is = new ByteArrayInputStream(buffer.toByteArray());
         DocFlavor df = INPUT_STREAM.AUTOSENSE;
         Doc doc = new SimpleDoc(is, df, null);
         DocPrintJob printJob = printService.createPrintJob();

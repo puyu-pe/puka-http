@@ -12,9 +12,7 @@ import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.UuidGeneratorService;
-import pe.puyu.pukahttp.application.services.printjob.PrintJobException;
 import pe.puyu.pukahttp.application.services.printjob.PrintJobService;
-import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.PngFileChooser;
 import pe.puyu.pukahttp.domain.PrintQueueObservable;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
@@ -92,8 +90,6 @@ public class PrintActionsController {
             CompletableFuture.runAsync(() -> {
                 try {
                     printJobService.reprint();
-                } catch (PrintJobException | PrintServiceNotFoundException e) {
-                    log.getLogger().warn(e.getMessage());
                 } catch (Exception e) {
                     log.getLogger().error(e.getMessage(), e);
                 } finally {
@@ -140,7 +136,7 @@ public class PrintActionsController {
         }
     }
 
-    private void showView(View view){
+    private void showView(View view) {
         boolean isDisableRelease = btnRelease.isDisable();
         boolean isDisableReprint = btnReprint.isDisable();
         btnReprint.setDisable(true);

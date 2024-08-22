@@ -11,17 +11,14 @@ public class PrinterInfoValidator {
         this.printerInfo = printerInfo;
     }
 
-    public void validate() throws DataValidationException{
-        if (printerInfo.printerName().isBlank()) {
-            throw new DataValidationException(String.format("Printer: %s printerName can't be empty.", printerInfo.printerName()));
+    public void validate() throws DataValidationException {
+        if (printerInfo.name().isBlank()) {
+            throw new DataValidationException(String.format("Printer: %s printerName can't be empty.", printerInfo.name()));
         }
-        if (printerInfo.type() != null && printerInfo.type().equals(PrinterType.ETHERNET)) {
-            ServerConfigDTO serverConfig = new ServerConfigDTO(printerInfo.printerName(), String.valueOf(printerInfo.port()));
-            ServerConfigValidator serverConfigValidator = new ServerConfigValidator(serverConfig);
+        if (printerInfo.type().equals(PrinterType.ETHERNET)) {
+            ServerConfigValidator serverConfigValidator = new ServerConfigValidator(printerInfo.name());
             serverConfigValidator.validateIp();
-            if (printerInfo.port() != null) {
-                serverConfigValidator.validatePort();
-            }
+            serverConfigValidator.validatePort();
         }
     }
 
