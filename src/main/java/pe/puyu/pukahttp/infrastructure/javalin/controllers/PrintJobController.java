@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class PrintJobController {
     private final PrintJobService printJobService;
@@ -64,7 +65,7 @@ public class PrintJobController {
                 try {
                     body = JsonParser.parseString(ctx.body());
                 } catch (JsonSyntaxException e) {
-                    throw new BadRequestResponse("Body json syntax error.");
+                    throw new BadRequestResponse("body json syntax error.");
                 }
                 JsonArray printJobs = new JsonArray();
                 if (body.isJsonObject()) {
@@ -72,7 +73,7 @@ public class PrintJobController {
                 } else if (body.isJsonArray()) {
                     printJobs = body.getAsJsonArray();
                 } else {
-                    throw new BadRequestResponse("body must be a json object or json array.");
+                    throw new BadRequestResponse("body is required like json object or json array.");
                 }
                 String printJobName = "unnamed";
                 List<PrintJobError> errors = new LinkedList<>();
@@ -100,6 +101,7 @@ public class PrintJobController {
                             PrinterInfo printerInfo = new PrinterInfo(printerName, printerType);
                             PrintDocument document = new PrintDocument(printerInfo, printJobData.toString(), times);
                             printJobService.print(document);
+                            TimeUnit.MILLISECONDS.sleep(50);
                         }
                     } catch (DataValidationException e) {
                         errors.add(PrintJobError.fromException(printJobName, e, "The document was ignored."));
