@@ -9,6 +9,7 @@ import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.*;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.TrayIconDependencyInjection;
+import pe.puyu.pukahttp.infrastructure.lock.AppInstance;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
 import pe.puyu.pukahttp.application.services.PrintServerService;
@@ -52,6 +53,7 @@ public class JavaFXApplication extends Application {
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
             launchApplicationService.stopApplication();
+            AppInstance.unlock();
         }
     }
 
@@ -61,6 +63,8 @@ public class JavaFXApplication extends Application {
             appLog.getLogger().info("stop application success");
         } catch (Exception stopException) {
             appLog.getLogger().error("stop application failed: {}", stopException.getMessage(), stopException);
+        }finally {
+            AppInstance.unlock();
         }
     }
 
@@ -84,9 +88,14 @@ public class JavaFXApplication extends Application {
     }
 
     public static void main(String[] args) {
-        _config_global_properties_(); // Important config first global properties
-        _config_app_properties_();
-        launch(args);
+        AppInstance.requestLock();
+        if(AppInstance.gotLock()){
+            _config_global_properties_(); // Important first call config global properties
+            _config_app_properties_();
+            launch(args);
+        }else {
+            Platform.exit();
+        }
     }
 
     private static void _config_global_properties_() {

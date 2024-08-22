@@ -34,10 +34,12 @@ public class PrintJobController {
         ctx.async(
             () -> {
                 try {
+                    log.getLogger().trace("Ticket to print {}", ctx.body());
                     this.printJobService.printTickets(ctx.body());
                     ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
                 } catch (PrintJobException e) {
-                    log.getLogger().error(e.getMessage(), e);
+                    log.getLogger().error(e.getMessage());
+                    log.getLogger().trace("", e);
                     throw new BadRequestResponse(e.getMessage());
                 }
             }
@@ -51,7 +53,8 @@ public class PrintJobController {
                     printJobService.printReport(ctx.body());
                     ctx.json(new DeprecateResponse("success", "Trabajo de impresión no lanzo ningun error", 0));
                 } catch (PrintJobException e) {
-                    log.getLogger().error(e.getMessage(), e);
+                    log.getLogger().error(e.getMessage());
+                    log.getLogger().trace("", e);
                     throw new BadRequestResponse(e.getMessage());
                 }
             }
@@ -106,7 +109,7 @@ public class PrintJobController {
                     } catch (DataValidationException e) {
                         errors.add(PrintJobError.fromException(printJobName, e, "The document was ignored."));
                     } catch (PrintJobException | PrintServiceNotFoundException e) {
-                        errors.add(PrintJobError.fromException(printJobName,e , "The document was saved." ));
+                        errors.add(PrintJobError.fromException(printJobName, e, "The document was saved."));
                     } catch (Exception e) {
                         errors.add(PrintJobError.fromException(printJobName, e, "Unknown error on print, the document was ignored."));
                     }
