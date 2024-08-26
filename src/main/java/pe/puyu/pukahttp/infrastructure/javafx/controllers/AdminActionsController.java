@@ -64,6 +64,7 @@ public class AdminActionsController {
     }
 
     public void onStart() {
+        lblError.setText("");
         ServerConfig serverConfig = new ServerConfig(txtIp.getText(), txtPort.getText());
         try {
             printServerService.saveServerConfig(serverConfig);
@@ -71,7 +72,6 @@ public class AdminActionsController {
             lblError.setText(e.getLocalizedMessage());
             log.getLogger().error(e.getMessage(), e);
         }
-
         CompletableFuture.runAsync(() -> {
             try {
                 printServerService.start();
@@ -83,7 +83,7 @@ public class AdminActionsController {
                 });
             } catch (Exception e) {
                 log.getLogger().error(e.getMessage(), e);
-                lblError.setText(e.getLocalizedMessage());
+                Platform.runLater(() -> lblError.setText(e.getLocalizedMessage()));
             }
         });
     }
