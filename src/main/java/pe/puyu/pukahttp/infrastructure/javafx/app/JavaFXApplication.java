@@ -52,8 +52,8 @@ public class JavaFXApplication extends Application {
             launchApplicationService.startApplication();
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
-            launchApplicationService.stopApplication();
             AppInstance.unlock();
+            launchApplicationService.stopApplication();
         }
     }
 

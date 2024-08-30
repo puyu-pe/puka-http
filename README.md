@@ -36,31 +36,39 @@ Servicio de impresión para la impresion de tickets en impresoras termicas.
 
 # Api 📖
 
-* Test connection service online: 
+* Test connection service online:
   ```
   "/" -> HTTP METHOD: GET
   ```
-* Mandar a imprimir un trabajo de impresión:
+* Mandar un trabajo de impresión:
   ```
   /print -> HTTP METHOD: POST
   ```
-  Query Params:
-  - printer: Nombre de la impresora o ip si es un impresora tipo ETHERNET
-  - type: Por defecto SYSTEM, representa el tipo de impresora: SYSTEM | ETHERNET | SERIAL | SAMBA
-  - port: Puerto de impresora en caso sea tipo ETHERNET
-  Ejemplo:
+  El body de la petición http puede ser un array o un objeto que represente
+  un trabajo de impresión, cada uno de estos objetos se puede construir con 
+  la libreria [smeargle de php](https://github.com/puyu-pe/smeargle-php).
+  ```json
+  [
+    {
+      "printer": {
+        "name": "BIXOLON SRP-E300",
+        "type": "system"
+      },
+      "times": 2,
+      "data": ["hello word"]
+    }
+  ]
   ```
-  /print?printer=EPSON_TMIII&type=SYSTEM
-  ```
-* Obtener elementos en cola, (para impresoras tipo SYSTEM, la cola de impresión lo maneja el propio sistema operativo): 
+
+* Obtener elementos en cola, (para impresoras tipo SYSTEM, la cola de impresión lo maneja el propio sistema operativo):
   ```
   "/print/queue" -> HTTP METHOD: GET
   ```
-* Reimprimir elementos en cola, (para impresoras tipo SYSTEM, la cola de impresión lo maneja el propio sistema operativo): 
+* Reimprimir elementos en cola, (para impresoras tipo SYSTEM, la cola de impresión lo maneja el propio sistema operativo):
   ```
   "/print/queue" -> HTTP METHOD: PUT
   ```
-* Liberar elementos en cola, (para impresoras tipo SYSTEM, la cola de impresión lo maneja el propio sistema operativo): 
+* Liberar elementos en cola, (para impresoras tipo SYSTEM, la cola de impresión lo maneja el propio sistema operativo):
   ```
   "/print/queue" -> HTTP METHOD: DELETE
   ```
@@ -70,9 +78,9 @@ Servicio de impresión para la impresion de tickets en impresoras termicas.
 ## Comenzando 🚀
 
 * Prerequisitos:
-  * [JAVA openjdk 17 o superior](https://ed.team/blog/instalar-openjdk-en-linux).
-  * [Apache Maven](https://ubunlog.com/apache-maven-instalacion-ubuntu/) , algunos IDE's ya tren maven incluido, ejm.
-    Intellij IDEA. (Aunque se recomienda su instalación independiente del IDE)
+    * [JAVA openjdk 17 o superior](https://ed.team/blog/instalar-openjdk-en-linux).
+    * [Apache Maven](https://ubunlog.com/apache-maven-instalacion-ubuntu/) , algunos IDE's ya tren maven incluido, ejm.
+      Intellij IDEA. (Aunque se recomienda su instalación independiente del IDE)
 
 1. Clonar el repositorio<br>
    Utilizando su IDE favorito o por medio de linea de comandos.
@@ -91,7 +99,8 @@ Servicio de impresión para la impresion de tickets en impresoras termicas.
 
 ### Preparar una nueva versión 🛠️
 
-Tener instalado [git-flow ](https://desarrollowp.com/blog/tutoriales/aprende-git-de-manera-sencilla-git-flow/) y [git-flow-hooks](https://github.com/jaspernbrouwer/git-flow-hooks)
+Tener instalado [git-flow ](https://desarrollowp.com/blog/tutoriales/aprende-git-de-manera-sencilla-git-flow/)
+y [git-flow-hooks](https://github.com/jaspernbrouwer/git-flow-hooks)
 
 1. Ejecutar git flow hotfix o release
    ```bash
