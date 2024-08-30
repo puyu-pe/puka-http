@@ -7,6 +7,7 @@ import io.javalin.websocket.WsConfig;
 import pe.puyu.pukahttp.application.services.printjob.PrintServiceNotFoundException;
 import pe.puyu.pukahttp.domain.DataValidationException;
 import pe.puyu.pukahttp.domain.models.*;
+import pe.puyu.pukahttp.infrastructure.javalin.models.DeprecateErrorResponse;
 import pe.puyu.pukahttp.infrastructure.javalin.models.DeprecateResponse;
 import pe.puyu.pukahttp.infrastructure.javalin.models.PrintJobError;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
@@ -40,7 +41,7 @@ public class PrintJobController {
                 } catch (PrintJobException e) {
                     log.getLogger().error(e.getMessage());
                     log.getLogger().trace("", e);
-                    throw new BadRequestResponse(e.getMessage());
+                    ctx.json(new DeprecateErrorResponse("error", "Excepción al imprimir", e.getMessage()));
                 }
             }
         );
@@ -55,7 +56,7 @@ public class PrintJobController {
                 } catch (PrintJobException e) {
                     log.getLogger().error(e.getMessage());
                     log.getLogger().trace("", e);
-                    throw new BadRequestResponse(e.getMessage());
+                    ctx.json(new DeprecateErrorResponse("error", "Excepción al imprimir", e.getMessage()));
                 }
             }
         );
