@@ -85,10 +85,10 @@ public class PrintJobController {
                     try {
                         if (printJob.isJsonObject()) {
                             JsonObject printJobData = printJob.getAsJsonObject();
+                            validateDataPrint(printJobData);
                             if (printJobData.has("name") && printJobData.get("name").isJsonPrimitive()) {
                                 printJobName = printJobData.get("name").getAsString();
                             }
-                            validateDataPrint(printJobData);
                             JsonObject printer = printJobData.getAsJsonObject("printer");
                             int times = 1;
                             PrinterType printerType = PrinterType.SYSTEM;
