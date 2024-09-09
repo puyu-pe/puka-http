@@ -23,9 +23,9 @@ public enum SmgQrErrorLevel {
     }
 
     public static @NotNull SmgQrErrorLevel from(@NotNull String value) {
-        for (SmgQrErrorLevel align : SmgQrErrorLevel.values()) {
-            if (align.value.equalsIgnoreCase(value.trim())) {
-                return align;
+        for (SmgQrErrorLevel level : SmgQrErrorLevel.values()) {
+            if (level.value.equalsIgnoreCase(value.trim())) {
+                return level;
             }
         }
         return SmgQrErrorLevel.Q;
