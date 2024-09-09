@@ -1,46 +1,62 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.styles;
 
-import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.jetbrains.annotations.NotNull;
 
 public class SmgMapStyles {
-    private final @NotNull JsonObject styles;
+    private final JsonObject object;
+    private final SmgStyle globalStyle;
 
     public SmgMapStyles() {
-        this.styles = new JsonObject();
+        this.object = new JsonObject();
+        this.globalStyle = SmgStyle.builder();
     }
 
-    public SmgMapStyles(@NotNull SmgMapStyles styles) {
-        this.styles = Optional.ofNullable(styles.toJson()).orElse(new JsonObject()).deepCopy();
+    public SmgMapStyles addGlobalStyle(SmgStyle style) {
+        this.globalStyle.merge(style);
+        return this;
     }
 
-    public void set(@NotNull String className, @NotNull SmgStyle style) {
-        Optional.ofNullable(style.toJson()).ifPresent((json) -> this.styles.add(className, json));
+    public SmgMapStyles set(String className, SmgStyle style) {
+        if (!style.isEmpty()) {
+            this.object.add(className, JsonParser.parseString(style.toJson()).getAsJsonObject());
+        }
+        return this;
     }
 
-    public void set(int index, @NotNull SmgStyle style) {
-        Optional.ofNullable(style.toJson()).ifPresent((json) -> this.styles.add(String.valueOf(index), json));
+    public SmgStyle get(String className) {
+        if (this.has(className)) {
+            return SmgStyle.builder().reset(JsonParser.parseString(this.object.get(className).toString()).getAsJsonObject());
+        }
+        return null;
     }
 
-    public boolean has(@NotNull String className) {
-        return this.styles.has(className);
+    public SmgMapStyles remove(String className) {
+        this.object.remove(className);
+        return this;
+    }
+
+    public boolean has(String className) {
+        return this.object.has(className);
+    }
+
+    public SmgMapStyles setIfNotExists(String className, SmgStyle style) {
+        if (!this.has(className)) {
+            this.set(className, style);
+        }
+        return this;
     }
 
     public boolean isEmpty() {
-        return this.styles.size() == 0;
+        return this.object.size() == 0 && this.globalStyle.isEmpty();
     }
 
-    public void remove(@NotNull String className) {
-        this.styles.remove(className);
-    }
-
-    public @Nullable JsonObject toJson() {
-        if (isEmpty()) {
-            return null;
+    public @NotNull String toJson() {
+        if (!this.globalStyle.isEmpty()) {
+            this.set("*", this.globalStyle);
         }
-        return this.styles;
+        return this.object.toString();
     }
 }
