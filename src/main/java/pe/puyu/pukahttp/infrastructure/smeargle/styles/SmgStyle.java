@@ -126,9 +126,9 @@ public class SmgStyle {
         return this;
     }
 
-    public SmgStyle pad(@Nullable String charValue) {
-        if (charValue != null && !charValue.isEmpty()) {
-            this.object.addProperty("pad", charValue.charAt(0));
+    public SmgStyle pad(@Nullable Character value) {
+        if (value != null) {
+            this.object.addProperty("pad", value);
         }
         return this;
     }
