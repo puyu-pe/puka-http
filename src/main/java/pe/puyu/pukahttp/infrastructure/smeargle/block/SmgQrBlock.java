@@ -14,7 +14,7 @@ public class SmgQrBlock implements SmgBlock {
     }
 
     @Override
-    public @Nullable JsonObject toJson() {
+    public @NotNull JsonObject toJson() {
         if (qrObject.size() > 0) {
             blockObject.add("qr", qrObject);
         }

@@ -99,7 +99,7 @@ public class SmgTextBlock implements SmgBlock {
     }
 
     @Override
-    public @Nullable JsonObject toJson() {
+    public @NotNull JsonObject toJson() {
         if (!rows.isEmpty() ) {
             blockObject.add("rows", rows);
         }

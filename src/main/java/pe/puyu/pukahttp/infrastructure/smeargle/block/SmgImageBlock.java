@@ -5,64 +5,33 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SmgImageBlock implements SmgBlock {
-    private final @NotNull JsonObject blockObject;
+    private final JsonObject object;
+    private final JsonObject imgObject;
 
     private SmgImageBlock() {
-        this.blockObject = new JsonObject();
+        object = new JsonObject();
+        object.addProperty("type", "img");
+        imgObject = new JsonObject();
     }
 
-    public static SmgImageBlock center(@NotNull String path){
-        SmgStyle style = SmgStyle.center();
-        return builder().imgPath(path).style(style).build();
+    public static SmgImageBlock builder() {
+        return new SmgImageBlock();
     }
 
-    public static SmgImageBlock right(@NotNull String path){
-        SmgStyle style = SmgStyle.right();
-        return builder().imgPath(path).style(style).build();
+    public SmgImageBlock setPath(@NotNull String localPath) {
+        imgObject.addProperty("path", localPath);
+        return this;
     }
 
-    public static SmgImageBlock left(@NotNull String path){
-        SmgStyle style = SmgStyle.left();
-        return builder().imgPath(path).style(style).build();
+    public SmgImageBlock setClass(@NotNull String className) {
+        imgObject.addProperty("class", className);
+        return this;
     }
 
-    public static Builder builder(){
-        return new Builder();
-    }
-
-    public static SmgImageBlock build(){
-        return builder().build();
-    }
-
-    @Override
-    public @Nullable JsonObject toJson() {
-        if(blockObject.size() == 0){
-            return null;
+    public @NotNull JsonObject toJson() {
+        if (imgObject.size() > 0) {
+            object.add("img", imgObject);
         }
-        return blockObject;
-    }
-
-    public static class Builder {
-        private final SmgImageBlock imageBlock;
-
-        public Builder() {
-            this.imageBlock = new SmgImageBlock();
-        }
-
-        public SmgImageBlock build(){
-            return imageBlock;
-        }
-
-        public Builder imgPath(@NotNull String path) {
-            this.imageBlock.blockObject.addProperty("imgPath", path);
-            return this;
-        }
-
-        public Builder style(@NotNull SmgStyle style) {
-            SmgMapStyles styles = new SmgMapStyles();
-            styles.set("$img", style);
-            this.imageBlock.blockObject.add("styles", styles.toJson());
-            return this;
-        }
+        return object;
     }
 }
