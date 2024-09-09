@@ -35,17 +35,14 @@ public class SmgTextBlock implements SmgBlock {
     }
 
     public SmgTextBlock addCell(@NotNull SmgCell cell) {
-        JsonElement cellJson = cell.toJson();
-        if (cellJson != null) {
-            this.rows.add(cellJson);
-        }
+        this.rows.add(cell.toJson());
         return this;
     }
 
-    public @NotNull JsonObject toJson() {
+    public @NotNull String toJson() {
         if (!this.rows.isEmpty()) {
             this.object.add("rows", this.rows);
         }
-        return this.object;
+        return this.object.toString();
     }
 }

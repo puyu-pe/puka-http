@@ -19,11 +19,8 @@ public class SmgCell {
         return new SmgCell(value, className);
     }
 
-    public @Nullable JsonObject toJson() {
-        if (this.object.size() == 0) {
-            return null;
-        }
-        return this.object;
+    public @NotNull String toJson() {
+        return this.object.toString();
     }
 
 }

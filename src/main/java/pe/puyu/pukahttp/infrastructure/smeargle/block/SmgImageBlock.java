@@ -2,7 +2,6 @@ package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class SmgImageBlock implements SmgBlock {
     private final JsonObject object;
@@ -28,10 +27,10 @@ public class SmgImageBlock implements SmgBlock {
         return this;
     }
 
-    public @NotNull JsonObject toJson() {
+    public @NotNull String toJson() {
         if (imgObject.size() > 0) {
             object.add("img", imgObject);
         }
-        return object;
+        return object.toString();
     }
 }

@@ -39,10 +39,10 @@ public class SmgQrBlock implements SmgBlock {
         return this;
     }
 
-    public @NotNull JsonObject toJson() {
+    public @NotNull String toJson() {
         if (qrObject.size() > 0) {
             object.add("qr", qrObject);
         }
-        return object;
+        return object.toString();
     }
 }
