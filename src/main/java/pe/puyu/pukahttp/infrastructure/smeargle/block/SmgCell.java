@@ -4,27 +4,23 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class SmgCell<T> {
-    private final @NotNull T value;
-    private final @Nullable String className;
+public class SmgCell {
+    private final JsonObject object;
 
-    public SmgCell(@NotNull T value, @NotNull String className) {
-        this.value = value;
-        this.className = className;
-    }
-
-    public SmgCell(@NotNull T value) {
-        this.value = value;
-        this.className = null;
-    }
-
-    public @NotNull JsonObject toJson() {
-        JsonObject cell = new JsonObject();
-        cell.addProperty("text", value.toString());
-        if (this.className != null) {
-            cell.addProperty("class", className);
+    public SmgCell(@NotNull String value, @Nullable String className) {
+        object = new JsonObject();
+        object.addProperty("text", value);
+        if (className != null && !className.isEmpty()) {
+            object.addProperty("class", className);
         }
-        return cell;
+    }
+
+    public static SmgCell build(String value, @Nullable String className) {
+        return new SmgCell(value, className);
+    }
+
+    public @NotNull String toJson() {
+        return this.object.toString();
     }
 
 }

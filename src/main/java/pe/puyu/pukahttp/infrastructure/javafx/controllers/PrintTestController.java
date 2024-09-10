@@ -23,9 +23,14 @@ import pe.puyu.pukahttp.domain.models.PrinterType;
 import pe.puyu.pukahttp.infrastructure.clipboard.MyClipboard;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.views.FxToast;
+import pe.puyu.pukahttp.infrastructure.smeargle.Smg;
 import pe.puyu.pukahttp.infrastructure.smeargle.SmgPrintObject;
 import pe.puyu.pukahttp.infrastructure.smeargle.block.*;
 import pe.puyu.pukahttp.infrastructure.smeargle.properties.SmgProperties;
+import pe.puyu.pukahttp.infrastructure.smeargle.styles.SmgJustify;
+import pe.puyu.pukahttp.infrastructure.smeargle.styles.SmgMapStyles;
+import pe.puyu.pukahttp.infrastructure.smeargle.styles.SmgScale;
+import pe.puyu.pukahttp.infrastructure.smeargle.styles.SmgStyle;
 
 import java.io.File;
 import java.net.URL;
@@ -46,7 +51,6 @@ public class PrintTestController {
 
     public void initialize() {
         initPrinterType();
-        txtPort.setText("9100");
         initPrintService();
         txtBlockWidth.setText("42");
         initAlign();
@@ -59,48 +63,78 @@ public class PrintTestController {
         reloadPrintServices();
     }
 
-
     @FXML
     void onClickBtnTest() {
         SmgMapStyles styles = new SmgMapStyles();
-        styles.set(0, SmgStyle.span(2));
-        styles.set(1, SmgStyle.span(4));
-        SmgTextBlock block = SmgTextBlock.builder().styles(styles).build();
-        block.text("-- PUYU - PUKA --", SmgStyle.builder().bold().fill().center().size(2).build());
-        block.text("Esta es una prueba de impresión", SmgStyle.builder().fill().center().build());
-        block.line();
-        block.row("Printer name:", txtPrintServiceName.getText());
-        block.row("Port:", txtPort.getText());
-        block.row("Printer type:", cmbPrinterType.getSelectionModel().getSelectedItem());
-        block.row("Block width:", txtBlockWidth.getText());
-        block.line();
-        block.text("Gracias, que tenga  un buen día.", SmgStyle.builder().fill().center().build());
-        List<SmgBlock> blocks = new LinkedList<>();
-        blocks.add(block);
-        print(blocks);
+        styles.addGlobalStyle(Smg.normalize(checkBoxNormalize.isSelected()))
+            .set("title", Smg.title())
+            .set("center", Smg.center(0))
+            .set("left_20", Smg.left(20))
+            .set("line*", Smg.pad('*').bold())
+            .set("line-", Smg.pad('-').bold());
+        SmgTextBlock test = SmgTextBlock.builder(" ")
+            .addCell(SmgCell.build("-- PUYU - PUKA --", "title"))
+            .addCell(SmgCell.build("This is a print test.", "center"))
+            .addCell(SmgCell.build("", "line*"))
+            .addRow(SmgRow.build().addCell("Printer name:", "left_20").addText(txtPrintServiceName.getText()))
+            .addRow(SmgRow.build().addCell("Printer type:", "left_20").addText(cmbPrinterType.getSelectionModel().getSelectedItem()))
+            .addRow(SmgRow.build().addCell("Block Width (cx):", "left_20").addText(txtBlockWidth.getText()))
+            .addCell(SmgCell.build("", "line-"))
+            .addCell(SmgCell.build("Thank you, have a nice day.", "center"));
+        print(List.of(test), styles);
     }
 
     @FXML
     void onClickBtnPrint() {
+        SmgMapStyles styles = new SmgMapStyles();
         List<SmgBlock> blocks = new LinkedList<>();
         if (!textBlock.isDisable()) {
+            SmgStyle textStyle = Smg.fontWidth(spnFontWidth.getValue())
+                .fontHeight(spnFontHeight.getValue())
+                .bgInverted(checkBoxBgInverted.isSelected())
+                .bold(checkBoxBold.isSelected())
+                .pad('*')
+                .align(SmgJustify.from(cmbTextAlign.getSelectionModel().getSelectedItem()));
+            styles.set("text-test-print", textStyle);
             blocks.add(buildTextBlock());
         }
         if (!imageBlock.isDisable()) {
             try {
-                blocks.add(buildImageBlock());
+                try {
+                    int width = Integer.parseInt(txtImageWidth.getText());
+                    int height = Integer.parseInt(txtImageHeight.getText());
+                    SmgStyle imgTestPrintStyle = SmgStyle.builder()
+                        .align(SmgJustify.from(cmbImageAlign.getSelectionModel().getSelectedItem()))
+                        .scale(SmgScale.from(cmbImageScale.getSelectionModel().getSelectedItem()))
+                        .width(width)
+                        .height(height);
+                    styles.set("img-test-print", imgTestPrintStyle);
+                    blocks.add(buildImageBlock());
+                } catch (NumberFormatException e) {
+                    throw new DataValidationException("Image height and width must be a positive integers.");
+                }
             } catch (Exception e) {
                 addOutputMessage(e.getMessage());
             }
         }
         if (!qrBlock.isDisable()) {
             try {
-                blocks.add(buildQrBlock());
+                try {
+                    int size = Integer.parseInt(txtQrSize.getText());
+                    SmgStyle qrStyle = SmgStyle.builder()
+                        .align(SmgJustify.from(cmbQrAlign.getSelectionModel().getSelectedItem()))
+                        .scale(SmgScale.from(cmbQrScale.getSelectionModel().getSelectedItem()))
+                        .width(size);
+                    styles.set("qr-test-print", qrStyle);
+                    blocks.add(buildQrBlock());
+                } catch (NumberFormatException e) {
+                    throw new DataValidationException("Qr size must be a positive integer.");
+                }
             } catch (Exception e) {
                 addOutputMessage(e.getMessage());
             }
         }
-        print(blocks);
+        print(blocks, styles);
     }
 
     @FXML
@@ -121,62 +155,29 @@ public class PrintTestController {
     }
 
     private SmgTextBlock buildTextBlock() {
-        SmgStyle style = SmgStyle.builder()
-            .fontWidth(spnFontWidth.getValue())
-            .fontHeight(spnFontHeight.getValue())
-            .align(SmgJustify.from(cmbTextAlign.getSelectionModel().getSelectedItem()))
-            .bgInverted(checkBoxBgInverted.isSelected())
-            .bold(checkBoxBold.isSelected())
-            .normalize(checkBoxNormalize.isSelected())
-            .pad('*')
-            .fill()
-            .build();
-        return SmgTextBlock.build().text("Prueba de impresión de texto áéíóú.", style);
+        return SmgTextBlock.builder(" ")
+            .addCell(SmgCell.build("Test print of text: áéíóú-ñ@-//", "text-test-print"));
     }
 
-    private SmgImageBlock buildImageBlock() throws DataValidationException {
-        int width;
-        int height;
-        try {
-            width = Integer.parseInt(txtImageWidth.getText());
-            height = Integer.parseInt(txtImageHeight.getText());
-        } catch (Exception e) {
-            throw new DataValidationException("Image height and width must be a positive integers.");
-        }
-        SmgStyle style = SmgStyle.builder()
-            .align(SmgJustify.from(cmbImageAlign.getSelectionModel().getSelectedItem()))
-            .scale(SmgScale.from(cmbImageScale.getSelectionModel().getSelectedItem()))
-            .width(width)
-            .height(height)
-            .build();
-
+    private SmgImageBlock buildImageBlock() {
         String imagePath = AppConfig.getLogoFilePath().toString();
         File file = new File(imagePath);
         if (!file.exists()) {
-            imagePath = Optional.ofNullable(getClass().getResource("/pe/puyu/pukahttp/assets/icon.png")).map(URL::getPath).orElse("");
+            imagePath = Optional.ofNullable(getClass().getResource("/pe/puyu/pukahttp/assets/icon.png"))
+                .map(URL::getPath).orElse("");
         }
-        return SmgImageBlock.builder().imgPath(imagePath).style(style).build();
+        return SmgImageBlock.builder()
+            .setClass("img-test-print")
+            .setPath(imagePath);
     }
 
-    private SmgQrBlock buildQrBlock() throws DataValidationException {
-        int size;
-        try {
-            size = Integer.parseInt(txtQrSize.getText());
-        } catch (Exception e) {
-            throw new DataValidationException("Qr size must be a positive integer.");
-        }
-        SmgStyle style = SmgStyle.builder()
-            .align(SmgJustify.from(cmbQrAlign.getSelectionModel().getSelectedItem()))
-            .scale(SmgScale.from(cmbQrScale.getSelectionModel().getSelectedItem()))
-            .width(size)
-            .build();
+    private SmgQrBlock buildQrBlock() {
         String data = "20450523381|01|F001|00000006|0|9.00|30/09/2019|6|sdfsdfsdf|";
         return SmgQrBlock.builder()
-            .data(data)
-            .type(SmgQrType.from(cmbQrType.getSelectionModel().getSelectedItem()))
-            .errorLevel(SmgQrErrorLevel.from(cmbErrorLevel.getSelectionModel().getSelectedItem()))
-            .style(style)
-            .build();
+            .setClass("qr-test-print")
+            .setData(data)
+            .setQrType(SmgQrType.from(cmbQrType.getSelectionModel().getSelectedItem()))
+            .setCorrectionLevel(SmgQrErrorLevel.from(cmbErrorLevel.getSelectionModel().getSelectedItem()));
     }
 
     private Stage getStage() {
@@ -264,10 +265,7 @@ public class PrintTestController {
         txtOutput.setStyle("-fx-text-fill: #fc8865;-fx-font-family: 'monospace';");
     }
 
-    private void print(List<SmgBlock> blocks) {
-        if (blocks.isEmpty()) {
-            return;
-        }
+    private void print(List<SmgBlock> blocks, SmgMapStyles styles) {
         btnPrint.setDisable(true);
         btnTest.setDisable(true);
         CompletableFuture.runAsync(() -> {
@@ -279,24 +277,18 @@ public class PrintTestController {
                     String message = String.format("blockWidth: %s must be a positive integer.", txtBlockWidth.getText());
                     throw new DataValidationException(message);
                 }
-                SmgProperties properties = SmgProperties.builder()
-                    .blockWidth(blockWidth)
-                    .normalize(checkBoxBgInverted.isSelected())
-                    .build();
-                SmgPrintObject printObject = SmgPrintObject.properties(properties);
+                SmgProperties properties = SmgProperties.builder().setBlockWidth(blockWidth);
+                SmgPrintObject printObject = SmgPrintObject.build()
+                    .setStyles(styles)
+                    .setProperties(properties);
                 for (SmgBlock block : blocks) {
-                    printObject.block(block);
+                    printObject.addBlock(block);
                 }
-                String data = printObject.toJsonString();
+                String data = printObject.toJson();
                 String printerName = txtPrintServiceName.getText();
                 PrinterType type = PrinterType.from(cmbPrinterType.getSelectionModel().getSelectedItem());
-                String port = txtPort.getText();
-                String service = printerName;
-                if (type.equals(PrinterType.ETHERNET)) {
-                    service = printerName + ":" + port;
-                }
-                PrinterInfo printerInfo = new PrinterInfo(service, type);
-                PrintDocument document = new PrintDocument(printerInfo,  data, 1);
+                PrinterInfo printerInfo = new PrinterInfo(printerName, type);
+                PrintDocument document = new PrintDocument(printerInfo, data, 1);
                 MyPrinter printer = MyPrinter.from(printerInfo);
                 printer.print(SweetTicketDesigner.design(document.jsonData(), document.times()));
             } catch (Exception e) {
@@ -386,9 +378,6 @@ public class PrintTestController {
 
     @FXML
     private TextArea txtOutput;
-
-    @FXML
-    private TextField txtPort;
 
     @FXML
     private TextField txtQrSize;

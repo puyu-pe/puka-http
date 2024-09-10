@@ -1,4 +1,4 @@
-package pe.puyu.pukahttp.infrastructure.smeargle.block;
+package pe.puyu.pukahttp.infrastructure.smeargle.styles;
 
 import org.jetbrains.annotations.NotNull;
 
