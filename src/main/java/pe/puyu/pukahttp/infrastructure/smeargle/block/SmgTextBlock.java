@@ -2,8 +2,8 @@ package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,7 @@ public class SmgTextBlock implements SmgBlock {
     }
 
     public SmgTextBlock addCell(@NotNull SmgCell cell) {
-        this.rows.add(cell.toJson());
+        this.rows.add(JsonParser.parseString(cell.toJson()).getAsJsonObject());
         return this;
     }
 

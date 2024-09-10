@@ -25,32 +25,44 @@ public class Smg {
         return SmgStyle.builder().right().ifThen(charxels != null, Smg.charxels(charxels));
     }
 
-    public static SmgStyle bold(@Nullable Boolean value, @Nullable Integer charxels) {
-        return SmgStyle.builder().bold(value).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle bold(@Nullable Boolean value) {
+        return SmgStyle.builder().bold(value);
     }
 
-    public static SmgStyle normalize(@Nullable Boolean value, @Nullable Integer charxels) {
-        return SmgStyle.builder().normalize(value).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle bold() {
+        return Smg.bold(true);
     }
 
-    public static SmgStyle fontWidth(@Nullable Integer value, @Nullable Integer charxels) {
-        return SmgStyle.builder().fontWidth(value).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle normalize(@Nullable Boolean value) {
+        return SmgStyle.builder().normalize(value);
     }
 
-    public static SmgStyle fontHeight(@Nullable Integer value, @Nullable Integer charxels) {
-        return SmgStyle.builder().fontHeight(value).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle normalize() {
+        return Smg.normalize(true);
     }
 
-    public static SmgStyle fontSize(@Nullable Integer value, @Nullable Integer charxels) {
-        return SmgStyle.builder().fontSize(value).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle fontWidth(@Nullable Integer value) {
+        return SmgStyle.builder().fontWidth(value);
     }
 
-    public static SmgStyle bgInverted(@Nullable Boolean value, @Nullable Integer charxels) {
-        return SmgStyle.builder().bgInverted(value != null ? value : true).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle fontHeight(@Nullable Integer value) {
+        return SmgStyle.builder().fontHeight(value);
     }
 
-    public static SmgStyle pad(@Nullable Character character, @Nullable Integer charxels) {
-        return SmgStyle.builder().pad(character).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle fontSize(@Nullable Integer value) {
+        return SmgStyle.builder().fontSize(value);
+    }
+
+    public static SmgStyle bgInverted() {
+        return Smg.bgInverted(true);
+    }
+
+    public static SmgStyle bgInverted(@Nullable Boolean value) {
+        return SmgStyle.builder().bgInverted(value != null ? value : true);
+    }
+
+    public static SmgStyle pad(@Nullable Character character) {
+        return SmgStyle.builder().pad(character);
     }
 
     public static SmgStyle charxels(@Nullable Integer value) {
@@ -73,8 +85,8 @@ public class Smg {
         return SmgStyle.builder().scale(value);
     }
 
-    public static SmgStyle charCode(@Nullable String value, Integer charxels) {
-        return SmgStyle.builder().charCode(value).ifThen(charxels != null, Smg.charxels(charxels));
+    public static SmgStyle charCode(@Nullable String value) {
+        return SmgStyle.builder().charCode(value);
     }
 
     public static SmgStyle leftBold(@Nullable Integer charxels) {

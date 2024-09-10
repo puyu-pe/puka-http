@@ -31,7 +31,7 @@ public class SmgDrawer {
         return this;
     }
 
-    public String toJson() {
+    public @NotNull String toJson() {
         return this.object.toString();
     }
 }

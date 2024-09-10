@@ -12,7 +12,20 @@ public class SmgRow {
         this.row = new JsonArray();
     }
 
-    public SmgRow add(@NotNull String text, @Nullable String className) {
+    public static SmgRow build() {
+        return new SmgRow();
+    }
+
+    public SmgRow addText(@NotNull String text) {
+        this.row.add(text);
+        return this;
+    }
+
+    public SmgRow addCell(@NotNull String text) {
+    return addCell(text, null);
+    }
+
+    public SmgRow addCell(@NotNull String text, @Nullable String className) {
         SmgCell cell = SmgCell.build(text, className);
         this.row.add(JsonParser.parseString(cell.toJson()).getAsJsonObject());
         return this;
