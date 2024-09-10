@@ -1,36 +1,45 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SmgRow {
-
     private final JsonArray row;
 
     public SmgRow() {
         this.row = new JsonArray();
     }
 
-    public <T> SmgRow add(@NotNull T value) {
-        add(new SmgCell<>(value));
+    public static SmgRow build() {
+        return new SmgRow();
+    }
+
+    public SmgRow addText(@NotNull String text) {
+        this.row.add(text);
         return this;
     }
 
-    public <T> SmgRow add(@NotNull T value, @NotNull String className) {
-        add(new SmgCell<>(value, className));
+    public SmgRow addCell(@NotNull String text) {
+    return addCell(text, null);
+    }
+
+    public SmgRow addCell(@NotNull String text, @Nullable String className) {
+        SmgCell cell = SmgCell.build(text, className);
+        this.row.add(JsonParser.parseString(cell.toJson()).getAsJsonObject());
         return this;
     }
 
-    public <T> SmgRow add(@NotNull SmgCell<T> cell) {
-        this.row.add(cell.toJson());
-        return this;
+    public boolean isEmpty() {
+        return this.size() == 0;
     }
 
-    public @Nullable JsonArray toJson() {
-        if (row.isEmpty()) {
-            return null;
-        }
+    public int size() {
+        return this.row.size();
+    }
+
+    public @NotNull JsonArray toJson() {
         return this.row;
     }
 

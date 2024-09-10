@@ -1,48 +1,36 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.properties;
 
 import com.google.gson.JsonObject;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class SmgCutProperty {
-
-    private final @NotNull JsonObject object;
+    private final JsonObject object;
 
     private SmgCutProperty() {
         this.object = new JsonObject();
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static SmgCutProperty builder() {
+        return new SmgCutProperty();
     }
 
-    public @Nullable JsonObject toJson() {
-        if (object.size() == 0) return null;
-        return object;
+    public SmgCutProperty feed(int feed) {
+        int value = Math.min(Math.max(feed, 1), 255);
+        this.object.addProperty("feed", value);
+        return this;
     }
 
-    public static class Builder {
-
-        private final SmgCutProperty cut;
-
-        private Builder() {
-            this.cut = new SmgCutProperty();
-        }
-
-        public SmgCutProperty build() {
-            return this.cut;
-        }
-
-        public Builder feed(int feed) {
-            cut.object.addProperty("feed", Math.min(Math.max(feed, 1), 255));
-            return this;
-        }
-
-        public Builder mode(@NotNull SmgCutMode mode) {
-            cut.object.addProperty("mode", mode.getValue());
-            return this;
-        }
-
+    public SmgCutProperty mode(SmgCutMode mode) {
+        this.object.addProperty("mode", mode.getValue());
+        return this;
     }
 
+    @Nullable
+    public String toJson() {
+        if (this.object.size() == 0) {
+            return null;
+        }
+        return this.object.toString();
+    }
 }
+

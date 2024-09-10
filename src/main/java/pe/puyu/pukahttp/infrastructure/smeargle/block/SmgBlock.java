@@ -1,11 +1,10 @@
 package pe.puyu.pukahttp.infrastructure.smeargle.block;
 
-import com.google.gson.JsonObject;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public interface SmgBlock {
 
-    @Nullable
-    JsonObject toJson();
+    @NotNull
+    String toJson();
 
 }
