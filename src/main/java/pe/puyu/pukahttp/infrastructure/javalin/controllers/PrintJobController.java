@@ -124,11 +124,17 @@ public class PrintJobController {
     }
 
     public void reprint(Context ctx) {
-        ctx.async(printJobService::reprint);
+        ctx.async(() -> {
+            printJobService.reprint();
+            ctx.result(String.valueOf(printQueueObservable.getQueueSize()));
+        });
     }
 
     public void release(Context ctx) {
-        ctx.async(printJobService::release);
+        ctx.async(() -> {
+            printJobService.release();
+            ctx.result(String.valueOf(printQueueObservable.getQueueSize()));
+        });
     }
 
 
