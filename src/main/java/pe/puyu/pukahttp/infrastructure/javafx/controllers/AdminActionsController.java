@@ -41,6 +41,8 @@ public class AdminActionsController {
             txtPort.setText(serverConfig.port());
             txtIp.setDisable(printServerService.isRunning());
             txtPort.setDisable(printServerService.isRunning());
+            btnStart.setDisable(printServerService.isRunning());
+            btnStop.setDisable(!printServerService.isRunning());
         } catch (Exception e) {
             log.getLogger().error(e.getMessage(), e);
         }

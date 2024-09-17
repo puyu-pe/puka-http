@@ -6,10 +6,13 @@ import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.CleanPrintQueueService;
+import pe.puyu.pukahttp.domain.PrintServerException;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.*;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.TrayIconDependencyInjection;
+import pe.puyu.pukahttp.infrastructure.javafx.views.AdminActionsView;
+import pe.puyu.pukahttp.infrastructure.javafx.views.FxAlert;
 import pe.puyu.pukahttp.infrastructure.javalin.controllers.PukaController;
 import pe.puyu.pukahttp.infrastructure.lock.AppInstance;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
@@ -34,12 +37,14 @@ public class JavaFXApplication extends Application {
     private final LaunchApplicationService launchApplicationService;
     private final ViewLauncher viewLauncher;
     private final GsonFailedPrintJobStorage storage;
+    private final AdminActionsView adminActionsView;
 
     public JavaFXApplication() {
         storage = new GsonFailedPrintJobStorage();
         this.viewLauncher = new FxLauncher(notifier);
         printServerService = new PrintServerService(new JavalinPrintServer(), new ServerPropertiesReader(), notifier);
         launchApplicationService = new LaunchApplicationService(printServerService, viewLauncher, new CleanPrintQueueService(storage));
+        this.adminActionsView = new AdminActionsView();
     }
 
     @Override
@@ -51,7 +56,17 @@ public class JavaFXApplication extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            launchApplicationService.startApplication();
+            try {
+                launchApplicationService.startApplication();
+            } catch (PrintServerException serverException) {
+                appLog.getLogger().error("Print server exception on start app: {}", serverException.getMessage());
+                boolean response = FxAlert.showConfirmation("Error on run server", "You want to configure server parameters?");
+                if (response) {
+                    adminActionsView.show();
+                } else {
+                    throw serverException;
+                }
+            }
         } catch (Exception startException) {
             appLog.getLogger().error("start application failed: {}", startException.getMessage(), startException);
             AppInstance.unlock();
@@ -74,7 +89,7 @@ public class JavaFXApplication extends Application {
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printServerService, viewLauncher, businessLogoService));
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
-                return new PrintActionsController(launchApplicationService, printJobService, storage, businessLogoService);
+                return new PrintActionsController(launchApplicationService, printJobService, storage, businessLogoService, adminActionsView);
             });
             FxDependencyInjection.addControllerFactory(AdminActionsController.class, () -> new AdminActionsController(printServerService));
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
@@ -91,11 +106,11 @@ public class JavaFXApplication extends Application {
 
     public static void main(String[] args) {
         AppInstance.requestLock();
-        if(AppInstance.gotLock()){
+        if (AppInstance.gotLock()) {
             _config_global_properties_(); // Important first call config global properties
             _config_app_properties_();
             launch(args);
-        }else {
+        } else {
             Platform.exit();
         }
     }

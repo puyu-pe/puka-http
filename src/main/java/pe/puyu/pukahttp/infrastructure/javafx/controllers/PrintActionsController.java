@@ -31,7 +31,7 @@ public class PrintActionsController {
     private final PrintJobService printJobService;
     private final PrintQueueObservable printQueueObservable;
     private final PrintTestView printTestView = new PrintTestView();
-    private final AdminActionsView adminActionsView = new AdminActionsView();
+    private final AdminActionsView adminActionsView;
     private final FxToast toast;
     private final BusinessLogoService businessLogoService;
 
@@ -39,12 +39,14 @@ public class PrintActionsController {
         LaunchApplicationService launchApplicationService,
         PrintJobService printJobService,
         PrintQueueObservable printQueueObservable,
-        BusinessLogoService businessLogoService
+        BusinessLogoService businessLogoService,
+        AdminActionsView adminActionsView
     ) {
         this.businessLogoService = businessLogoService;
         this.launchApplicationService = launchApplicationService;
         this.printJobService = printJobService;
         this.printQueueObservable = printQueueObservable;
+        this.adminActionsView = adminActionsView;
         this.toast = new FxToast(3);
     }
 
