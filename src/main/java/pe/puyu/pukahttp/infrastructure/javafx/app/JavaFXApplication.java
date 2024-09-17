@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
 import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.CleanPrintQueueService;
+import pe.puyu.pukahttp.application.sweetticketdesign.PrintComponentsProviderService;
 import pe.puyu.pukahttp.domain.PrintServerException;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
@@ -88,12 +89,12 @@ public class JavaFXApplication extends Application {
             BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
             FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printServerService, viewLauncher, businessLogoService));
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
-                PrintJobService printJobService = new PrintJobService(storage, notifier);
+                PrintJobService printJobService = new PrintJobService(storage, notifier, new PrintComponentsProviderService(businessLogoService));
                 return new PrintActionsController(launchApplicationService, printJobService, storage, businessLogoService, adminActionsView);
             });
             FxDependencyInjection.addControllerFactory(AdminActionsController.class, () -> new AdminActionsController(printServerService));
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
-                PrintJobService printJobService = new PrintJobService(storage, notifier);
+                PrintJobService printJobService = new PrintJobService(storage, notifier, new PrintComponentsProviderService(businessLogoService));
                 return new PrintJobController(printJobService, storage);
             });
             JavalinDependencyInjection.addControllerFactory(PukaController.class, () -> new PukaController(businessLogoService));
