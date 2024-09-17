@@ -4,11 +4,13 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
+import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.CleanPrintQueueService;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.*;
 import pe.puyu.pukahttp.infrastructure.javafx.injection.TrayIconDependencyInjection;
+import pe.puyu.pukahttp.infrastructure.javalin.controllers.PukaController;
 import pe.puyu.pukahttp.infrastructure.lock.AppInstance;
 import pe.puyu.pukahttp.infrastructure.loggin.AppLog;
 import pe.puyu.pukahttp.application.services.LaunchApplicationService;
@@ -68,16 +70,18 @@ public class JavaFXApplication extends Application {
 
     private void injectDependenciesIntoControllers() {
         try {
-            FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printServerService, viewLauncher));
+            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
+            FxDependencyInjection.addControllerFactory(StartConfigController.class, () -> new StartConfigController(printServerService, viewLauncher, businessLogoService));
             FxDependencyInjection.addControllerFactory(PrintActionsController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
-                return new PrintActionsController(launchApplicationService, printJobService, storage);
+                return new PrintActionsController(launchApplicationService, printJobService, storage, businessLogoService);
             });
             FxDependencyInjection.addControllerFactory(AdminActionsController.class, () -> new AdminActionsController(printServerService));
             JavalinDependencyInjection.addControllerFactory(PrintJobController.class, () -> {
                 PrintJobService printJobService = new PrintJobService(storage, notifier);
                 return new PrintJobController(printJobService, storage);
             });
+            JavalinDependencyInjection.addControllerFactory(PukaController.class, () -> new PukaController(businessLogoService));
             TrayIconDependencyInjection.registerController(TrayIconController.class, () -> new TrayIconController(launchApplicationService));
             appLog.getLogger().info("build injected controller dependencies  success!!!");
         } catch (Exception e) {
