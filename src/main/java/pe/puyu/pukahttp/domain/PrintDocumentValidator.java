@@ -11,7 +11,7 @@ public class PrintDocumentValidator {
 
     public void validate() throws DataValidationException {
         new PrinterInfoValidator(document.printerInfo()).validate();
-        if(document.times() <= 0){
+        if(document.times() < 0){
             throw new DataValidationException("Times must be a positive integer greater than zero.");
         }
     }
