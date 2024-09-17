@@ -2,7 +2,6 @@ package pe.puyu.pukahttp.infrastructure.javafx.controllers;
 
 import javafx.application.Platform;
 import pe.puyu.pukahttp.domain.*;
-import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -25,10 +24,16 @@ public class StartConfigController {
     private final PrintServerService printServerService;
     private final AppLog log = new AppLog(StartConfigController.class);
     private final ViewLauncher viewLauncher;
+    private final BusinessLogoService businessLogoService;
 
-    public StartConfigController(PrintServerService printServerService, ViewLauncher viewLauncher) {
+    public StartConfigController(
+        PrintServerService printServerService,
+        ViewLauncher viewLauncher,
+        BusinessLogoService businessLogoService
+    ) {
         this.printServerService = printServerService;
         this.viewLauncher = viewLauncher;
+        this.businessLogoService = businessLogoService;
     }
 
     public void initialize() {
@@ -79,9 +84,7 @@ public class StartConfigController {
             PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
             File imageFile = pngFileChooser.show();
             if (imageFile != null) {
-                BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
                 businessLogoService.save(imageFile);
-                imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
             }
         } catch (IOException e) {
             log.getLogger().warn(e.getMessage());
@@ -94,8 +97,8 @@ public class StartConfigController {
 
     private void recoverLogo() {
         try {
-            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
             imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
+            businessLogoService.addLogoObserver((url) -> Platform.runLater(() -> imgViewLogo.setImage(new Image(url.toString()))));
         } catch (Exception e) {
             log.getLogger().warn("error on initialize image: {}", e.getMessage(), e);
         }
