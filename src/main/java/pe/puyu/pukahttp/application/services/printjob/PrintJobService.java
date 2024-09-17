@@ -1,5 +1,6 @@
 package pe.puyu.pukahttp.application.services.printjob;
 
+import pe.puyu.SweetTicketDesign.domain.components.SweetDefaultComponentsProvider;
 import pe.puyu.pukahttp.application.notifier.AppNotifier;
 import pe.puyu.pukahttp.application.services.UuidGeneratorService;
 import pe.puyu.pukahttp.application.services.printjob.deprecated.JTicketDesignPrintJob;
@@ -15,10 +16,16 @@ import java.util.List;
 public class PrintJobService {
     private final FailedPrintJobsStorage failedPrintJobsStorage;
     private final AppNotifier notifier;
+    private final SweetDefaultComponentsProvider defaultComponentsProvider;
 
-    public PrintJobService(FailedPrintJobsStorage failedPrintJobsStorage, AppNotifier notifier) {
+    public PrintJobService(
+        FailedPrintJobsStorage failedPrintJobsStorage,
+        AppNotifier notifier,
+        SweetDefaultComponentsProvider defaultComponentsProvider
+    ) {
         this.failedPrintJobsStorage = failedPrintJobsStorage;
         this.notifier = notifier;
+        this.defaultComponentsProvider = defaultComponentsProvider;
     }
 
     public void printTickets(String jsonArray) throws PrintJobException {
@@ -37,7 +44,8 @@ public class PrintJobService {
         new PrintDocumentValidator(document).validate();
         try {
             MyPrinter printer = MyPrinter.from(document.printerInfo());
-            printer.print(SweetTicketDesigner.design(document.jsonData(), document.times()));
+            SweetTicketDesigner designer = new SweetTicketDesigner(this.defaultComponentsProvider);
+            printer.print(designer.design(document.jsonData(), document.times()));
         } catch (PrintJobException | PrintServiceNotFoundException e) {
             PrintJob printJob = new PrintJob(UuidGeneratorService.random(), document);
             failedPrintJobsStorage.save(printJob);
@@ -57,7 +65,8 @@ public class PrintJobService {
                 PrintDocumentValidator validator = new PrintDocumentValidator(job.document());
                 validator.validate();
                 MyPrinter printer = MyPrinter.from(job.document().printerInfo());
-                printer.print(SweetTicketDesigner.design(job.document().jsonData(), job.document().times()));
+                SweetTicketDesigner designer = new SweetTicketDesigner(this.defaultComponentsProvider);
+                printer.print(designer.design(job.document().jsonData(), job.document().times()));
                 willDeleteJobs.add(job);
             } catch (Exception e) {
                 notifier.error(e.getMessage());

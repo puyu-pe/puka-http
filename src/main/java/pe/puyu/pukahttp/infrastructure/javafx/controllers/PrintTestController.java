@@ -290,7 +290,8 @@ public class PrintTestController {
                 PrinterInfo printerInfo = new PrinterInfo(printerName, type);
                 PrintDocument document = new PrintDocument(printerInfo, data, 1);
                 MyPrinter printer = MyPrinter.from(printerInfo);
-                printer.print(SweetTicketDesigner.design(document.jsonData(), document.times()));
+                SweetTicketDesigner designer = new SweetTicketDesigner();
+                printer.print(designer.design(document.jsonData(), document.times()));
             } catch (Exception e) {
                 Platform.runLater(() -> addOutputMessage(e.getMessage()));
             } finally {
