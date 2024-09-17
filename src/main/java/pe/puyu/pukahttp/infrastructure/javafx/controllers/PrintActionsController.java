@@ -33,12 +33,15 @@ public class PrintActionsController {
     private final PrintTestView printTestView = new PrintTestView();
     private final AdminActionsView adminActionsView = new AdminActionsView();
     private final FxToast toast;
+    private final BusinessLogoService businessLogoService;
 
     public PrintActionsController(
         LaunchApplicationService launchApplicationService,
         PrintJobService printJobService,
-        PrintQueueObservable printQueueObservable
+        PrintQueueObservable printQueueObservable,
+        BusinessLogoService businessLogoService
     ) {
+        this.businessLogoService = businessLogoService;
         this.launchApplicationService = launchApplicationService;
         this.printJobService = printJobService;
         this.printQueueObservable = printQueueObservable;
@@ -123,7 +126,6 @@ public class PrintActionsController {
     @FXML
     public void onClickImageView(MouseEvent mouseEvent) {
         try {
-            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
             int clickCount = mouseEvent.getClickCount();
             if(clickCount == 2){
                 PngFileChooser pngFileChooser = new FxPngFileChooser(getStage());
@@ -132,7 +134,6 @@ public class PrintActionsController {
                     boolean response = FxAlert.showConfirmation("Confirmation for update logo.", "Are you sure you want to do this?");
                     if (response) {
                         businessLogoService.save(imageFile);
-                        imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
                     }
                 }
             }else if(clickCount == 1){
@@ -171,7 +172,7 @@ public class PrintActionsController {
 
     private void recoverLogo() {
         try {
-            BusinessLogoService businessLogoService = new BusinessLogoService(AppConfig.getLogoFilePath());
+            businessLogoService.addLogoObserver((url) -> Platform.runLater(() -> imgViewLogo.setImage(new Image(url.toString()))));
             if (businessLogoService.existLogo()) {
                 imgViewLogo.setImage(new Image(businessLogoService.getLogoUrl().toString()));
             }
