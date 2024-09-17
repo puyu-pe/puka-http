@@ -1,6 +1,5 @@
 package pe.puyu.pukahttp.application.services;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -33,7 +32,7 @@ public class BusinessLogoService {
             Files.delete(logoFilePath);
         }
         Files.copy(newLogoFilePath, logoFilePath);
-        notifyToLogoObservers(getLogoUrl());
+        notifyChangesToLogoObservers(getLogoUrl());
     }
 
     public void save(byte[] bytes) throws IOException {
@@ -42,7 +41,7 @@ public class BusinessLogoService {
             out.write(bytes);
             Files.move(tempFile, logoFilePath, StandardCopyOption.REPLACE_EXISTING);
         }
-        notifyToLogoObservers(getLogoUrl());
+        notifyChangesToLogoObservers(getLogoUrl());
     }
 
     public void addLogoObserver(Consumer<URL> callback) {
@@ -57,7 +56,7 @@ public class BusinessLogoService {
         return logoFilePath.toUri().toURL();
     }
 
-    private void notifyToLogoObservers(URL url) {
+    private void notifyChangesToLogoObservers(URL url) {
         for (Consumer<URL> observer : this.logoObservers) {
             observer.accept(url);
         }
