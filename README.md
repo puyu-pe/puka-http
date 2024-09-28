@@ -72,6 +72,10 @@ Servicio de impresión para la impresion de tickets en impresoras termicas.
   ```
   "/print/queue" -> HTTP METHOD: DELETE
   ```
+* Actualizar logo mediante http
+  ```
+  "/logo" -> HTTP METHOD: PUT
+  ```
 
 # Para desarrolladores ☕ 🍺
 
