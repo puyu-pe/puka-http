@@ -49,7 +49,7 @@ public class JTicketDesignPrintJob {
             OutputStream outputStream = Printer.getOutputStreamFor(name_system, port, type);
             try (var escpos = new EscPos(outputStream)) {
                 escpos.pulsePin(EscPos.PinConnector.Pin_2, 120, 240);
-                escpos.cut(EscPos.CutMode.PART);
+                escpos.cut(EscPos.CutMode.FULL);
             }
         } catch (Exception e) {
             throw new PrintJobException(e.getMessage(), e);
