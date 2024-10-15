@@ -59,6 +59,7 @@ public class JavaFXApplication extends Application {
         try {
             try {
                 launchApplicationService.startApplication();
+                Runtime.getRuntime().addShutdownHook(new Thread(launchApplicationService::stopApplication));
             } catch (PrintServerException serverException) {
                 appLog.getLogger().error("Print server exception on start app: {}", serverException.getMessage());
                 boolean response = FxAlert.showConfirmation("Error on run server", "You want to configure server parameters?");
