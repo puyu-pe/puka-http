@@ -1,5 +1,7 @@
 package pe.puyu.pukahttp.infrastructure.javafx.app;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -8,6 +10,7 @@ import pe.puyu.pukahttp.application.services.BusinessLogoService;
 import pe.puyu.pukahttp.application.services.CleanPrintQueueService;
 import pe.puyu.pukahttp.application.sweetticketdesign.PrintComponentsProviderService;
 import pe.puyu.pukahttp.domain.PrintServerException;
+import pe.puyu.pukahttp.domain.ServerConfig;
 import pe.puyu.pukahttp.domain.ViewLauncher;
 import pe.puyu.pukahttp.infrastructure.config.AppConfig;
 import pe.puyu.pukahttp.infrastructure.javafx.controllers.*;
@@ -29,6 +32,9 @@ import pe.puyu.pukahttp.infrastructure.properties.AppPropertyKey;
 import pe.puyu.pukahttp.infrastructure.properties.ApplicationProperties;
 import pe.puyu.pukahttp.infrastructure.properties.ServerPropertiesReader;
 import pe.puyu.pukahttp.infrastructure.storage.GsonFailedPrintJobStorage;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class JavaFXApplication extends Application {
 
@@ -58,6 +64,7 @@ public class JavaFXApplication extends Application {
     public void start(Stage stage) {
         try {
             try {
+                parchInitServerIni();
                 launchApplicationService.startApplication();
             } catch (PrintServerException serverException) {
                 appLog.getLogger().error("Print server exception on start app: {}", serverException.getMessage());
@@ -133,5 +140,21 @@ public class JavaFXApplication extends Application {
             ApplicationProperties.setBoolean(AppPropertyKey.TRAY_NOTIFICATIONS, true);
         }
         //...
+    }
+
+    //temp method [parch]
+    private void parchInitServerIni() {
+        try {
+            Path oldConfigPath = Path.of(AppConfig.getUserDataDir()).resolve("pos.json");
+            ServerPropertiesReader serverPropertiesReader = new ServerPropertiesReader();
+            if (Files.exists(oldConfigPath) && !serverPropertiesReader.hasServerConfig()) {
+                String content = Files.readString(oldConfigPath);
+                JsonObject posJson = JsonParser.parseString(content).getAsJsonObject();
+                ServerConfig serverConfig = new ServerConfig(posJson.get("ip").getAsString(), posJson.get("port").getAsString());
+                serverPropertiesReader.write(serverConfig);
+            }
+        } catch (Exception e) {
+            appLog.getLogger().warn("exception on parch server ini", e);
+        }
     }
 }
