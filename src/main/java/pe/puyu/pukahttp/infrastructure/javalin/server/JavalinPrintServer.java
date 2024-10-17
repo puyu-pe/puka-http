@@ -22,6 +22,7 @@ public class JavalinPrintServer implements PrintServer {
                 initializeApp();
                 int port = Integer.parseInt(serverConfig.port());
                 app.start(serverConfig.ip(), port);
+                Runtime.getRuntime().addShutdownHook(new Thread(() -> app.stop()));
                 log.getLogger().info("Sever listening on {}:{}", serverConfig.ip(), port);
             } catch (Exception e) {
                 stop();
